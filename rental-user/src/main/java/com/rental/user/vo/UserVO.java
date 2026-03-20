@@ -18,5 +18,7 @@ public class UserVO {
 
     private String avatarUrl;
 
-    private Integer role;
+    private String role;
+
+    private Integer status;
 }

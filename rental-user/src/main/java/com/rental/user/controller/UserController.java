@@ -5,10 +5,12 @@ import com.rental.user.dto.BindPhoneRequest;
 import com.rental.user.dto.WxLoginRequest;
 import com.rental.user.entity.User;
 import com.rental.user.service.UserService;
+import com.rental.user.vo.LoginVO;
 import com.rental.user.vo.UserVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -24,30 +26,25 @@ public class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "微信登录")
-    public Result<UserVO> wxLogin(@RequestBody WxLoginRequest request) {
-        User user = userService.wxLogin(request.getOpenid(), request.getUnionid());
-        return Result.success(convertToVO(user));
+    public Result<LoginVO> wxLogin(@RequestBody WxLoginRequest request) {
+        LoginVO loginVO = userService.wxLogin(request.getCode());
+        return Result.success(loginVO);
     }
 
     @PostMapping("/bind-phone")
     @Operation(summary = "绑定手机号")
-    public Result<UserVO> bindPhone(@RequestBody BindPhoneRequest request) {
-        User user = userService.bindPhone(request.getUserId(), request.getPhone());
+    public Result<UserVO> bindPhone(@RequestBody BindPhoneRequest request, Authentication authentication) {
+        Long userId = (Long) authentication.getPrincipal();
+        User user = userService.bindPhone(userId, request.getPhone());
         return Result.success(convertToVO(user));
     }
 
     @GetMapping("/info")
-    @Operation(summary = "获取用户信息")
-    public Result<UserVO> getUserInfo(@RequestParam Long userId) {
+    @Operation(summary = "获取当前用户信息")
+    public Result<UserVO> getUserInfo(Authentication authentication) {
+        Long userId = (Long) authentication.getPrincipal();
         User user = userService.getById(userId);
         return Result.success(convertToVO(user));
-    }
-
-    @PutMapping("/info")
-    @Operation(summary = "更新用户信息")
-    public Result<UserVO> updateUserInfo(@RequestBody User user) {
-        User updated = userService.updateUser(user);
-        return Result.success(convertToVO(updated));
     }
 
     private UserVO convertToVO(User user) {
@@ -60,6 +57,7 @@ public class UserController {
         vo.setNickname(user.getNickname());
         vo.setAvatarUrl(user.getAvatarUrl());
         vo.setRole(user.getRole());
+        vo.setStatus(user.getStatus());
         return vo;
     }
 }

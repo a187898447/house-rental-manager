@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
  * 用户实体
  */
 @Data
-@TableName("user")
+@TableName("t_user")
 public class User {
 
     @TableId(type = IdType.AUTO)
@@ -23,17 +23,20 @@ public class User {
     private String avatarUrl;
 
     /**
-     * 1:房东 2:租客
+     * 角色: tenant/landlord/admin
      */
-    private Integer role;
+    private String role;
 
-    private String wxUnionid;
+    /**
+     * 状态: 0禁用 1正常
+     */
+    private Integer status;
 
     @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createdAt;
+    private LocalDateTime createTime;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updatedAt;
+    private LocalDateTime updateTime;
 
     private LocalDateTime deletedAt;
 }

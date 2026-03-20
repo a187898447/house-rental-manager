@@ -10,15 +10,6 @@ import lombok.Data;
 @Schema(description = "微信登录请求")
 public class WxLoginRequest {
 
-    @Schema(description = "微信openid", required = true)
-    private String openid;
-
-    @Schema(description = "微信unionid")
-    private String unionid;
-
-    @Schema(description = "昵称")
-    private String nickname;
-
-    @Schema(description = "头像URL")
-    private String avatarUrl;
+    @Schema(description = "微信授权code", required = true)
+    private String code;
 }
