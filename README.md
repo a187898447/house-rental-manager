@@ -1,1 +1,79 @@
-IyBob3VzZS1yZW50YWwtbWFuYWdlcgoK56ef5oi/5bCP56iL5bqPIC0g5oi/5Lic56uvICsg56ef5a6i56uvCgojIyDmioDmnK/moIgKCi0gdW5pLWFwcCArIFZ1ZSAzICsgVHlwZVNjcmlwdAotIFVJIOe7hOS7tu+8mnV2aWV3LXBsdXMKLSDnirbmgIHnrqHnkIbvvJpQaW5pYQoKIyMg6aG555uu57uT5p6ECgpgYGAKc3JjLwrilJzilIDilIAgcGFnZXMvICAgICAgICAgICAjIOmhtemdogrilIIgICDilJzilIDilIAgbGFuZGxvcmQvICAgIyDmiL/kuJznq68K4pSCICAg4pSU4pSA4pSAIHRlbmFudC8gICAgICMg56ef5a6i56uvCuKUnOKUgOKUgCBjb21wb25lbnRzLyAgICAgIyDlhazlhbHnu4Tku7YK4pSc4pSA4pSAIGNvbXBvc2FibGVzLyAgICAjIOe7hOWQiOW8j+WHveaVsArilJzilIDilIAgc3RvcmVzLyAgICAgICAgICMgUGluaWEg54q25oCB566h55CGCuKUnOKUgOKUgCBzZXJ2aWNlcy8gICAgICAgIyBBUEkg5pyN5Yqh5bGCCuKUnOKUgOKUgCB1dGlscy8gICAgICAgICAgIyDlt6Xlhbflh73mlbAK4pSc4pSA4pSAIHR5cGVzLyAgICAgICAgICAjIFR5cGVTY3JpcHQg57G75Z6LCuKUlOKUgOKUgCBzdGF0aWMvICAgICAgICAgIyDpnZnmgIHotYTmupAKYGBgCgojIyDlvIDlj5EKCmBgYGJhc2gKIyDlronoo4Xkvp3otZYKbnBtIGluc3RhbGwKCiMg5byA5Y+R5b6u5L+h5bCP56iL5bqPCm5wbSBydW4gZGV2Om1wLXdlaXhpbgoKIyDmnoTlu7rlvq7kv6HlsI/nqIvluo8KbnBtIHJ1biBidWlsZDptcC13ZWl4aW4KYGBgCg==
+# 租房小程序后端
+
+基于 Spring Boot + Spring Cloud Alibaba 的微服务后端
+
+## 技术栈
+
+- Spring Boot 3.2.x + Java 17
+- Spring Cloud Alibaba (Nacos)
+- 达梦数据库 DM8
+- MyBatis-Plus
+- Redis
+
+## 模块
+
+- rental-gateway (8080) - API网关
+- rental-user (8081) - 用户服务
+- rental-property (8082) - 房源服务
+- rental-bill (8083) - 账单服务
+- rental-notify (8084) - 通知服务
+- rental-pay (8085) - 支付服务(预留)
+
+## 快速开始
+
+### 环境要求
+
+- JDK 17+
+- Maven 3.8+
+- Nacos 2.2.x
+- Redis 7.x
+- 达梦数据库 DM8
+
+### 编译
+
+```bash
+mvn clean package -DskipTests
+```
+
+### 启动
+
+按顺序启动各服务：
+
+```bash
+# 启动网关
+java -jar rental-gateway/target/rental-gateway.jar
+
+# 启动用户服务
+java -jar rental-user/target/rental-user.jar
+
+# 启动房源服务
+java -jar rental-property/target/rental-property.jar
+
+# 启动账单服务
+java -jar rental-bill/target/rental-bill.jar
+
+# 启动通知服务
+java -jar rental-notify/target/rental-notify.jar
+```
+
+## API 文档
+
+各服务启动后访问：
+
+- 网关: http://localhost:8080
+- 用户服务: http://localhost:8081/doc.html
+- 房源服务: http://localhost:8082/doc.html
+- 账单服务: http://localhost:8083/doc.html
+- 通知服务: http://localhost:8084/doc.html
+
+## 开发
+
+```bash
+# 运行单个模块
+cd rental-user
+mvn spring-boot:run
+```
+
+## License
+
+MIT
