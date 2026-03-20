@@ -1,0 +1,72 @@
+package com.rental.property.controller;
+
+import com.rental.common.result.Result;
+import com.rental.property.dto.PropertyCreateDTO;
+import com.rental.property.dto.PropertyQueryDTO;
+import com.rental.property.dto.PropertyUpdateDTO;
+import com.rental.property.entity.Property;
+import com.rental.property.service.PropertyService;
+import com.rental.property.vo.PropertyVO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * 房源控制器
+ */
+@RestController
+@RequestMapping("/property")
+@RequiredArgsConstructor
+@Tag(name = "房源管理", description = "房源增删改查相关接口")
+public class PropertyController {
+
+    private final PropertyService propertyService;
+
+    @GetMapping("/list")
+    @Operation(summary = "分页查询房源列表")
+    public Result<PropertyVO> list(PropertyQueryDTO queryDTO, Authentication authentication) {
+        // 从认证信息获取房东ID
+        Long ownerId = (Long) authentication.getPrincipal();
+        queryDTO.setOwnerId(ownerId);
+        
+        var page = propertyService.queryPage(queryDTO);
+        return Result.success(page);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "获取房源详情")
+    @Parameter(name = "id", description = "房源ID")
+    public Result<PropertyVO> getDetail(@PathVariable Long id) {
+        PropertyVO vo = propertyService.getDetail(id);
+        return Result.success(vo);
+    }
+
+    @PostMapping
+    @Operation(summary = "新增房源")
+    public Result<Long> create(@RequestBody PropertyCreateDTO dto, Authentication authentication) {
+        Long ownerId = (Long) authentication.getPrincipal();
+        dto.setOwnerId(ownerId);
+        
+        Long id = propertyService.create(dto);
+        return Result.success("房源创建成功", id);
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "更新房源")
+    @Parameter(name = "id", description = "房源ID")
+    public Result<Boolean> update(@PathVariable Long id, @RequestBody PropertyUpdateDTO dto) {
+        boolean result = propertyService.updateProperty(id, dto);
+        return Result.success("房源更新成功", result);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "删除房源")
+    @Parameter(name = "id", description = "房源ID")
+    public Result<Boolean> delete(@PathVariable Long id) {
+        boolean result = propertyService.deleteProperty(id);
+        return Result.success("房源删除成功", result);
+    }
+}
