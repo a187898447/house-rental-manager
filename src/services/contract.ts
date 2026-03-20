@@ -1,0 +1,64 @@
+import { request } from './index'
+import type { Contract, ApiResponse } from '@/types'
+
+/**
+ * 获取合同列表
+ */
+export const getContracts = async (params?: { tenantId?: string; propertyId?: string }) => {
+  return request<Contract[]>({
+    url: '/api/contracts',
+    method: 'GET',
+    data: params
+  })
+}
+
+/**
+ * 获取合同详情
+ */
+export const getContractDetail = async (id: string) => {
+  return request<Contract>({
+    url: `/api/contracts/${id}`,
+    method: 'GET'
+  })
+}
+
+/**
+ * 创建合同
+ */
+export const createContract = async (data: {
+  tenantId: string
+  propertyId: string
+  rentAmount: number
+  depositAmount: number
+  waterFee: number
+  electricityFee: number
+  leaseStart: string
+  leaseEnd: string
+}) => {
+  return request<Contract>({
+    url: '/api/contracts',
+    method: 'POST',
+    data
+  })
+}
+
+/**
+ * 签署合同
+ */
+export const signContract = async (id: string, signImageUrl: string) => {
+  return request<Contract>({
+    url: `/api/contracts/${id}/sign`,
+    method: 'POST',
+    data: { signImageUrl }
+  })
+}
+
+/**
+ * 获取合同签署 URL（用于微信小程序签名）
+ */
+export const getContractSignUrl = async (id: string) => {
+  return request<{ url: string }>({
+    url: `/api/contracts/${id}/sign-url`,
+    method: 'GET'
+  })
+}
