@@ -1,0 +1,55 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: rental-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: public
+      config:
+        server-addr: 127.0.0.1:8848
+        namespace: public
+        file-extension: yaml
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: rental-user
+          uri: lb://rental-user
+          predicates:
+            - Path=/api/user/**
+          filters:
+            - StripPrefix=1
+        - id: rental-property
+          uri: lb://rental-property
+          predicates:
+            - Path=/api/property/**
+          filters:
+            - StripPrefix=1
+        - id: rental-bill
+          uri: lb://rental-bill
+          predicates:
+            - Path=/api/bill/**
+          filters:
+            - StripPrefix=1
+        - id: rental-notify
+          uri: lb://rental-notify
+          predicates:
+            - Path=/api/notify/**
+          filters:
+            - StripPrefix=1
+        - id: rental-pay
+          uri: lb://rental-pay
+          predicates:
+            - Path=/api/pay/**
+          filters:
+            - StripPrefix=1
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
