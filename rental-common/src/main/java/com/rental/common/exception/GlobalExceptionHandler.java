@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,27 @@ public class GlobalExceptionHandler {
     public Result<?> handleBusinessException(BusinessException e, HttpServletRequest request) {
         log.warn("业务异常: {} - {}", request.getRequestURI(), e.getMessage());
         return Result.error(e.getCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(AuthException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Result<?> handleAuthException(AuthException e, HttpServletRequest request) {
+        log.warn("认证异常: {} - {}", request.getRequestURI(), e.getMessage());
+        return Result.error(e.getCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Result<?> handleExpiredJwtException(ExpiredJwtException e, HttpServletRequest request) {
+        log.warn("JWT Token 已过期: {}", request.getRequestURI());
+        return Result.error(401, "Token 已过期，请重新登录");
+    }
+
+    @ExceptionHandler(JwtException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Result<?> handleJwtException(JwtException e, HttpServletRequest request) {
+        log.warn("JWT Token 无效: {} - {}", request.getRequestURI(), e.getMessage());
+        return Result.error(401, "Token 无效");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

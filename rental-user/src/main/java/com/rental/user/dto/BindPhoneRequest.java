@@ -10,12 +10,9 @@ import lombok.Data;
 @Schema(description = "绑定手机号请求")
 public class BindPhoneRequest {
 
-    @Schema(description = "用户ID", required = true)
-    private Long userId;
-
     @Schema(description = "手机号", required = true)
     private String phone;
 
-    @Schema(description = "验证码")
-    private String code;
+    @Schema(description = "短信验证码")
+    private String smsCode;
 }

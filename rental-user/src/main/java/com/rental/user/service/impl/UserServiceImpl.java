@@ -3,9 +3,12 @@ package com.rental.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rental.common.exception.BusinessException;
+import com.rental.common.utils.JwtUtils;
 import com.rental.user.entity.User;
 import com.rental.user.mapper.UserMapper;
 import com.rental.user.service.UserService;
+import com.rental.user.service.WxService;
+import com.rental.user.vo.LoginVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,30 +22,46 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    @Override
-    public User getByOpenid(String openid) {
-        return this.getOne(new LambdaQueryWrapper<User>()
-                .eq(User::getOpenid, openid)
-                .isNull(User::getDeletedAt));
-    }
+    private final WxService wxService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public User wxLogin(String openid, String wxUnionid) {
+    public LoginVO wxLogin(String code) {
+        // 1. 用 code 换取 openid
+        String openid = wxService.getOpenid(code);
+        
+        // 2. 查询用户是否存在
         User user = getByOpenid(openid);
-        if (user != null) {
-            log.info("用户已存在，登录成功: {}", openid);
-            return user;
+        
+        if (user == null) {
+            // 3. 创建新用户
+            user = new User();
+            user.setOpenid(openid);
+            user.setRole("tenant"); // 默认租客
+            user.setStatus(1); // 正常状态
+            this.save(user);
+            log.info("新用户注册: openid={}", openid);
         }
 
-        // 创建新用户
-        user = new User();
-        user.setOpenid(openid);
-        user.setWxUnionid(wxUnionid);
-        user.setRole(0); // 默认普通用户
-        this.save(user);
-        log.info("新用户注册: {}", openid);
-        return user;
+        // 4. 检查用户状态
+        if (user.getStatus() != null && user.getStatus() == 0) {
+            throw new BusinessException("用户已被禁用");
+        }
+
+        // 5. 生成 JWT Token
+        String token = JwtUtils.generateToken(user.getId(), user.getOpenid(), user.getRole());
+
+        // 6. 返回登录响应
+        LoginVO vo = new LoginVO();
+        vo.setToken(token);
+        vo.setUserId(user.getId());
+        vo.setNickname(user.getNickname());
+        vo.setAvatarUrl(user.getAvatarUrl());
+        vo.setRole(user.getRole());
+        vo.setPhone(user.getPhone());
+
+        log.info("用户登录成功: userId={}, role={}", user.getId(), user.getRole());
+        return vo;
     }
 
     @Override
@@ -68,13 +87,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public User updateUser(User user) {
-        User existUser = this.getById(user.getId());
-        if (existUser == null) {
-            throw new BusinessException("用户不存在");
-        }
-        this.updateById(user);
-        return this.getById(user.getId());
+    public User getByOpenid(String openid) {
+        return this.getOne(new LambdaQueryWrapper<User>()
+                .eq(User::getOpenid, openid)
+                .isNull(User::getDeletedAt));
     }
 }

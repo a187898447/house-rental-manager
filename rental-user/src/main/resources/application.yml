@@ -51,3 +51,8 @@ knife4j:
 logging:
   level:
     com.rental.user: DEBUG
+
+# 微信配置
+wechat:
+  appid: wx1234567890abcdef
+  secret: abcdef1234567890abcdef1234567890
