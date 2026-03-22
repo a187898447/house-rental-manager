@@ -8,7 +8,10 @@ import com.rental.bill.mapper.RepairMapper;
 import com.rental.bill.service.RepairService;
 import com.rental.bill.vo.RepairVO;
 import com.rental.common.exception.BusinessException;
+import com.rental.common.notify.NotifyClient;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +21,15 @@ import java.util.List;
 /**
  * 报修服务实现
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RepairServiceImpl implements RepairService {
 
     private final RepairMapper repairMapper;
+
+    @Autowired(required = false)
+    private NotifyClient notifyClient;
 
     private static final List<Integer> CANCELABLE_STATUSES = Arrays.asList(0);
     private static final List<Integer> PROCESSABLE_STATUSES = Arrays.asList(0);
@@ -41,6 +48,13 @@ public class RepairServiceImpl implements RepairService {
         repair.setStatus(0); // 待处理
         
         repairMapper.insert(repair);
+        
+        // TODO: 获取房东ID后发送通知
+        // if (notifyClient != null) {
+        //     notifyClient.notifyRepairCreated(ownerId, propertyName, title);
+        // }
+        
+        log.info("报修创建成功: id={}, propertyId={}, title={}", repair.getId(), dto.getPropertyId(), dto.getTitle());
         return repair.getId();
     }
 
@@ -100,6 +114,11 @@ public class RepairServiceImpl implements RepairService {
         repair.setStatus(1); // 处理中
         repair.setHandlerId(handlerId);
         
+        // TODO: 通知租客开始处理
+        // if (notifyClient != null) {
+        //     notifyClient.sendNotify(tenantId, "repair", "报修已开始处理", ...);
+        // }
+        
         return repairMapper.updateById(repair) > 0;
     }
 
@@ -116,6 +135,11 @@ public class RepairServiceImpl implements RepairService {
         
         repair.setStatus(2); // 已完成
         repair.setHandleRemark(remark);
+        
+        // TODO: 通知租客已完成
+        // if (notifyClient != null) {
+        //     notifyClient.sendNotify(tenantId, "repair", "报修已完成", ...);
+        // }
         
         return repairMapper.updateById(repair) > 0;
     }

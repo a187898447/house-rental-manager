@@ -9,7 +9,10 @@ import com.rental.bill.mapper.ContractMapper;
 import com.rental.bill.service.ContractService;
 import com.rental.bill.vo.ContractVO;
 import com.rental.common.exception.BusinessException;
+import com.rental.common.notify.NotifyClient;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +24,15 @@ import java.util.List;
 /**
  * 合同服务实现
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ContractServiceImpl implements ContractService {
 
     private final ContractMapper contractMapper;
+
+    @Autowired(required = false)
+    private NotifyClient notifyClient;
 
     private static final List<Integer> VALID_STATUSES = Arrays.asList(0, 1, 2, 3, 4);
     private static final List<Integer> TERMINABLE_STATUSES = Arrays.asList(1, 2);
@@ -49,6 +56,13 @@ public class ContractServiceImpl implements ContractService {
         contract.setOwnerId(1L);
         
         contractMapper.insert(contract);
+        
+        // TODO: 通知房东有新合同待签署
+        // if (notifyClient != null) {
+        //     notifyClient.notifyContractCreated(ownerId, propertyName, true);
+        // }
+        
+        log.info("合同创建成功: id={}, propertyId={}", contract.getId(), dto.getPropertyId());
         return contract.getId();
     }
 
@@ -138,7 +152,19 @@ public class ContractServiceImpl implements ContractService {
         contract.setSignUrl(signUrl);
         contract.setStatus(1); // 已签署
         
-        return contractMapper.updateById(contract) > 0;
+        contractMapper.updateById(contract);
+        
+        // 通知房东和租客合同已签署
+        // TODO: 获取用户ID后发送通知
+        // if (notifyClient != null) {
+        //     // 通知房东
+        //     notifyClient.notifyContractSigned(contract.getOwnerId(), propertyName, true);
+        //     // 通知租客
+        //     notifyClient.notifyContractSigned(contract.getTenantId(), propertyName, false);
+        // }
+        
+        log.info("合同签署成功: id={}", id);
+        return true;
     }
 
     @Override
@@ -175,6 +201,13 @@ public class ContractServiceImpl implements ContractService {
         }
         
         contract.setStatus(4); // 已解除
+        
+        // TODO: 通知双方合同已解除
+        // if (notifyClient != null) {
+        //     notifyClient.notifyContractSigned(ownerId, propertyName, true);
+        //     notifyClient.notifyContractSigned(tenantId, propertyName, false);
+        // }
+        
         return contractMapper.updateById(contract) > 0;
     }
 
