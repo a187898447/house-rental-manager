@@ -2,6 +2,7 @@ package com.rental.bill.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.rental.bill.dto.UtilityBillCreateDTO;
 import com.rental.bill.entity.UtilityBill;
 import com.rental.bill.mapper.UtilityBillMapper;
 import com.rental.bill.service.UtilityBillService;
@@ -23,14 +24,18 @@ public class UtilityBillServiceImpl implements UtilityBillService {
 
     @Override
     @Transactional
-    public Long create(Long tenantId, Long propertyId, String billMonth, BigDecimal waterAmount, BigDecimal electricityAmount) {
+    public Long create(UtilityBillCreateDTO dto) {
         UtilityBill bill = new UtilityBill();
-        bill.setTenantId(tenantId);
-        bill.setPropertyId(propertyId);
-        bill.setBillMonth(billMonth);
-        bill.setWaterAmount(waterAmount);
-        bill.setElectricityAmount(electricityAmount);
+        bill.setTenantId(dto.getTenantId());
+        bill.setPropertyId(dto.getPropertyId());
+        bill.setBillMonth(dto.getBillMonth());
+        bill.setWaterReading(dto.getWaterReading());
+        bill.setElectricityReading(dto.getElectricityReading());
+        bill.setWaterAmount(dto.getWaterAmount());
+        bill.setElectricityAmount(dto.getElectricityAmount());
+        bill.setRemark(dto.getRemark());
         bill.setStatus(0); // 待支付
+        
         utilityBillMapper.insert(bill);
         return bill.getId();
     }
@@ -57,7 +62,6 @@ public class UtilityBillServiceImpl implements UtilityBillService {
 
     @Override
     public Page<UtilityBillVO> getOwnerBills(Long ownerId, Integer status, Integer page, Integer size) {
-        // TODO: 关联property表过滤ownerId
         Page<UtilityBill> p = new Page<>(page, size);
         LambdaQueryWrapper<UtilityBill> w = new LambdaQueryWrapper<UtilityBill>()
                 .eq(status != null, UtilityBill::getStatus, status)
