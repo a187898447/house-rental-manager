@@ -56,6 +56,16 @@ public class Property {
 
     private BigDecimal dailyRate;
 
+    /**
+     * 水费单价（元/吨）
+     */
+    private BigDecimal waterUnitPrice;
+
+    /**
+     * 电费单价（元/度）
+     */
+    private BigDecimal electricityUnitPrice;
+
     private String remark;
 
     @TableField(fill = FieldFill.INSERT)

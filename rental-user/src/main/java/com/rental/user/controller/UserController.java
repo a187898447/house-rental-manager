@@ -31,6 +31,17 @@ public class UserController {
         return Result.success(loginVO);
     }
 
+    @PostMapping("/send-code")
+    @Operation(summary = "发送验证码")
+    public Result<Boolean> sendCode(@RequestBody SendCodeRequest request) {
+        // TODO: 实现短信验证码发送逻辑
+        // 1. 验证手机号格式
+        // 2. 生成6位验证码
+        // 3. 调用短信服务发送
+        // 4. 存入Redis，设置过期时间
+        return Result.success(true);
+    }
+
     @PostMapping("/bind-phone")
     @Operation(summary = "绑定手机号")
     public Result<UserVO> bindPhone(@RequestBody BindPhoneRequest request, Authentication authentication) {

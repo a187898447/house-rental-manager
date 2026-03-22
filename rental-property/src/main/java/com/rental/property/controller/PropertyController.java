@@ -88,4 +88,23 @@ public class PropertyController {
         PropertyVO vo = propertyService.getDetail(id);
         return Result.success(vo);
     }
+
+    // ========== 水电费配置 ==========
+
+    @GetMapping("/{id}/utility-config")
+    @Operation(summary = "获取房源水电费配置")
+    @Parameter(name = "id", description = "房源ID")
+    public Result<PropertyVO> getUtilityConfig(@PathVariable Long id) {
+        PropertyVO vo = propertyService.getDetail(id);
+        return Result.success(vo);
+    }
+
+    @PutMapping("/{id}/utility-config")
+    @Operation(summary = "更新房源水电费配置")
+    @Parameter(name = "id", description = "房源ID")
+    public Result<Boolean> updateUtilityConfig(@PathVariable Long id, 
+            @RequestBody com.rental.property.dto.UtilityConfigDTO dto) {
+        boolean result = propertyService.updateUtilityConfig(id, dto);
+        return Result.success("水电费配置更新成功", result);
+    }
 }
