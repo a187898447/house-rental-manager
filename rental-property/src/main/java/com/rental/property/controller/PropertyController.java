@@ -69,4 +69,23 @@ public class PropertyController {
         boolean result = propertyService.deleteProperty(id);
         return Result.success("房源删除成功", result);
     }
+
+    // ========== 公开接口（无需登录）==========
+
+    @GetMapping("/public/list")
+    @Operation(summary = "公开房源列表（无需登录）")
+    public Result<PropertyVO> getPublicList(PropertyQueryDTO queryDTO) {
+        // 不需要ownerId筛选，返回所有公开房源
+        queryDTO.setOwnerId(null);
+        var page = propertyService.queryPage(queryDTO);
+        return Result.success(page);
+    }
+
+    @GetMapping("/public/{id}")
+    @Operation(summary = "公开房源详情（无需登录）")
+    @Parameter(name = "id", description = "房源ID")
+    public Result<PropertyVO> getPublicDetail(@PathVariable Long id) {
+        PropertyVO vo = propertyService.getDetail(id);
+        return Result.success(vo);
+    }
 }
