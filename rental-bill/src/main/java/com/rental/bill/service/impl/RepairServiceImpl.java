@@ -160,6 +160,33 @@ public class RepairServiceImpl implements RepairService {
         return repairMapper.updateById(repair) > 0;
     }
 
+    @Override
+    @Transactional
+    public boolean updateStatus(Long id, Integer status, String remark) {
+        Repair repair = repairMapper.selectById(id);
+        if (repair == null) {
+            throw new BusinessException("报修不存在");
+        }
+
+        // 状态校验
+        if (status == 0 && !CANCELABLE_STATUSES.contains(repair.getStatus())) {
+            throw new BusinessException("只有待处理的报修可以取消");
+        }
+        if (status == 1 && !PROCESSABLE_STATUSES.contains(repair.getStatus())) {
+            throw new BusinessException("报修状态不正确，无法开始处理");
+        }
+        if (status == 2 && !COMPLETABLE_STATUSES.contains(repair.getStatus())) {
+            throw new BusinessException("只有处理中的报修可以完成");
+        }
+
+        repair.setStatus(status);
+        if (remark != null) {
+            repair.setHandleRemark(remark);
+        }
+
+        return repairMapper.updateById(repair) > 0;
+    }
+
     private RepairVO convertToVO(Repair repair) {
         RepairVO vo = new RepairVO();
         vo.setId(repair.getId());
