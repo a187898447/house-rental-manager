@@ -3,15 +3,14 @@ package com.rental.bill.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * 租金账单实体
+ * 其他费用实体
  */
 @Data
-@TableName("rent_record")
-public class RentRecord {
+@TableName("other_fee")
+public class OtherFee {
 
     @TableId(type = IdType.AUTO)
     private Long id;
@@ -20,27 +19,21 @@ public class RentRecord {
 
     private Long propertyId;
 
+    /**
+     * 费用类型：management-管理费、network-网络费、garbage-垃圾费、other-其他
+     */
+    private String feeType;
+
     private BigDecimal amount;
 
-    private Integer days;
-
-    private BigDecimal dailyRate;
-
-    private String payMonth;
-
-    private LocalDate payDate;
+    private String billMonth;
 
     /**
-     * 0:待支付 1:已支付 2:已逾期 3:已取消
+     * 0:待支付 1:已支付
      */
     private Integer status;
 
-    private Integer remindCount;
-
-    /**
-     * 支付方式：cash-现金、transfer-转账、wechat-微信、alipay-支付宝
-     */
-    private String payMethod;
+    private LocalDateTime payDate;
 
     private String remark;
 
