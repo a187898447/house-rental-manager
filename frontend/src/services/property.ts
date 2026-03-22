@@ -6,7 +6,7 @@ import type { Property, PropertyInput, ApiResponse, PageResponse } from '@/types
  */
 export const getProperties = async (params?: { status?: string; page?: number; pageSize?: number }) => {
   return request<Property[]>({
-    url: '/api/properties',
+    url: '/api/property/list',
     method: 'GET',
     data: params
   })
@@ -17,7 +17,7 @@ export const getProperties = async (params?: { status?: string; page?: number; p
  */
 export const getPropertyDetail = async (id: string) => {
   return request<Property>({
-    url: `/api/properties/${id}`,
+    url: `/api/property/${id}`,
     method: 'GET'
   })
 }
@@ -27,7 +27,7 @@ export const getPropertyDetail = async (id: string) => {
  */
 export const createProperty = async (data: PropertyInput) => {
   return request<Property>({
-    url: '/api/properties',
+    url: '/api/property',
     method: 'POST',
     data
   })
@@ -38,7 +38,7 @@ export const createProperty = async (data: PropertyInput) => {
  */
 export const updateProperty = async (id: string, data: PropertyInput) => {
   return request<Property>({
-    url: `/api/properties/${id}`,
+    url: `/api/property/${id}`,
     method: 'PUT',
     data
   })
@@ -49,7 +49,7 @@ export const updateProperty = async (id: string, data: PropertyInput) => {
  */
 export const deleteProperty = async (id: string) => {
   return request<{ success: boolean }>({
-    url: `/api/properties/${id}`,
+    url: `/api/property/${id}`,
     method: 'DELETE'
   })
 }
