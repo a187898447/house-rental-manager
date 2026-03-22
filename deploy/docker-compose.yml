@@ -1,0 +1,155 @@
+version: '3.8'
+
+services:
+  # Nacos 服务注册/配置中心
+  nacos:
+    image: nacos/nacos-server:v2.2.3
+    container_name: rental-nacos
+    environment:
+      - MODE=standalone
+      - SPRING_DATASOURCE_PLATFORM=mysql
+      - MYSQL_SERVICE_HOST=dm-db
+      - MYSQL_SERVICE_PORT=5236
+      - MYSQL_SERVICE_DB_NAME=nacos_config
+      - MYSQL_SERVICE_USER=SYSDBA
+      - MYSQL_SERVICE_PASSWORD=SYSDBA004
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    depends_on:
+      - dm-db
+    networks:
+      - rental-network
+
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    container_name: rental-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - rental-network
+
+  # 达梦数据库
+  dm-db:
+    image: dmdbms/dm8:latest
+    container_name: rental-dm-db
+    environment:
+      - MODE=Primary
+    ports:
+      - "5236:5236"
+    volumes:
+      - dm-data:/data
+    networks:
+      - rental-network
+    privileged: true
+
+  # API 网关
+  rental-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.gateway
+    container_name: rental-gateway
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      - nacos
+      - redis
+    networks:
+      - rental-network
+
+  # 用户服务
+  rental-user:
+    build:
+      context: .
+      dockerfile: Dockerfile.user
+    container_name: rental-user
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8081:8081"
+    depends_on:
+      - nacos
+      - redis
+      - dm-db
+    networks:
+      - rental-network
+
+  # 房源服务
+  rental-property:
+    build:
+      context: .
+      dockerfile: Dockerfile.property
+    container_name: rental-property
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8082:8082"
+    depends_on:
+      - nacos
+      - redis
+      - dm-db
+    networks:
+      - rental-network
+
+  # 账单服务
+  rental-bill:
+    build:
+      context: .
+      dockerfile: Dockerfile.bill
+    container_name: rental-bill
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8083:8083"
+    depends_on:
+      - nacos
+      - redis
+      - dm-db
+    networks:
+      - rental-network
+
+  # 通知服务
+  rental-notify:
+    build:
+      context: .
+      dockerfile: Dockerfile.notify
+    container_name: rental-notify
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8084:8084"
+    depends_on:
+      - nacos
+      - redis
+    networks:
+      - rental-network
+
+  # 支付服务（预留）
+  rental-pay:
+    build:
+      context: .
+      dockerfile: Dockerfile.pay
+    container_name: rental-pay
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8085:8085"
+    depends_on:
+      - nacos
+      - redis
+    networks:
+      - rental-network
+
+networks:
+  rental-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  dm-data:
