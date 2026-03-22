@@ -6,7 +6,7 @@ import type { UtilityFee, ApiResponse } from '@/types'
  */
 export const getUtilityConfig = async (propertyId: string) => {
   return request<{ waterRate: number; electricityRate: number }>({
-    url: `/api/properties/${propertyId}/utility-config`,
+    url: `/api/property/${propertyId}/utility-config`,
     method: 'GET'
   })
 }
@@ -16,7 +16,7 @@ export const getUtilityConfig = async (propertyId: string) => {
  */
 export const setUtilityConfig = async (propertyId: string, data: { waterRate: number; electricityRate: number }) => {
   return request<{ success: boolean }>({
-    url: `/api/properties/${propertyId}/utility-config`,
+    url: `/api/property/${propertyId}/utility-config`,
     method: 'PUT',
     data
   })
@@ -28,7 +28,9 @@ export const setUtilityConfig = async (propertyId: string, data: { waterRate: nu
 export const getUtilityBills = async (params?: {
   propertyId?: string
   tenantId?: string
-  month?: string
+  status?: string
+  page?: number
+  pageSize?: number
 }) => {
   return request<UtilityFee[]>({
     url: '/api/utility/bills',
@@ -43,9 +45,12 @@ export const getUtilityBills = async (params?: {
 export const createUtilityBill = async (data: {
   propertyId: string
   tenantId: string
-  month: string
-  waterUsage?: number
-  electricityUsage?: number
+  billMonth: string
+  waterReading?: number
+  electricityReading?: number
+  waterAmount?: number
+  electricityAmount?: number
+  remark?: string
 }) => {
   return request<UtilityFee>({
     url: '/api/utility/bills',
