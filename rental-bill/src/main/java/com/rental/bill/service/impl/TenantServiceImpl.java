@@ -2,121 +2,150 @@ package com.rental.bill.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.rental.bill.dto.AppointmentCreateDTO;
-import com.rental.bill.entity.Appointment;
-import com.rental.bill.entity.Property;
-import com.rental.bill.entity.Building;
-import com.rental.bill.mapper.AppointmentMapper;
+import com.rental.bill.dto.TenantCreateDTO;
+import com.rental.bill.entity.Tenant;
+import com.rental.bill.mapper.TenantMapper;
 import com.rental.bill.service.TenantService;
-import com.rental.bill.vo.AppointmentVO;
-import com.rental.bill.vo.PropertyPublicVO;
+import com.rental.bill.vo.TenantVO;
+import com.rental.common.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 租客服务实现
  */
-@Slf4j
 @Service
 @RequiredArgsConstructor
-public class TenantServiceImpl extends ServiceImpl<AppointmentMapper, Appointment> implements TenantService {
+public class TenantServiceImpl implements TenantService {
 
-    // 需要注入PropertyMapper，但目前在不同模块，这里简化处理
-    // 实际项目中需要通过Feign调用property-service
+    private final TenantMapper tenantMapper;
 
-    private static final Map<Integer, String> APPOINTMENT_STATUS_MAP = new HashMap<>();
-    static {
-        APPOINTMENT_STATUS_MAP.put(0, "待确认");
-        APPOINTMENT_STATUS_MAP.put(1, "已确认");
-        APPOINTMENT_STATUS_MAP.put(2, "已取消");
-        APPOINTMENT_STATUS_MAP.put(3, "已完成");
-    }
+    private static final List<Integer> CHECKOUT_ALLOWED_STATUSES = Arrays.asList(1);
 
     @Override
-    public Page<PropertyPublicVO> getPublicPropertyList(Integer page, Integer size) {
-        // 简化实现：返回空列表
-        // 实际需要调用property-service获取公开房源
-        Page<PropertyPublicVO> result = new Page<>(page, size);
-        log.info("获取公开房源列表: page={}, size={}", page, size);
-        return result;
-    }
-
-    @Override
-    public PropertyPublicVO getPublicPropertyDetail(Long id) {
-        // 简化实现
-        // 实际需要调用property-service获取房源详情
-        log.info("获取公开房源详情: id={}", id);
-        return null;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Long createAppointment(AppointmentCreateDTO dto) {
-        Appointment appointment = new Appointment();
-        BeanUtils.copyProperties(dto, appointment);
-        appointment.setStatus(0); // 待确认
+    @Transactional
+    public Long checkIn(TenantCreateDTO dto) {
+        Tenant tenant = new Tenant();
+        tenant.setUserId(dto.getUserId());
+        tenant.setPropertyId(dto.getPropertyId());
+        tenant.setName(dto.getName());
+        tenant.setPhone(dto.getPhone());
+        tenant.setIdCard(dto.getIdCard());
+        tenant.setLeaseStartDate(dto.getLeaseStartDate());
+        tenant.setLeaseEndDate(dto.getLeaseEndDate());
+        tenant.setEmergencyContact(dto.getEmergencyContact());
+        tenant.setEmergencyPhone(dto.getEmergencyPhone());
+        tenant.setRemark(dto.getRemark());
+        tenant.setStatus(0); // 待入住
         
-        this.save(appointment);
-        log.info("创建预约看房: propertyId={}, tenantPhone={}", dto.getPropertyId(), dto.getTenantPhone());
-        
-        return appointment.getId();
+        tenantMapper.insert(tenant);
+        return tenant.getId();
     }
 
     @Override
-    public Page<AppointmentVO> getMyAppointments(String tenantPhone, Integer page, Integer size) {
-        LambdaQueryWrapper<Appointment> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Appointment::getTenantPhone, tenantPhone)
-               .isNull(Appointment::getDeletedAt)
-               .orderByDesc(Appointment::getCreatedAt);
-        
-        Page<Appointment> pageResult = new Page<>(page, size);
-        Page<Appointment> result = this.page(pageResult, wrapper);
-        
-        return convertPage(result);
-    }
-
-    @Override
-    public Page<AppointmentVO> getOwnerAppointments(Long ownerId, Integer page, Integer size) {
-        // 需要关联查询property表的ownerId
-        // 简化实现
-        Page<Appointment> pageResult = new Page<>(page, size);
-        Page<Appointment> result = this.page(pageResult);
-        
-        return convertPage(result);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean updateAppointmentStatus(Long id, Integer status) {
-        Appointment appointment = this.getById(id);
-        if (appointment == null) {
-            return false;
+    public TenantVO getDetail(Long id) {
+        Tenant tenant = tenantMapper.selectById(id);
+        if (tenant == null) {
+            throw new BusinessException("租客不存在");
         }
-        
-        appointment.setStatus(status);
-        boolean result = this.updateById(appointment);
-        log.info("更新预约状态: id={}, status={}", id, status);
-        
-        return result;
+        return convertToVO(tenant);
     }
 
-    private Page<AppointmentVO> convertPage(Page<Appointment> page) {
-        Page<AppointmentVO> voPage = new Page<>(page.getCurrent(), page.getSize(), page.getTotal());
+    @Override
+    public Page<TenantVO> getPropertyTenants(Long propertyId, Integer status, Integer page, Integer size) {
+        Page<Tenant> pageParam = new Page<>(page, size);
+        LambdaQueryWrapper<Tenant> wrapper = new LambdaQueryWrapper<Tenant>()
+                .eq(Tenant::getPropertyId, propertyId)
+                .eq(status != null, Tenant::getStatus, status)
+                .orderByDesc(Tenant::getCreatedAt);
         
-        for (Appointment appointment : page.getRecords()) {
-            AppointmentVO vo = new AppointmentVO();
-            BeanUtils.copyProperties(appointment, vo);
-            vo.setStatusName(APPOINTMENT_STATUS_MAP.getOrDefault(appointment.getStatus(), "未知"));
-            voPage.getRecords().add(vo);
-        }
+        Page<Tenant> result = tenantMapper.selectPage(pageParam, wrapper);
+        
+        Page<TenantVO> voPage = new Page<>(result.getCurrent(), result.getSize(), result.getTotal());
+        voPage.setRecords(result.getRecords().stream().map(this::convertToVO).toList());
         
         return voPage;
+    }
+
+    @Override
+    public Page<TenantVO> getOwnerTenants(Long ownerId, Integer status, Integer page, Integer size) {
+        // TODO: 需要关联property表查询ownerId
+        Page<Tenant> pageParam = new Page<>(page, size);
+        LambdaQueryWrapper<Tenant> wrapper = new LambdaQueryWrapper<Tenant>()
+                .eq(status != null, Tenant::getStatus, status)
+                .orderByDesc(Tenant::getCreatedAt);
+        
+        Page<Tenant> result = tenantMapper.selectPage(pageParam, wrapper);
+        
+        Page<TenantVO> voPage = new Page<>(result.getCurrent(), result.getSize(), result.getTotal());
+        voPage.setRecords(result.getRecords().stream().map(this::convertToVO).toList());
+        
+        return voPage;
+    }
+
+    @Override
+    @Transactional
+    public boolean checkOut(Long id, String remark) {
+        Tenant tenant = tenantMapper.selectById(id);
+        if (tenant == null) {
+            throw new BusinessException("租客不存在");
+        }
+        if (!CHECKOUT_ALLOWED_STATUSES.contains(tenant.getStatus())) {
+            throw new BusinessException("只有已入住的租客可以办理退租");
+        }
+        
+        tenant.setStatus(2); // 已退租
+        if (remark != null) {
+            tenant.setRemark(remark);
+        }
+        
+        return tenantMapper.updateById(tenant) > 0;
+    }
+
+    @Override
+    @Transactional
+    public boolean delete(Long id) {
+        Tenant tenant = tenantMapper.selectById(id);
+        if (tenant == null) {
+            throw new BusinessException("租客不存在");
+        }
+        if (tenant.getStatus() == 1) {
+            throw new BusinessException("已入住的租客无法删除");
+        }
+        
+        return tenantMapper.deleteById(id) > 0;
+    }
+
+    private TenantVO convertToVO(Tenant tenant) {
+        TenantVO vo = new TenantVO();
+        vo.setId(tenant.getId());
+        vo.setUserId(tenant.getUserId());
+        vo.setPropertyId(tenant.getPropertyId());
+        vo.setName(tenant.getName());
+        vo.setPhone(tenant.getPhone());
+        vo.setIdCard(tenant.getIdCard());
+        vo.setLeaseStartDate(tenant.getLeaseStartDate());
+        vo.setLeaseEndDate(tenant.getLeaseEndDate());
+        vo.setEmergencyContact(tenant.getEmergencyContact());
+        vo.setEmergencyPhone(tenant.getEmergencyPhone());
+        vo.setStatus(tenant.getStatus());
+        vo.setStatusName(getStatusName(tenant.getStatus()));
+        vo.setRemark(tenant.getRemark());
+        vo.setCreatedAt(tenant.getCreatedAt());
+        vo.setUpdatedAt(tenant.getUpdatedAt());
+        return vo;
+    }
+
+    private String getStatusName(Integer status) {
+        return switch (status) {
+            case 0 -> "待入住";
+            case 1 -> "已入住";
+            case 2 -> "已退租";
+            default -> "未知";
+        };
     }
 }

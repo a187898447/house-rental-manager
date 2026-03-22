@@ -1,43 +1,41 @@
 package com.rental.bill.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.rental.bill.dto.AppointmentCreateDTO;
-import com.rental.bill.vo.AppointmentVO;
-import com.rental.bill.vo.PropertyPublicVO;
+import com.rental.bill.dto.TenantCreateDTO;
+import com.rental.bill.vo.TenantVO;
 
 /**
  * 租客服务接口
  */
 public interface TenantService {
-
+    
     /**
-     * 公开房源列表（无需登录）
+     * 入住登记
      */
-    Page<PropertyPublicVO> getPublicPropertyList(Integer page, Integer size);
-
+    Long checkIn(TenantCreateDTO dto);
+    
     /**
-     * 公开房源详情（无需登录）
+     * 租客详情
      */
-    PropertyPublicVO getPublicPropertyDetail(Long id);
-
+    TenantVO getDetail(Long id);
+    
     /**
-     * 预约看房
+     * 房源租客列表
      */
-    Long createAppointment(AppointmentCreateDTO dto);
-
+    Page<TenantVO> getPropertyTenants(Long propertyId, Integer status, Integer page, Integer size);
+    
     /**
-     * 我的预约列表（租客）
+     * 房东所有租客
      */
-    Page<AppointmentVO> getMyAppointments(String tenantPhone, Integer page, Integer size);
-
+    Page<TenantVO> getOwnerTenants(Long ownerId, Integer status, Integer page, Integer size);
+    
     /**
-     * 收到的预约列表（房东）
+     * 退租办理
      */
-    Page<AppointmentVO> getOwnerAppointments(Long ownerId, Integer page, Integer size);
-
+    boolean checkOut(Long id, String remark);
+    
     /**
-     * 更新预约状态
+     * 删除租客
      */
-    boolean updateAppointmentStatus(Long id, Integer status);
+    boolean delete(Long id);
 }
