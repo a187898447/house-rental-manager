@@ -27,6 +27,12 @@
       }
     },
     {
+      "path": "pages/landlord/property/detail/index",
+      "style": {
+        "navigationBarTitleText": "房源详情"
+      }
+    },
+    {
       "path": "pages/landlord/tenant/list/index",
       "style": {
         "navigationBarTitleText": "租客管理"
