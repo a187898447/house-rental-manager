@@ -19,30 +19,88 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
+        # 用户服务 - /api/user/** -> /user
         - id: rental-user
           uri: lb://rental-user
           predicates:
             - Path=/api/user/**
           filters:
             - StripPrefix=1
+        # 房源服务 - /api/property/** -> /property
         - id: rental-property
           uri: lb://rental-property
           predicates:
             - Path=/api/property/**
           filters:
             - StripPrefix=1
-        - id: rental-bill
+        # 账单服务 - 路由多个路径到同一个服务
+        - id: rental-bill-contract
+          uri: lb://rental-bill
+          predicates:
+            - Path=/api/contract/**
+          filters:
+            - StripPrefix=1
+        - id: rental-bill-rent
+          uri: lb://rental-bill
+          predicates:
+            - Path=/api/rent/**
+          filters:
+            - StripPrefix=1
+        - id: rental-bill-tenant
+          uri: lb://rental-bill
+          predicates:
+            - Path=/api/tenant/**
+          filters:
+            - StripPrefix=1
+        - id: rental-bill-repair
+          uri: lb://rental-bill
+          predicates:
+            - Path=/api/repair/**
+          filters:
+            - StripPrefix=1
+        # 预约看房
+        - id: rental-bill-appointment
+          uri: lb://rental-bill
+          predicates:
+            - Path=/api/appointment/**
+          filters:
+            - StripPrefix=1
+        # 账单
+        - id: rental-bill-bill
           uri: lb://rental-bill
           predicates:
             - Path=/api/bill/**
           filters:
             - StripPrefix=1
+        # 押金
+        - id: rental-bill-deposit
+          uri: lb://rental-bill
+          predicates:
+            - Path=/api/deposit/**
+          filters:
+            - StripPrefix=1
+        # 水电账单
+        - id: rental-bill-utility
+          uri: lb://rental-bill
+          predicates:
+            - Path=/api/utility/**
+          filters:
+            - StripPrefix=1
+        # 其他费用
+        - id: rental-bill-otherfee
+          uri: lb://rental-bill
+          predicates:
+            - Path=/api/other-fee/**
+          filters:
+            - StripPrefix=1
+        # 通知服务 - /api/notify/** -> /notify
         - id: rental-notify
           uri: lb://rental-notify
           predicates:
             - Path=/api/notify/**
           filters:
             - StripPrefix=1
+        # 支付服务 - /api/pay/** -> /pay
         - id: rental-pay
           uri: lb://rental-pay
           predicates:
