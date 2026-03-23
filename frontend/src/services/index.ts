@@ -181,6 +181,40 @@ export interface Repair {
 }
 
 /**
+ * 通知消息类型
+ */
+export interface NotifyMessage {
+  id: number
+  userId: number
+  senderId?: number
+  type: string
+  title: string
+  content: string
+  relatedId?: number
+  relatedType?: string
+  isRead: boolean
+  readAt?: string
+  createdAt: string
+}
+
+/**
+ * 预约类型
+ */
+export interface Appointment {
+  id: number
+  propertyId: number
+  userId?: number
+  name: string
+  phone: string
+  appointmentDate: string
+  appointmentTime: string
+  status: number
+  remark?: string
+  rejectReason?: string
+  createdAt: string
+}
+
+/**
  * API 响应类型
  */
 export interface ApiResponse<T = any> {
