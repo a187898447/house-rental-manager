@@ -90,7 +90,7 @@ spring:
         - id: rental-bill-otherfee
           uri: lb://rental-bill
           predicates:
-            - Path=/api/other-fee/**
+            - Path=/api/fee/**
           filters:
             - StripPrefix=1
         # 通知服务 - /api/notify/** -> /notify
