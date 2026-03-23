@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -79,7 +80,8 @@ public class UtilityBillServiceImpl implements UtilityBillService {
         if (bill == null) throw new BusinessException("水电账单不存在");
         if (bill.getStatus() != 0) throw new BusinessException("状态不正确");
         bill.setStatus(1); // 已支付
-        bill.setPayDate(LocalDateTime.now());
+        bill.setPayDate(LocalDate.now());
+        bill.setUpdatedAt(LocalDateTime.now());
         return utilityBillMapper.updateById(bill) > 0;
     }
 

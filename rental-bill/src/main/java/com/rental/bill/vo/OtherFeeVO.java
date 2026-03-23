@@ -2,6 +2,7 @@ package com.rental.bill.vo;
 
 import lombok.Data;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,7 +18,7 @@ public class OtherFeeVO {
     private String billMonth;
     private Integer status;
     private String statusName;
-    private LocalDateTime payDate;
+    private LocalDate payDate;
     private String remark;
     private LocalDateTime createdAt;
 }

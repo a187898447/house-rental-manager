@@ -16,9 +16,9 @@ public class DepositVO {
     private BigDecimal amount;
     private Integer status;
     private String statusName;
-    private LocalDateTime payDate;
+    private LocalDate payDate;
     private BigDecimal refundAmount;
-    private LocalDateTime refundDate;
+    private LocalDate refundDate;
     private String remark;
     private LocalDateTime createdAt;
 }
