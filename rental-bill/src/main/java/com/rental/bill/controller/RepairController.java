@@ -86,22 +86,4 @@ public class RepairController {
         boolean result = repairService.cancel(id);
         return Result.success("已取消", result);
     }
-
-    @PutMapping("/{id}/status")
-    @Operation(summary = "更新报修状态")
-    @Parameter(name = "id", description = "报修ID")
-    public Result<Boolean> updateStatus(
-            @PathVariable Long id,
-            @RequestParam String status,
-            @RequestParam(required = false) String remark) {
-        // 将字符串状态转换为整数: processing=1, completed=2, cancelled=3
-        Integer statusCode = switch (status) {
-            case "processing" -> 1;
-            case "completed" -> 2;
-            case "cancelled" -> 3;
-            default -> 0;
-        };
-        boolean result = repairService.updateStatus(id, statusCode, remark);
-        return Result.success("状态更新成功", result);
-    }
 }

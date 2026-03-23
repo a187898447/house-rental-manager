@@ -3,16 +3,18 @@ FROM maven:3.9-eclipse-temurin-17 AS builder
 
 WORKDIR /app
 
-# 配置 Maven 镜像
-RUN mkdir -p /root/.m2 && \
-    echo '<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd"> <mirrors> <mirror> <id>aliyun</id> <mirrorOf>central</mirrorOf> <name>Aliyun Maven</name> <url>https://maven.aliyun.com/repository/public</url> </mirror> </mirrors> </settings>' > /root/.m2/settings.xml
+COPY pom.xml .
+COPY rental-common/pom.xml rental-common/
+COPY rental-property/pom.xml rental-property/
+
+RUN mvn dependency:go-offline -B
 
 COPY . .
 
-RUN mvn clean package -DskipTests -pl rental-property -am -e
+RUN mvn clean package -DskipTests -pl rental-property -am
 
 # 运行阶段
-FROM eclipse-temurin:17-jre
+FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /app
 

@@ -2,7 +2,6 @@ package com.rental.user.controller;
 
 import com.rental.common.result.Result;
 import com.rental.user.dto.BindPhoneRequest;
-import com.rental.user.dto.SendCodeRequest;
 import com.rental.user.dto.WxLoginRequest;
 import com.rental.user.entity.User;
 import com.rental.user.service.UserService;

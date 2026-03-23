@@ -26,13 +26,6 @@ spring:
             - Path=/api/user/**
           filters:
             - StripPrefix=1
-        # 认证服务 - /api/auth/** -> /user (兼容前端)
-        - id: rental-user-auth
-          uri: lb://rental-user
-          predicates:
-            - Path=/api/auth/**
-          filters:
-            - StripPrefix=1
         # 房源服务 - /api/property/** -> /property
         - id: rental-property
           uri: lb://rental-property
@@ -47,13 +40,6 @@ spring:
             - Path=/api/contract/**
           filters:
             - StripPrefix=1
-        # 合同（复数形式）
-        - id: rental-bill-contracts
-          uri: lb://rental-bill
-          predicates:
-            - Path=/api/contracts/**
-          filters:
-            - StripPrefix=1
         - id: rental-bill-rent
           uri: lb://rental-bill
           predicates:
@@ -66,24 +52,10 @@ spring:
             - Path=/api/tenant/**
           filters:
             - StripPrefix=1
-        # 租客（复数形式）
-        - id: rental-bill-tenants
-          uri: lb://rental-bill
-          predicates:
-            - Path=/api/tenants/**
-          filters:
-            - StripPrefix=1
         - id: rental-bill-repair
           uri: lb://rental-bill
           predicates:
             - Path=/api/repair/**
-          filters:
-            - StripPrefix=1
-        # 报修（复数形式）
-        - id: rental-bill-repairs
-          uri: lb://rental-bill
-          predicates:
-            - Path=/api/repairs/**
           filters:
             - StripPrefix=1
         # 预约看房

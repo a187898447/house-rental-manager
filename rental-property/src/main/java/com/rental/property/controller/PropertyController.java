@@ -1,6 +1,5 @@
 package com.rental.property.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rental.common.result.Result;
 import com.rental.property.dto.PropertyCreateDTO;
 import com.rental.property.dto.PropertyQueryDTO;
@@ -28,7 +27,7 @@ public class PropertyController {
 
     @GetMapping("/list")
     @Operation(summary = "分页查询房源列表")
-    public Result<Page<PropertyVO>> list(PropertyQueryDTO queryDTO, Authentication authentication) {
+    public Result<PropertyVO> list(PropertyQueryDTO queryDTO, Authentication authentication) {
         // 从认证信息获取房东ID
         Long ownerId = (Long) authentication.getPrincipal();
         queryDTO.setOwnerId(ownerId);
@@ -75,7 +74,7 @@ public class PropertyController {
 
     @GetMapping("/public/list")
     @Operation(summary = "公开房源列表（无需登录）")
-    public Result<Page<PropertyVO>> getPublicList(PropertyQueryDTO queryDTO) {
+    public Result<PropertyVO> getPublicList(PropertyQueryDTO queryDTO) {
         // 不需要ownerId筛选，返回所有公开房源
         queryDTO.setOwnerId(null);
         var page = propertyService.queryPage(queryDTO);
@@ -88,24 +87,5 @@ public class PropertyController {
     public Result<PropertyVO> getPublicDetail(@PathVariable Long id) {
         PropertyVO vo = propertyService.getDetail(id);
         return Result.success(vo);
-    }
-
-    // ========== 水电费配置 ==========
-
-    @GetMapping("/{id}/utility-config")
-    @Operation(summary = "获取房源水电费配置")
-    @Parameter(name = "id", description = "房源ID")
-    public Result<PropertyVO> getUtilityConfig(@PathVariable Long id) {
-        PropertyVO vo = propertyService.getDetail(id);
-        return Result.success(vo);
-    }
-
-    @PutMapping("/{id}/utility-config")
-    @Operation(summary = "更新房源水电费配置")
-    @Parameter(name = "id", description = "房源ID")
-    public Result<Boolean> updateUtilityConfig(@PathVariable Long id, 
-            @RequestBody com.rental.property.dto.UtilityConfigDTO dto) {
-        boolean result = propertyService.updateUtilityConfig(id, dto);
-        return Result.success("水电费配置更新成功", result);
     }
 }

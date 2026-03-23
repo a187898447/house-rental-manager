@@ -31,6 +31,7 @@
         <spring-cloud-alibaba.version>2023.0.1.2</spring-cloud-alibaba.version>
         <mybatis-plus.version>3.5.6</mybatis-plus.version>
         <knife4j.version>4.5.0</knife4j.version>
+        <dm.version>3.2.12</dm.version>
     </properties>
 
     <dependencyManagement>
@@ -76,11 +77,11 @@
                 <version>${knife4j.version}</version>
             </dependency>
 
-            <!-- MySQL 驱动 -->
+            <!-- 达梦数据库驱动 -->
             <dependency>
-                <groupId>com.mysql</groupId>
-                <artifactId>mysql-connector-j</artifactId>
-                <version>8.3.0</version>
+                <groupId>com.dameng</groupId>
+                <artifactId>DmJdbcDriver18</artifactId>
+                <version>${dm.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -92,13 +93,6 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>repackage</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

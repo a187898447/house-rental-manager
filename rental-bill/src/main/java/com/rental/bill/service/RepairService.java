@@ -43,9 +43,4 @@ public interface RepairService {
      * 取消报修
      */
     boolean cancel(Long id);
-
-    /**
-     * 更新报修状态
-     */
-    boolean updateStatus(Long id, Integer status, String remark);
 }

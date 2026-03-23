@@ -48,12 +48,4 @@ public interface PropertyService extends IService<Property> {
      * @return 是否成功
      */
     boolean deleteProperty(Long id);
-
-    /**
-     * 更新水电费配置
-     * @param id 房源ID
-     * @param dto 水电费配置
-     * @return 是否成功
-     */
-    boolean updateUtilityConfig(Long id, com.rental.property.dto.UtilityConfigDTO dto);
 }

@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -76,7 +75,6 @@ public class DepositServiceImpl implements DepositService {
         if (deposit.getStatus() != 0) throw new BusinessException("状态不正确");
         deposit.setStatus(1); // 已缴纳
         deposit.setPayDate(LocalDate.now());
-        deposit.setUpdatedAt(LocalDateTime.now());
         return depositMapper.updateById(deposit) > 0;
     }
 
@@ -89,7 +87,6 @@ public class DepositServiceImpl implements DepositService {
         deposit.setStatus(3); // 已退还
         deposit.setRefundAmount(refundAmount);
         deposit.setRefundDate(LocalDate.now());
-        deposit.setUpdatedAt(LocalDateTime.now());
         return depositMapper.updateById(deposit) > 0;
     }
 
