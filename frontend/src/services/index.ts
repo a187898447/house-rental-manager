@@ -8,7 +8,7 @@ interface RequestOptions {
   header?: Record<string, string>
 }
 
-const baseURL = 'http://localhost:8080' // TODO: 配置实际后端地址
+const baseURL = 'https://api.example.com' // TODO: 配置实际后端地址
 
 /**
  * 统一请求封装

@@ -137,26 +137,6 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
         return result;
     }
 
-    @Override
-    @Transactional
-    public boolean updateUtilityConfig(Long id, com.rental.property.dto.UtilityConfigDTO dto) {
-        Property property = this.getById(id);
-        if (property == null) {
-            throw new BusinessException("房源不存在");
-        }
-        
-        if (dto.getWaterUnitPrice() != null) {
-            property.setWaterUnitPrice(dto.getWaterUnitPrice());
-        }
-        if (dto.getElectricityUnitPrice() != null) {
-            property.setElectricityUnitPrice(dto.getElectricityUnitPrice());
-        }
-        
-        boolean result = this.updateById(property);
-        log.info("水电费配置更新成功: id={}", id);
-        return result;
-    }
-
     /**
      * 分页结果转换
      */

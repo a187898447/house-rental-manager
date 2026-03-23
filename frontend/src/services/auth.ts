@@ -8,7 +8,7 @@ export const wechatLogin = async () => {
   const loginRes = await uni.login()
   
   return request<LoginResponse>({
-    url: '/api/user/login',
+    url: '/api/auth/wechat/login',
     method: 'POST',
     data: { code: loginRes.code }
   })
@@ -19,7 +19,7 @@ export const wechatLogin = async () => {
  */
 export const bindPhone = async (phone: string, code: string) => {
   return request<LoginResponse>({
-    url: '/api/user/bind-phone',
+    url: '/api/auth/bind-phone',
     method: 'POST',
     data: { phone, code }
   })
@@ -30,7 +30,7 @@ export const bindPhone = async (phone: string, code: string) => {
  */
 export const getUserInfo = async () => {
   return request<User>({
-    url: '/api/user/info',
+    url: '/api/auth/userinfo',
     method: 'GET'
   })
 }
@@ -40,7 +40,7 @@ export const getUserInfo = async () => {
  */
 export const updateUserInfo = async (data: Partial<User>) => {
   return request<User>({
-    url: '/api/user/info',
+    url: '/api/auth/userinfo',
     method: 'PUT',
     data
   })
@@ -51,7 +51,7 @@ export const updateUserInfo = async (data: Partial<User>) => {
  */
 export const sendVerifyCode = async (phone: string) => {
   return request<{ success: boolean }>({
-    url: '/api/user/send-code',
+    url: '/api/auth/send-code',
     method: 'POST',
     data: { phone }
   })
