@@ -60,16 +60,6 @@ public class UserController {
         return Result.success(convertToVO(user));
     }
 
-    @PutMapping
-    @Operation(summary = "更新用户信息")
-    public Result<UserVO> updateUserInfo(@RequestBody User user, Authentication authentication) {
-        Long userId = (Long) authentication.getPrincipal();
-        user.setId(userId);
-        userService.updateById(user);
-        User updatedUser = userService.getById(userId);
-        return Result.success(convertToVO(updatedUser));
-    }
-
     private UserVO convertToVO(User user) {
         if (user == null) {
             return null;

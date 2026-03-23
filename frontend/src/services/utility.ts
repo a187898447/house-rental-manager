@@ -1,5 +1,5 @@
 import { request } from './index'
-import type { UtilityBill, ApiResponse } from '@/types'
+import type { UtilityFee, ApiResponse } from '@/types'
 
 /**
  * 获取水电费配置
@@ -30,7 +30,7 @@ export const getUtilityBills = async (params?: {
   tenantId?: string
   month?: string
 }) => {
-  return request<UtilityBill[]>({
+  return request<UtilityFee[]>({
     url: '/api/utility/bills',
     method: 'GET',
     data: params
@@ -47,7 +47,7 @@ export const createUtilityBill = async (data: {
   waterUsage?: number
   electricityUsage?: number
 }) => {
-  return request<UtilityBill>({
+  return request<UtilityFee>({
     url: '/api/utility/bills',
     method: 'POST',
     data
@@ -58,8 +58,8 @@ export const createUtilityBill = async (data: {
  * 标记水电费已支付
  */
 export const markUtilityPaid = async (id: string) => {
-  return request<UtilityBill>({
-    url: `/api/utility/${id}/pay`,
+  return request<UtilityFee>({
+    url: `/api/utility/bills/${id}/pay`,
     method: 'POST'
   })
 }

@@ -6,7 +6,7 @@ import type { Tenant, ApiResponse } from '@/types'
  */
 export const getTenants = async (params?: { propertyId?: string; status?: string }) => {
   return request<Tenant[]>({
-    url: '/api/tenant',
+    url: '/api/tenants',
     method: 'GET',
     data: params
   })
@@ -17,7 +17,7 @@ export const getTenants = async (params?: { propertyId?: string; status?: string
  */
 export const getTenantDetail = async (id: string) => {
   return request<Tenant>({
-    url: `/api/tenant/${id}`,
+    url: `/api/tenants/${id}`,
     method: 'GET'
   })
 }
@@ -36,7 +36,7 @@ export const checkIn = async (data: {
   emergencyPhone?: string
 }) => {
   return request<Tenant>({
-    url: '/api/tenant/checkin',
+    url: '/api/tenants/checkin',
     method: 'POST',
     data
   })
@@ -47,7 +47,7 @@ export const checkIn = async (data: {
  */
 export const checkOut = async (id: string, data?: { remark?: string }) => {
   return request<Tenant>({
-    url: `/api/tenant/${id}/checkout`,
+    url: `/api/tenants/${id}/checkout`,
     method: 'POST',
     data
   })
@@ -58,7 +58,7 @@ export const checkOut = async (id: string, data?: { remark?: string }) => {
  */
 export const deleteTenant = async (id: string) => {
   return request<{ success: boolean }>({
-    url: `/api/tenant/${id}`,
+    url: `/api/tenants/${id}`,
     method: 'DELETE'
   })
 }
