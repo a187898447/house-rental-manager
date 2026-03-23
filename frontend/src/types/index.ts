@@ -2,184 +2,182 @@
  * 用户类型
  */
 export interface User {
-  id: string
-  openid: string
+  id: number
   phone: string
   role: 'landlord' | 'tenant'
   avatar?: string
   nickname?: string
+  openid?: string
+  status?: number
 }
 
 /**
  * 房源类型
  */
 export interface Property {
-  id: string
-  buildingId: string
-  building: string
-  unit: string
+  id: number
+  ownerId: number
+  buildingId?: number
+  buildingName?: string
+  unit?: string
   roomNumber: string
-  rent: number
-  status: 'vacant' | 'rented' | 'rented_unpaid' | 'rented_paid'
-  images: string[]
+  rentAmount: number
+  depositAmount?: number
+  status: number
+  statusName?: string
+  dailyRate?: number
   area?: number
-  floor?: string
-  orientation?: string
-  description?: string
-  createTime?: string
-  updateTime?: string
+  remark?: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 /**
  * 房源输入类型（新增/编辑用）
  */
 export interface PropertyInput {
-  buildingId?: string
-  building: string
-  unit: string
+  ownerId?: number
+  buildingId?: number
+  unit?: string
   roomNumber: string
-  rent: number
-  images?: string[]
+  rentAmount: number
+  depositAmount?: number
+  dailyRate?: number
   area?: number
-  floor?: string
-  orientation?: string
-  description?: string
+  remark?: string
 }
 
 /**
  * 租客类型
  */
 export interface Tenant {
-  id: string
-  propertyId: string
+  id: number
+  propertyId: number
+  userId: number
   name: string
   phone: string
-  leaseStart: string
-  leaseEnd: string
-  status: 'living' | 'checkout_pending' | 'checkout'
-  idCard?: string
-  emergencyContact?: string
-  emergencyPhone?: string
-  createTime?: string
+  leaseStartDate?: string
+  leaseEndDate?: string
+  status: number
+  createdAt?: string
+  updatedAt?: string
 }
 
 /**
  * 租金账单类型
  */
-export interface RentBill {
-  id: string
-  propertyId: string
-  tenantId: string
+export interface RentRecord {
+  id: number
+  tenantId: number
+  propertyId: number
   amount: number
   days?: number
   dailyRate?: number
-  status: 'unpaid' | 'paid'
-  dueDate: string
+  payMonth: string
   payDate?: string
+  status: number
   remindCount: number
-  month: string
-  year: number
-  type: 'rent' | 'deposit' | 'utility' | 'other'
+  remark?: string
+  createdAt?: string
 }
 
 /**
  * 账单输入类型
  */
 export interface BillInput {
-  propertyId: string
-  tenantId: string
+  tenantId: number
+  propertyId: number
   amount: number
   days?: number
   dailyRate?: number
-  month: string
-  year: number
-  type: 'rent' | 'deposit' | 'utility' | 'other'
+  payMonth: string
+  remark?: string
 }
 
 /**
  * 押金类型
  */
 export interface Deposit {
-  id: string
-  propertyId: string
-  tenantId: string
+  id: number
+  tenantId: number
+  propertyId: number
   amount: number
-  status: 'held' | 'refunded' | 'partially_refunded'
-  createTime: string
-  refundTime?: string
+  status: number
+  refundDate?: string
   refundAmount?: number
   remark?: string
+  createdAt?: string
 }
 
 /**
  * 水电费类型
  */
-export interface UtilityFee {
-  id: string
-  propertyId: string
-  tenantId: string
-  month: string
-  year: number
-  waterUsage?: number
-  waterFee?: number
-  electricityUsage?: number
-  electricityFee?: number
-  totalFee: number
-  status: 'unpaid' | 'paid'
-  dueDate: string
+export interface UtilityBill {
+  id: number
+  tenantId: number
+  propertyId: number
+  billMonth: string
+  waterReading?: number
+  waterAmount?: number
+  electricityReading?: number
+  electricityAmount?: number
+  source: number
+  status: number
   payDate?: string
-  readingDate?: string
+  remark?: string
+  createdAt?: string
 }
 
 /**
  * 其他费用类型
  */
 export interface OtherFee {
-  id: string
-  propertyId: string
-  tenantId: string
-  name: string
+  id: number
+  tenantId: number
+  propertyId: number
+  feeType: string
   amount: number
-  dueDate: string
-  status: 'unpaid' | 'paid'
+  billMonth: string
+  status: number
+  payDate?: string
   remark?: string
+  createdAt?: string
 }
 
 /**
  * 合同类型
  */
 export interface Contract {
-  id: string
-  tenantId: string
-  propertyId: string
+  id: number
+  tenantId: number
+  propertyId: number
   rentAmount: number
   depositAmount: number
-  waterFee: number
-  electricityFee: number
-  otherFees: OtherFee[]
-  signImageUrl: string
-  status: 'draft' | 'signed'
-  leaseStart: string
-  leaseEnd: string
-  createTime: string
-  signTime?: string
+  waterFee?: number
+  electricityFee?: number
+  otherFees?: string
+  startDate: string
+  endDate: string
+  signUrl?: string
+  status: number
+  createdAt?: string
 }
 
 /**
  * 报修类型
  */
 export interface Repair {
-  id: string
-  propertyId: string
-  tenantId?: string
+  id: number
+  tenantId: number
+  propertyId: number
   title: string
-  description: string
-  images: string[]
-  status: 'pending' | 'processing' | 'completed' | 'cancelled'
-  contactPhone?: string
-  createTime: string
-  completeTime?: string
-  remark?: string
+  description?: string
+  images?: string
+  status: number
+  handlerId?: number
+  handleRemark?: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 /**
@@ -189,6 +187,7 @@ export interface ApiResponse<T = any> {
   code: number
   message: string
   data: T
+  timestamp?: number
 }
 
 /**
@@ -196,16 +195,20 @@ export interface ApiResponse<T = any> {
  */
 export interface LoginResponse {
   token: string
-  needBindPhone: boolean
-  userInfo?: User
+  userId: number
+  nickname?: string
+  avatarUrl?: string
+  role?: string
+  phone?: string
 }
 
 /**
  * 分页响应
  */
 export interface PageResponse<T> {
-  list: T[]
+  records: T[]
   total: number
-  page: number
-  pageSize: number
+  size: number
+  current: number
+  pages: number
 }

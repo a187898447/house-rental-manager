@@ -1,65 +1,214 @@
-import { useUserStore } from '@/stores/user'
-import type { ApiResponse } from '@/types'
-
-interface RequestOptions {
-  url: string
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
-  data?: any
-  header?: Record<string, string>
+/**
+ * 用户类型
+ */
+export interface User {
+  id: number
+  phone: string
+  role: 'landlord' | 'tenant'
+  avatar?: string
+  nickname?: string
+  openid?: string
+  status?: number
 }
 
-const baseURL = 'https://api.example.com' // TODO: 配置实际后端地址
+/**
+ * 房源类型
+ */
+export interface Property {
+  id: number
+  ownerId: number
+  buildingId?: number
+  buildingName?: string
+  unit?: string
+  roomNumber: string
+  rentAmount: number
+  depositAmount?: number
+  status: number
+  statusName?: string
+  dailyRate?: number
+  area?: number
+  remark?: string
+  createdAt?: string
+  updatedAt?: string
+}
 
 /**
- * 统一请求封装
+ * 房源输入类型（新增/编辑用）
  */
-export const request = async <T = any>(options: RequestOptions): Promise<T> => {
-  const userStore = useUserStore()
-  
-  const header: Record<string, string> = {
-    'Content-Type': 'application/json',
-    ...options.header
-  }
-  
-  // 添加认证 Token
-  if (userStore.token) {
-    header['Authorization'] = `Bearer ${userStore.token}`
-  }
-  
-  return new Promise<T>((resolve, reject) => {
-    uni.request({
-      url: baseURL + options.url,
-      method: options.method || 'GET',
-      data: options.data,
-      header,
-      success: (res) => {
-        if (res.statusCode === 200) {
-          const response = res.data as ApiResponse<T>
-          if (response.code === 200 || response.code === 0) {
-            resolve(response.data)
-          } else {
-            uni.showToast({
-              title: response.message || '请求失败',
-              icon: 'none'
-            })
-            reject(response)
-          }
-        } else if (res.statusCode === 401) {
-          // Token 过期，跳转登录
-          userStore.logout()
-          uni.reLaunch({ url: '/pages/landlord/index/index' })
-          reject(new Error('未授权'))
-        } else {
-          reject(res.data)
-        }
-      },
-      fail: (err) => {
-        uni.showToast({
-          title: '网络请求失败',
-          icon: 'none'
-        })
-        reject(err)
-      }
-    })
-  })
+export interface PropertyInput {
+  ownerId?: number
+  buildingId?: number
+  unit?: string
+  roomNumber: string
+  rentAmount: number
+  depositAmount?: number
+  dailyRate?: number
+  area?: number
+  remark?: string
+}
+
+/**
+ * 租客类型
+ */
+export interface Tenant {
+  id: number
+  propertyId: number
+  userId: number
+  name: string
+  phone: string
+  leaseStartDate?: string
+  leaseEndDate?: string
+  status: number
+  createdAt?: string
+  updatedAt?: string
+}
+
+/**
+ * 租金账单类型
+ */
+export interface RentRecord {
+  id: number
+  tenantId: number
+  propertyId: number
+  amount: number
+  days?: number
+  dailyRate?: number
+  payMonth: string
+  payDate?: string
+  status: number
+  remindCount: number
+  remark?: string
+  createdAt?: string
+}
+
+/**
+ * 账单输入类型
+ */
+export interface BillInput {
+  tenantId: number
+  propertyId: number
+  amount: number
+  days?: number
+  dailyRate?: number
+  payMonth: string
+  remark?: string
+}
+
+/**
+ * 押金类型
+ */
+export interface Deposit {
+  id: number
+  tenantId: number
+  propertyId: number
+  amount: number
+  status: number
+  refundDate?: string
+  refundAmount?: number
+  remark?: string
+  createdAt?: string
+}
+
+/**
+ * 水电费类型
+ */
+export interface UtilityBill {
+  id: number
+  tenantId: number
+  propertyId: number
+  billMonth: string
+  waterReading?: number
+  waterAmount?: number
+  electricityReading?: number
+  electricityAmount?: number
+  source: number
+  status: number
+  payDate?: string
+  remark?: string
+  createdAt?: string
+}
+
+/**
+ * 其他费用类型
+ */
+export interface OtherFee {
+  id: number
+  tenantId: number
+  propertyId: number
+  feeType: string
+  amount: number
+  billMonth: string
+  status: number
+  payDate?: string
+  remark?: string
+  createdAt?: string
+}
+
+/**
+ * 合同类型
+ */
+export interface Contract {
+  id: number
+  tenantId: number
+  propertyId: number
+  rentAmount: number
+  depositAmount: number
+  waterFee?: number
+  electricityFee?: number
+  otherFees?: string
+  startDate: string
+  endDate: string
+  signUrl?: string
+  status: number
+  createdAt?: string
+}
+
+/**
+ * 报修类型
+ */
+export interface Repair {
+  id: number
+  tenantId: number
+  propertyId: number
+  title: string
+  description?: string
+  images?: string
+  status: number
+  handlerId?: number
+  handleRemark?: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+/**
+ * API 响应类型
+ */
+export interface ApiResponse<T = any> {
+  code: number
+  message: string
+  data: T
+  timestamp?: number
+}
+
+/**
+ * 登录响应
+ */
+export interface LoginResponse {
+  token: string
+  userId: number
+  nickname?: string
+  avatarUrl?: string
+  role?: string
+  phone?: string
+}
+
+/**
+ * 分页响应
+ */
+export interface PageResponse<T> {
+  records: T[]
+  total: number
+  size: number
+  current: number
+  pages: number
 }
