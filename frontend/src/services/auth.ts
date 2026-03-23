@@ -40,7 +40,7 @@ export const getUserInfo = async () => {
  */
 export const updateUserInfo = async (data: Partial<User>) => {
   return request<User>({
-    url: '/api/user/info',
+    url: '/api/user',
     method: 'PUT',
     data
   })

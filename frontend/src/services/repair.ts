@@ -10,7 +10,7 @@ export const getRepairs = async (params?: {
   status?: string
 }) => {
   return request<Repair[]>({
-    url: '/api/repairs',
+    url: '/api/repair',
     method: 'GET',
     data: params
   })
@@ -21,7 +21,7 @@ export const getRepairs = async (params?: {
  */
 export const getRepairDetail = async (id: string) => {
   return request<Repair>({
-    url: `/api/repairs/${id}`,
+    url: `/api/repair/${id}`,
     method: 'GET'
   })
 }
@@ -37,7 +37,7 @@ export const createRepair = async (data: {
   contactPhone?: string
 }) => {
   return request<Repair>({
-    url: '/api/repairs',
+    url: '/api/repair',
     method: 'POST',
     data
   })
@@ -51,7 +51,7 @@ export const updateRepairStatus = async (id: string, data: {
   remark?: string
 }) => {
   return request<Repair>({
-    url: `/api/repairs/${id}/status`,
+    url: `/api/repair/${id}/status`,
     method: 'PUT',
     data
   })
