@@ -76,6 +76,14 @@ public class ContractController {
         return Result.success("合同签署成功", result);
     }
 
+    @GetMapping("/{id}/sign-url")
+    @Operation(summary = "获取合同签署URL")
+    @Parameter(name = "id", description = "合同ID")
+    public Result<String> getSignUrl(@PathVariable Long id) {
+        String url = contractService.getSignUrl(id);
+        return Result.success(url);
+    }
+
     @PutMapping("/{id}/status")
     @Operation(summary = "更新合同状态")
     @Parameter(name = "id", description = "合同ID")

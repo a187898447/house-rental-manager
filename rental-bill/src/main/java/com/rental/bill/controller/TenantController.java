@@ -24,23 +24,6 @@ public class TenantController {
 
     private final TenantService tenantService;
 
-    @GetMapping("/property/list")
-    @Operation(summary = "公开房源列表（无需登录）")
-    public Result<Page<PropertyPublicVO>> getPublicPropertyList(
-            @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(defaultValue = "10") Integer size) {
-        var result = tenantService.getPublicPropertyList(page, size);
-        return Result.success(result);
-    }
-
-    @GetMapping("/property/{id}")
-    @Operation(summary = "公开房源详情（无需登录）")
-    @Parameter(name = "id", description = "房源ID")
-    public Result<PropertyPublicVO> getPublicPropertyDetail(@PathVariable Long id) {
-        var result = tenantService.getPublicPropertyDetail(id);
-        return Result.success(result);
-    }
-
     @PostMapping("/appointment")
     @Operation(summary = "预约看房")
     public Result<Long> createAppointment(@RequestBody AppointmentCreateDTO dto) {

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -75,7 +75,7 @@ public class OtherFeeServiceImpl implements OtherFeeService {
         if (fee == null) throw new BusinessException("费用记录不存在");
         if (fee.getStatus() != 0) throw new BusinessException("状态不正确");
         fee.setStatus(1); // 已支付
-        fee.setPayDate(LocalDate.now());
+        fee.setPayDate(LocalDateTime.now());
         return otherFeeMapper.updateById(fee) > 0;
     }
 

@@ -2,7 +2,6 @@ package com.rental.bill.vo;
 
 import lombok.Data;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,7 +16,7 @@ public class UtilityBillVO {
     private BigDecimal electricityAmount;
     private Integer status;
     private String statusName;
-    private LocalDate payDate;
+    private LocalDateTime payDate;
     private String remark;
     private LocalDateTime createdAt;
 }

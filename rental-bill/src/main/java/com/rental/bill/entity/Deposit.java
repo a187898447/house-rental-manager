@@ -19,12 +19,16 @@ public class Deposit {
 
     private Long propertyId;
 
+    private Long contractId;
+
     private BigDecimal amount;
 
     /**
      * 0:待退还 1:已退还 2:部分退还
      */
     private Integer status;
+
+    private LocalDateTime payDate;
 
     private LocalDateTime refundDate;
 
