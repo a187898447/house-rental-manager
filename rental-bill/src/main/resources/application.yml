@@ -14,10 +14,10 @@ spring:
         namespace: public
         file-extension: yaml
   datasource:
-    driver-class-name: dm.jdbc.driver.DmDriver
-    url: jdbc:dm://localhost:5236/RENTAL?schema=RENTAL_BILL&zeroDateTimeBehavior=convertToNull
-    username: SYSDBA
-    password: SYSDBA001
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/rental_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: rental123456
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml

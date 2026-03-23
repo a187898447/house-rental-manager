@@ -3,6 +3,7 @@ package com.rental.bill.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -39,7 +40,7 @@ public class UtilityBill {
      */
     private Integer status;
 
-    private LocalDateTime payDate;
+    private LocalDate payDate;
 
     private String remark;
 
