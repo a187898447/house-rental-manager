@@ -1,5 +1,5 @@
 // 预约服务 - Appointment
-import request from './index'
+import { request } from './index'
 
 export interface Appointment {
   id: number
@@ -22,7 +22,7 @@ export const getMyAppointments = async (params?: {
   size?: number
 }) => {
   return request<{ list: Appointment[]; total: number }>({
-    url: '/api/appointment/my',
+    url: '/api/tenant/appointment/my',
     method: 'GET',
     data: params
   })
@@ -36,7 +36,7 @@ export const getOwnerAppointments = async (params?: {
   size?: number
 }) => {
   return request<{ list: Appointment[]; total: number }>({
-    url: '/api/appointment/owner',
+    url: '/api/tenant/appointment/owner',
     method: 'GET',
     data: params
   })
@@ -52,7 +52,7 @@ export const createAppointment = async (data: {
   remark?: string
 }) => {
   return request<{ id: number }>({
-    url: '/api/appointment',
+    url: '/api/tenant/appointment',
     method: 'POST',
     data
   })
@@ -68,7 +68,7 @@ export const updateAppointmentStatus = async (
   }
 ) => {
   return request<{ success: boolean }>({
-    url: `/api/appointment/${id}/status`,
+    url: `/api/tenant/appointment/${id}/status`,
     method: 'PUT',
     data
   })
@@ -77,7 +77,7 @@ export const updateAppointmentStatus = async (
 // 取消预约
 export const cancelAppointment = async (id: number, remark?: string) => {
   return request<{ success: boolean }>({
-    url: `/api/appointment/${id}/cancel`,
+    url: `/api/tenant/appointment/${id}/cancel`,
     method: 'POST',
     data: { remark }
   })

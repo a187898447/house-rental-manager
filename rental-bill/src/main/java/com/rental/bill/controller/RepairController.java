@@ -86,4 +86,15 @@ public class RepairController {
         boolean result = repairService.cancel(id);
         return Result.success("已取消", result);
     }
+
+    @PutMapping("/{id}/status")
+    @Operation(summary = "更新报修状态")
+    @Parameter(name = "id", description = "报修ID")
+    public Result<Boolean> updateStatus(
+            @PathVariable Long id,
+            @RequestParam Integer status,
+            @RequestParam(required = false) String remark) {
+        boolean result = repairService.updateStatus(id, status, remark);
+        return Result.success("状态更新成功", result);
+    }
 }
