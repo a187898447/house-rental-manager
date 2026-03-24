@@ -38,6 +38,10 @@ export interface Property {
 export interface PropertyInput {
   ownerId?: number
   buildingId?: number
+  name?: string
+  address?: string
+  building?: string
+  type?: string
   unit?: string
   roomNumber: string
   rentAmount: number

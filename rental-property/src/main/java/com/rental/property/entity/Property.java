@@ -19,6 +19,11 @@ public class Property {
 
     private Long buildingId;
 
+    private String name;
+    private String address;
+    private String building;
+    private String type;
+
     private String unit;
 
     private String roomNumber;
