@@ -131,6 +131,7 @@ const handleWechatLogin = async () => {
 // 试用模式 - 无需登录
 const handleDemoLogin = () => {
   // 设置演示用户信息
+  userStore.setToken("demo-token");
   userStore.setUserInfo({
     id: 1,
     nickname: '演示用户',
