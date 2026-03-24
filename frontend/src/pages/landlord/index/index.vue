@@ -11,12 +11,7 @@
     />
     
     <!-- 房源列表 -->
-    <scroll-view 
-      scroll-y 
-      class="property-list"
-      @scrolltolower="onLoadMore"
-      :lower-threshold="100"
-    >
+    <view class="property-list">
       <view v-if="loading && properties.length === 0" class="loading-wrap">
         <u-loading mode="circle"></u-loading>
       </view>
@@ -37,7 +32,7 @@
       <view v-if="loading && properties.length > 0" class="loading-more">
         <u-loading mode="circle"></u-loading>
       </view>
-    </scroll-view>
+    </view>
     
     <!-- 新增按钮 -->
     <view class="add-btn" @click="onAddProperty">
@@ -111,6 +106,10 @@ onMounted(() => {
 .property-list {
   flex: 1;
   padding: 20rpx;
+}
+
+.scroll-view {
+  height: 100%;
 }
 
 .property-items {
