@@ -83,6 +83,7 @@ CREATE TABLE `tenant` (
     `emergency_contact` VARCHAR(100) COMMENT '紧急联系人',
     `emergency_phone` VARCHAR(20) COMMENT '紧急联系电话',
     `status` INT DEFAULT 1 COMMENT '状态: 1-租住中, 2-已退租',
+    `remark` VARCHAR(500) COMMENT '备注',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     `deleted_at` TIMESTAMP NULL COMMENT '删除时间',
