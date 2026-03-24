@@ -101,7 +101,7 @@ const actionText = (type: string) => {
 const fetchLogs = async () => {
   loading.value = true
   try {
-    const type = tabs[currentTab].value
+    const type = tabs[currentTab.value].value
     const res = await getOperationLogs(type ? { type } : {})
     logs.value = res || []
   } catch (e) {

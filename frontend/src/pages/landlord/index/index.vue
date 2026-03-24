@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import type { Property } from '@/types'
 import { usePropertyStore } from '@/stores/property'
 import PropertyCard from '@/components/PropertyCard.vue'
@@ -52,18 +52,19 @@ const currentTab = ref(0)
 const loading = ref(false)
 
 const tabs = [
-  { name: '未出租', value: 'vacant' },
-  { name: '已出租未缴费', value: 'rented_unpaid' },
-  { name: '已出租已缴费', value: 'rented_paid' }
+  { name: '未出租', value: 0 },
+  { name: '已出租未缴费', value: 1 },
+  { name: '已出租已缴费', value: 2 }
 ]
 
-const statusMap = ['vacant', 'rented_unpaid', 'rented_paid']
+const statusMap = [0, 1, 2]
 
-const properties = computed(() => propertyStore.properties)
+// 直接使用 store 中的 properties，不需要 computed 包装
+const properties = propertyStore.properties
 
 const filteredList = computed(() => {
   const status = statusMap[currentTab.value]
-  return properties.value.filter(p => p.status === status)
+  return properties.filter((p: Property) => p.status === status)
 })
 
 const onTabChange = (index: number) => {
