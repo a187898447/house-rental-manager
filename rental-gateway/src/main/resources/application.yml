@@ -16,6 +16,14 @@ spring:
         server-addr: 127.0.0.1:8848
         namespace: public
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: "*"
+            allowed-methods: "*"
+            allowed-headers: "*"
+            allow-credentials: true
+            max-age: 3600
       discovery:
         locator:
           enabled: true
