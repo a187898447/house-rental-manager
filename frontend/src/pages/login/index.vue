@@ -17,6 +17,14 @@
         <text v-else>登录中...</text>
       </button>
 
+      <!-- 试用按钮 -->
+      <button 
+        class="demo-btn" 
+        @click="handleDemoLogin"
+      >
+        试用一下（无需登录）
+      </button>
+
       <!-- 用户协议 -->
       <view class="agreement">
         <checkbox 
@@ -118,6 +126,21 @@ const handleWechatLogin = async () => {
   } finally {
     loading.value = false
   }
+}
+
+// 试用模式 - 无需登录
+const handleDemoLogin = () => {
+  // 设置演示用户信息
+  userStore.setUserInfo({
+    id: 1,
+    nickname: '演示用户',
+    role: 'landlord',
+    phone: '13800000000'
+  })
+  uni.showToast({ title: '已进入演示模式', icon: 'success' })
+  setTimeout(() => {
+    uni.switchTab({ url: '/pages/landlord/index/index' })
+  }, 1000)
 }
 
 // 发送验证码
@@ -224,6 +247,24 @@ const openAgreement = (type: string) => {
     align-items: center;
     justify-content: center;
     border: none;
+    
+    &::after {
+      border: none;
+    }
+  }
+
+  .demo-btn {
+    width: 100%;
+    height: 96rpx;
+    background-color: #fff;
+    border: 2rpx solid #0087FF;
+    border-radius: 48rpx;
+    color: #0087FF;
+    font-size: 32rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 24rpx;
     
     &::after {
       border: none;
