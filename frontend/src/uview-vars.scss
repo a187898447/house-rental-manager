@@ -1,0 +1,42 @@
+/**
+ * uview-plus 全局变量覆盖
+ */
+
+// 基础颜色
+$u-primary: #0087FF;
+$u-success: #5AC725;
+$u-warning: #FFB100;
+$u-error: #F5A623;
+$u-info: #999999;
+
+// 文字颜色
+$u-content-color: #333333;
+$u-tips-color: #999999;
+$u-light-color: #F8F8F8;
+
+// 边框颜色
+$u-border-color: #E5E5E5;
+
+// 背景色
+$u-bg-color: #F8F8F8;
+
+// 字体大小
+$u-font-size-sm: 24rpx;
+$u-font-size-base: 28rpx;
+$u-font-size-lg: 32rpx;
+
+// 间距
+$u-padding-sm: 20rpx;
+$u-padding-base: 30rpx;
+$u-padding-lg: 40rpx;
+
+// 圆角
+$u-border-radius-sm: 8rpx;
+$u-border-radius-base: 12rpx;
+$u-border-radius-lg: 16rpx;
+
+// 阴影
+$u-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.1);
+
+// 分割线
+$u-border: 1px solid #E5E5E5;
