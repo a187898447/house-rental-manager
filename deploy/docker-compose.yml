@@ -1,23 +1,31 @@
-version: '3.8'
-
 services:
+  # MySQL 数据库
+  mysql:
+    image: mysql:8.0
+    container_name: rental-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=rental123456
+      - MYSQL_DATABASE=rental_db
+      - MYSQL_CHARACTER_SET_SERVER=utf8mb4
+      - MYSQL_COLLATION_SERVER=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - rental-network
+
   # Nacos 服务注册/配置中心
   nacos:
-    image: nacos/nacos-server:v2.2.3
+    image: nacos/nacos-server:v2.2.3-slim
     container_name: rental-nacos
     environment:
       - MODE=standalone
-      - SPRING_DATASOURCE_PLATFORM=mysql
-      - MYSQL_SERVICE_HOST=dm-db
-      - MYSQL_SERVICE_PORT=5236
-      - MYSQL_SERVICE_DB_NAME=nacos_config
-      - MYSQL_SERVICE_USER=SYSDBA
-      - MYSQL_SERVICE_PASSWORD=SYSDBA004
     ports:
       - "8848:8848"
       - "9848:9848"
     depends_on:
-      - dm-db
+      - mysql
     networks:
       - rental-network
 
@@ -33,25 +41,11 @@ services:
     networks:
       - rental-network
 
-  # 达梦数据库
-  dm-db:
-    image: dmdbms/dm8:latest
-    container_name: rental-dm-db
-    environment:
-      - MODE=Primary
-    ports:
-      - "5236:5236"
-    volumes:
-      - dm-data:/data
-    networks:
-      - rental-network
-    privileged: true
-
   # API 网关
   rental-gateway:
     build:
-      context: .
-      dockerfile: Dockerfile.gateway
+      context: ..
+      dockerfile: deploy/Dockerfile.gateway
     container_name: rental-gateway
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -66,8 +60,8 @@ services:
   # 用户服务
   rental-user:
     build:
-      context: .
-      dockerfile: Dockerfile.user
+      context: ..
+      dockerfile: deploy/Dockerfile.user
     container_name: rental-user
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -76,15 +70,15 @@ services:
     depends_on:
       - nacos
       - redis
-      - dm-db
+      - mysql
     networks:
       - rental-network
 
   # 房源服务
   rental-property:
     build:
-      context: .
-      dockerfile: Dockerfile.property
+      context: ..
+      dockerfile: deploy/Dockerfile.property
     container_name: rental-property
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -93,15 +87,15 @@ services:
     depends_on:
       - nacos
       - redis
-      - dm-db
+      - mysql
     networks:
       - rental-network
 
   # 账单服务
   rental-bill:
     build:
-      context: .
-      dockerfile: Dockerfile.bill
+      context: ..
+      dockerfile: deploy/Dockerfile.bill
     container_name: rental-bill
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -110,15 +104,15 @@ services:
     depends_on:
       - nacos
       - redis
-      - dm-db
+      - mysql
     networks:
       - rental-network
 
   # 通知服务
   rental-notify:
     build:
-      context: .
-      dockerfile: Dockerfile.notify
+      context: ..
+      dockerfile: deploy/Dockerfile.notify
     container_name: rental-notify
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -133,8 +127,8 @@ services:
   # 支付服务（预留）
   rental-pay:
     build:
-      context: .
-      dockerfile: Dockerfile.pay
+      context: ..
+      dockerfile: deploy/Dockerfile.pay
     container_name: rental-pay
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -151,5 +145,5 @@ networks:
     driver: bridge
 
 volumes:
+  mysql-data:
   redis-data:
-  dm-data:

@@ -6,7 +6,7 @@ import type { Tenant, ApiResponse } from '@/types'
  */
 export const getTenants = async (params?: { propertyId?: string; status?: string }) => {
   return request<Tenant[]>({
-    url: '/api/tenant',
+    url: '/api/tenant/property',
     method: 'GET',
     data: params
   })

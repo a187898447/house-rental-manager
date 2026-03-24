@@ -9,9 +9,9 @@ import java.math.BigDecimal;
 @Data
 public class UtilityBillCreateDTO {
 
-    private Long propertyId;
-
     private Long tenantId;
+
+    private Long propertyId;
 
     /**
      * 账单月份（YYYY-MM）

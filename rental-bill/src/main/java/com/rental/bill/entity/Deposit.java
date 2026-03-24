@@ -3,6 +3,7 @@ package com.rental.bill.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -19,14 +20,18 @@ public class Deposit {
 
     private Long propertyId;
 
+    private Long contractId;
+
     private BigDecimal amount;
 
     /**
-     * 0:待退还 1:已退还 2:部分退还
+     * 0:待缴纳 1:已缴纳 2:待退还 3:已退还 4:已扣除
      */
     private Integer status;
 
-    private LocalDateTime refundDate;
+    private LocalDate payDate;
+
+    private LocalDate refundDate;
 
     private BigDecimal refundAmount;
 

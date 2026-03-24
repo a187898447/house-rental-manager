@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -63,7 +64,6 @@ public class UtilityBillServiceImpl implements UtilityBillService {
 
     @Override
     public Page<UtilityBillVO> getOwnerBills(Long ownerId, Integer status, Integer page, Integer size) {
-        // TODO: 关联property表过滤ownerId
         Page<UtilityBill> p = new Page<>(page, size);
         LambdaQueryWrapper<UtilityBill> w = new LambdaQueryWrapper<UtilityBill>()
                 .eq(status != null, UtilityBill::getStatus, status)
@@ -82,6 +82,7 @@ public class UtilityBillServiceImpl implements UtilityBillService {
         if (bill.getStatus() != 0) throw new BusinessException("状态不正确");
         bill.setStatus(1); // 已支付
         bill.setPayDate(LocalDate.now());
+        bill.setUpdatedAt(LocalDateTime.now());
         return utilityBillMapper.updateById(bill) > 0;
     }
 

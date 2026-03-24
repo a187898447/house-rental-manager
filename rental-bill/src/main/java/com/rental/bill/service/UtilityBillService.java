@@ -1,9 +1,8 @@
 package com.rental.bill.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.rental.bill.vo.UtilityBillVO;
 import com.rental.bill.dto.UtilityBillCreateDTO;
-import java.math.BigDecimal;
+import com.rental.bill.vo.UtilityBillVO;
 
 public interface UtilityBillService {
     Long create(UtilityBillCreateDTO dto);

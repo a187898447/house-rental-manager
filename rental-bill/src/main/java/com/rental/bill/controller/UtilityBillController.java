@@ -22,10 +22,26 @@ public class UtilityBillController {
 
     private final UtilityBillService utilityBillService;
 
+    @GetMapping("/bills")
+    @Operation(summary = "水电账单列表")
+    public Result<Page<UtilityBillVO>> getBills(
+            @RequestParam(required = false) Long tenantId,
+            @RequestParam(required = false) Long propertyId,
+            @RequestParam(required = false) Integer status,
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer size) {
+        // 根据tenantId或propertyId查询
+        if (tenantId != null) {
+            return Result.success(utilityBillService.getTenantBills(tenantId, status, page, size));
+        }
+        return Result.success(utilityBillService.getOwnerBills(null, status, page, size));
+    }
+
     @PostMapping("/bills")
     @Operation(summary = "创建水电账单")
     public Result<Long> create(@RequestBody UtilityBillCreateDTO dto) {
-        return Result.success(utilityBillService.create(dto));
+        Long id = utilityBillService.create(dto);
+        return Result.success("账单创建成功", id);
     }
 
     @GetMapping("/{id}")

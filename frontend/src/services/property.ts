@@ -12,7 +12,7 @@ export const getProperties = async (params?: {
   size?: number 
 }) => {
   return request<PageResponse<Property>>({
-    url: '/property/list',
+    url: '/api/property/list',
     method: 'GET',
     data: params
   })
@@ -23,7 +23,7 @@ export const getProperties = async (params?: {
  */
 export const getPropertyDetail = async (id: number) => {
   return request<Property>({
-    url: `/property/${id}`,
+    url: `/api/property/${id}`,
     method: 'GET'
   })
 }
@@ -33,7 +33,7 @@ export const getPropertyDetail = async (id: number) => {
  */
 export const createProperty = async (data: PropertyInput) => {
   return request<number>({
-    url: '/property',
+    url: '/api/property',
     method: 'POST',
     data
   })
@@ -44,7 +44,7 @@ export const createProperty = async (data: PropertyInput) => {
  */
 export const updateProperty = async (id: number, data: Partial<PropertyInput>) => {
   return request<boolean>({
-    url: `/property/${id}`,
+    url: `/api/property/${id}`,
     method: 'PUT',
     data
   })
@@ -55,7 +55,7 @@ export const updateProperty = async (id: number, data: Partial<PropertyInput>) =
  */
 export const deleteProperty = async (id: number) => {
   return request<boolean>({
-    url: `/property/${id}`,
+    url: `/api/property/${id}`,
     method: 'DELETE'
   })
 }

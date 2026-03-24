@@ -2,6 +2,7 @@ package com.rental.bill.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.rental.bill.dto.OtherFeeCreateDTO;
 import com.rental.bill.entity.OtherFee;
 import com.rental.bill.mapper.OtherFeeMapper;
 import com.rental.bill.service.OtherFeeService;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,13 +25,14 @@ public class OtherFeeServiceImpl implements OtherFeeService {
 
     @Override
     @Transactional
-    public Long create(Long tenantId, Long propertyId, String feeType, BigDecimal amount, String billMonth) {
+    public Long create(OtherFeeCreateDTO dto) {
         OtherFee fee = new OtherFee();
-        fee.setTenantId(tenantId);
-        fee.setPropertyId(propertyId);
-        fee.setFeeType(feeType);
-        fee.setAmount(amount);
-        fee.setBillMonth(billMonth);
+        fee.setTenantId(dto.getTenantId());
+        fee.setPropertyId(dto.getPropertyId());
+        fee.setFeeType(dto.getFeeType());
+        fee.setAmount(dto.getAmount());
+        fee.setBillMonth(dto.getBillMonth());
+        fee.setRemark(dto.getRemark());
         fee.setStatus(0); // 待支付
         otherFeeMapper.insert(fee);
         return fee.getId();
@@ -76,7 +79,17 @@ public class OtherFeeServiceImpl implements OtherFeeService {
         if (fee.getStatus() != 0) throw new BusinessException("状态不正确");
         fee.setStatus(1); // 已支付
         fee.setPayDate(LocalDate.now());
+        fee.setUpdatedAt(LocalDateTime.now());
         return otherFeeMapper.updateById(fee) > 0;
+    }
+
+    @Override
+    @Transactional
+    public boolean delete(Long id) {
+        OtherFee fee = otherFeeMapper.selectById(id);
+        if (fee == null) throw new BusinessException("费用记录不存在");
+        if (fee.getStatus() == 1) throw new BusinessException("已支付的费用不能删除");
+        return otherFeeMapper.deleteById(id) > 0;
     }
 
     private OtherFeeVO convertToVO(OtherFee f) {

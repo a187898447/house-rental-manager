@@ -1,6 +1,7 @@
 package com.rental.bill.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.rental.bill.dto.OtherFeeCreateDTO;
 import com.rental.bill.service.OtherFeeService;
 import com.rental.bill.vo.OtherFeeVO;
 import com.rental.common.result.Result;
@@ -52,5 +53,19 @@ public class OtherFeeController {
     @Operation(summary = "支付费用")
     public Result<Boolean> pay(@PathVariable Long id) {
         return Result.success(otherFeeService.pay(id));
+    }
+
+    @PostMapping
+    @Operation(summary = "创建费用")
+    public Result<Long> create(@RequestBody OtherFeeCreateDTO dto) {
+        Long id = otherFeeService.create(dto);
+        return Result.success("费用创建成功", id);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "删除费用")
+    @Parameter(name = "id", description = "费用ID")
+    public Result<Boolean> delete(@PathVariable Long id) {
+        return Result.success(otherFeeService.delete(id));
     }
 }
