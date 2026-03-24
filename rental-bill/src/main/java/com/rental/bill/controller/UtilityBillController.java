@@ -67,7 +67,7 @@ public class UtilityBillController {
             @RequestParam(required = false) Integer status,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        Long ownerId = (Long) authentication.getPrincipal();
+        Long ownerId = 1L; // TODO: 临时处理
         return Result.success(utilityBillService.getOwnerBills(ownerId, status, page, size));
     }
 

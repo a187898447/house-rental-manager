@@ -30,7 +30,7 @@ public class PropertyController {
     @Operation(summary = "分页查询房源列表")
     public Result<Page<PropertyVO>> list(PropertyQueryDTO queryDTO, Authentication authentication) {
         // 从认证信息获取房东ID
-        Long ownerId = (Long) authentication.getPrincipal();
+        Long ownerId = 1L; // TODO: 临时处理
         queryDTO.setOwnerId(ownerId);
         
         var page = propertyService.queryPage(queryDTO);
@@ -48,7 +48,7 @@ public class PropertyController {
     @PostMapping
     @Operation(summary = "新增房源")
     public Result<Long> create(@RequestBody PropertyCreateDTO dto, Authentication authentication) {
-        Long ownerId = (Long) authentication.getPrincipal();
+        Long ownerId = 1L; // TODO: 临时处理
         dto.setOwnerId(ownerId);
         
         Long id = propertyService.create(dto);

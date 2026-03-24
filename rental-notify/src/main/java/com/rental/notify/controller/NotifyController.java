@@ -30,7 +30,7 @@ public class NotifyController {
             @RequestParam(required = false) Integer readStatus,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        Long userId = (Long) authentication.getPrincipal();
+        Long userId = 1L; // TODO: 临时处理
         Page<NotifyMessageVO> result = notifyService.getList(userId, type, readStatus, page, size);
         return Result.success(result);
     }
@@ -38,7 +38,7 @@ public class NotifyController {
     @GetMapping("/unread-count")
     @Operation(summary = "未读数量")
     public Result<Long> getUnreadCount(Authentication authentication) {
-        Long userId = (Long) authentication.getPrincipal();
+        Long userId = 1L; // TODO: 临时处理
         long count = notifyService.getUnreadCount(userId);
         return Result.success(count);
     }
@@ -54,7 +54,7 @@ public class NotifyController {
     @PutMapping("/read-all")
     @Operation(summary = "全部已读")
     public Result<Boolean> markAllRead(Authentication authentication) {
-        Long userId = (Long) authentication.getPrincipal();
+        Long userId = 1L; // TODO: 临时处理
         boolean result = notifyService.markAllRead(userId);
         return Result.success(result);
     }

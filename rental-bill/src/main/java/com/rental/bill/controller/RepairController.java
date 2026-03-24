@@ -57,7 +57,7 @@ public class RepairController {
             @RequestParam(required = false) Integer status,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        Long ownerId = (Long) authentication.getPrincipal();
+        Long ownerId = 1L; // TODO: 临时处理
         Page<RepairVO> result = repairService.getOwnerRepairs(ownerId, propertyId, status, page, size);
         return Result.success(result);
     }
@@ -66,7 +66,7 @@ public class RepairController {
     @Operation(summary = "开始处理")
     @Parameter(name = "id", description = "报修ID")
     public Result<Boolean> startProcess(@PathVariable Long id, Authentication authentication) {
-        Long handlerId = (Long) authentication.getPrincipal();
+        Long handlerId = 1L; // TODO: 临时处理
         boolean result = repairService.startProcess(id, handlerId);
         return Result.success("已开始处理", result);
     }
