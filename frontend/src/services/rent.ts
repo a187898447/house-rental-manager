@@ -10,11 +10,12 @@ export const getRentBills = async (params?: {
   status?: string
   month?: string
 }) => {
-  return request<RentBill[]>({
+  const res = await request<any>({
     url: '/api/rent/bills/owner',
     method: 'GET',
     data: params
   })
+  return res?.records || []
 }
 
 /**
