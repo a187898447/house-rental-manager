@@ -23,9 +23,13 @@ public class UtilityBill {
 
     private BigDecimal waterReading;
 
+    private BigDecimal waterReadingCurrent;
+
     private BigDecimal waterAmount;
 
     private BigDecimal electricityReading;
+
+    private BigDecimal electricityReadingCurrent;
 
     private BigDecimal electricityAmount;
 

@@ -2,6 +2,7 @@ package com.rental.bill.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.rental.bill.dto.UtilityBillCreateDTO;
 import com.rental.bill.entity.UtilityBill;
 import com.rental.bill.mapper.UtilityBillMapper;
 import com.rental.bill.service.UtilityBillService;
@@ -23,14 +24,19 @@ public class UtilityBillServiceImpl implements UtilityBillService {
 
     @Override
     @Transactional
-    public Long create(Long tenantId, Long propertyId, String billMonth, BigDecimal waterAmount, BigDecimal electricityAmount) {
+    public Long create(UtilityBillCreateDTO dto) {
         UtilityBill bill = new UtilityBill();
-        bill.setTenantId(tenantId);
-        bill.setPropertyId(propertyId);
-        bill.setBillMonth(billMonth);
-        bill.setWaterAmount(waterAmount);
-        bill.setElectricityAmount(electricityAmount);
-        bill.setStatus(0); // 待支付
+        bill.setTenantId(dto.getTenantId());
+        bill.setPropertyId(dto.getPropertyId());
+        bill.setBillMonth(dto.getBillMonth());
+        bill.setWaterReading(dto.getWaterReading());
+        bill.setWaterReadingCurrent(dto.getWaterReadingCurrent());
+        bill.setWaterAmount(dto.getWaterAmount());
+        bill.setElectricityReading(dto.getElectricityReading());
+        bill.setElectricityReadingCurrent(dto.getElectricityReadingCurrent());
+        bill.setElectricityAmount(dto.getElectricityAmount());
+        bill.setSource(dto.getSource() != null ? dto.getSource() : 0);
+        bill.setStatus(0);
         utilityBillMapper.insert(bill);
         return bill.getId();
     }
@@ -85,7 +91,11 @@ public class UtilityBillServiceImpl implements UtilityBillService {
         vo.setTenantId(b.getTenantId());
         vo.setPropertyId(b.getPropertyId());
         vo.setBillMonth(b.getBillMonth());
+        vo.setWaterReading(b.getWaterReading());
+        vo.setWaterReadingCurrent(b.getWaterReadingCurrent());
         vo.setWaterAmount(b.getWaterAmount());
+        vo.setElectricityReading(b.getElectricityReading());
+        vo.setElectricityReadingCurrent(b.getElectricityReadingCurrent());
         vo.setElectricityAmount(b.getElectricityAmount());
         vo.setStatus(b.getStatus());
         vo.setStatusName(getStatusName(b.getStatus()));

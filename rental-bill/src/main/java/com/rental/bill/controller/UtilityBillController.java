@@ -1,6 +1,7 @@
 package com.rental.bill.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.rental.bill.dto.UtilityBillCreateDTO;
 import com.rental.bill.service.UtilityBillService;
 import com.rental.bill.vo.UtilityBillVO;
 import com.rental.common.result.Result;
@@ -20,6 +21,12 @@ import java.math.BigDecimal;
 public class UtilityBillController {
 
     private final UtilityBillService utilityBillService;
+
+    @PostMapping("/bills")
+    @Operation(summary = "创建水电账单")
+    public Result<Long> create(@RequestBody UtilityBillCreateDTO dto) {
+        return Result.success(utilityBillService.create(dto));
+    }
 
     @GetMapping("/{id}")
     @Operation(summary = "水电账单详情")

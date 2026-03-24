@@ -13,8 +13,12 @@ public class UtilityBillVO {
     private Long propertyId;
     private String propertyName;
     private String billMonth;
+    private BigDecimal waterReading;
+    private BigDecimal waterReadingCurrent;
     private BigDecimal waterAmount;
-    private BigDecimal electricityAmount;
+    private BigDecimal electricityReading;
+    private BigDecimal electricityReadingCurrent;
+    private Integer source;
     private Integer status;
     private String statusName;
     private LocalDate payDate;

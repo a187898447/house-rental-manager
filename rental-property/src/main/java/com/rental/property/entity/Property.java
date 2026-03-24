@@ -35,7 +35,7 @@ public class Property {
     private String building;
 
     /**
-     * 户型（如：2室1厅）
+     * 户型（例：2室1厅）
      */
     private String type;
 

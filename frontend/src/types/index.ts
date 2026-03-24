@@ -58,6 +58,9 @@ export interface Tenant {
   phone: string
   leaseStartDate?: string
   leaseEndDate?: string
+  idCard?: string
+  emergencyContact?: string
+  emergencyPhone?: string
   status: number
   createdAt?: string
   updatedAt?: string
@@ -118,8 +121,10 @@ export interface UtilityBill {
   propertyId: number
   billMonth: string
   waterReading?: number
+  waterReadingCurrent?: number
   waterAmount?: number
   electricityReading?: number
+  electricityReadingCurrent?: number
   electricityAmount?: number
   source: number
   status: number
