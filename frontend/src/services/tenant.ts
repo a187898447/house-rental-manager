@@ -5,8 +5,14 @@ import type { Tenant, ApiResponse } from '@/types'
  * 获取租客列表
  */
 export const getTenants = async (params?: { propertyId?: string; status?: string }) => {
+  if (params?.propertyId) {
+    return request<Tenant[]>({
+      url: `/api/tenant/property/${params.propertyId}`,
+      method: 'GET'
+    })
+  }
   return request<Tenant[]>({
-    url: '/api/tenant/property',
+    url: '/api/tenant/owner/list',
     method: 'GET',
     data: params
   })
