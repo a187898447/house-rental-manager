@@ -29,7 +29,7 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
 
         String token = getTokenFromRequest(exchange.getRequest());
         
-        if (token == null || token.isEmpty()) {
+        if (token == null || token.isEmpty() || token.equals("demo-token")) {
             // 没有token，返回401
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
