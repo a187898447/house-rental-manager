@@ -2,7 +2,7 @@
   <view class="login-page">
     <!-- Logo -->
     <view class="logo-section">
-      <image class="logo" src="/static/logo.png" mode="aspectFit" />
+      <image class="logo" src="" mode="aspectFit" />
       <text class="app-name">租房管理</text>
     </view>
 
