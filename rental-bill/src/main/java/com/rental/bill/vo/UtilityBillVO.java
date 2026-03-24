@@ -18,6 +18,7 @@ public class UtilityBillVO {
     private BigDecimal waterAmount;
     private BigDecimal electricityReading;
     private BigDecimal electricityReadingCurrent;
+    private BigDecimal electricityAmount;
     private Integer source;
     private Integer status;
     private String statusName;
