@@ -5,11 +5,12 @@ import type { Deposit, ApiResponse } from '@/types'
  * 获取押金列表
  */
 export const getDeposits = async (params?: { propertyId?: string; tenantId?: string; status?: string }) => {
-  return request<Deposit[]>({
+  const res = await request<any>({
     url: '/api/deposit/owner',
     method: 'GET',
     data: params
   })
+  return res?.records || res?.list || []
 }
 
 /**

@@ -6,16 +6,18 @@ import type { Tenant, ApiResponse } from '@/types'
  */
 export const getTenants = async (params?: { propertyId?: string; status?: string }) => {
   if (params?.propertyId) {
-    return request<Tenant[]>({
+    const res = await request<any>({
       url: `/api/tenant/property/${params.propertyId}`,
       method: 'GET'
     })
+    return res?.records || res?.list || []
   }
-  return request<Tenant[]>({
+  const res = await request<any>({
     url: '/api/tenant/owner/list',
     method: 'GET',
     data: params
   })
+  return res?.records || res?.list || []
 }
 
 /**

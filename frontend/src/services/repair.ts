@@ -9,11 +9,12 @@ export const getRepairs = async (params?: {
   tenantId?: string
   status?: string
 }) => {
-  return request<Repair[]>({
+  const res = await request<any>({
     url: '/api/repair',
     method: 'GET',
     data: params
   })
+  return res?.records || res?.list || []
 }
 
 /**
@@ -23,31 +24,12 @@ export const getOwnerRepairs = async (params?: {
   propertyId?: string
   status?: string
 }) => {
-  return request<Repair[]>({
+  const res = await request<any>({
     url: '/api/repair/owner',
     method: 'GET',
     data: params
   })
-}
-
-/**
- * 开始处理报修
- */
-export const handleRepair = async (id: string) => {
-  return request<Repair>({
-    url: `/api/repair/${id}/process`,
-    method: 'POST'
-  })
-}
-
-/**
- * 完成报修处理
- */
-export const completeRepair = async (id: string) => {
-  return request<Repair>({
-    url: `/api/repair/${id}/complete`,
-    method: 'POST'
-  })
+  return res?.records || res?.list || []
 }
 
 /**
@@ -88,5 +70,25 @@ export const updateRepairStatus = async (id: string, data: {
     url: `/api/repair/${id}/status`,
     method: 'PUT',
     data
+  })
+}
+
+/**
+ * 开始处理报修
+ */
+export const handleRepair = async (id: string) => {
+  return request<Repair>({
+    url: `/api/repair/${id}/process`,
+    method: 'POST'
+  })
+}
+
+/**
+ * 完成报修处理
+ */
+export const completeRepair = async (id: string) => {
+  return request<Repair>({
+    url: `/api/repair/${id}/complete`,
+    method: 'POST'
   })
 }

@@ -23,11 +23,12 @@ export interface NotificationListParams {
  * 获取通知列表
  */
 export const getNotificationList = async (params?: NotificationListParams) => {
-  return request<Notification[]>({
+  const res = await request<any>({
     url: '/api/notify/list',
     method: 'GET',
     data: params
   })
+  return res?.records || res?.list || []
 }
 
 /**
@@ -38,6 +39,7 @@ export const getUnreadCount = async () => {
     url: '/api/notify/unread-count',
     method: 'GET'
   })
+  return res?.records || res?.list || []
 }
 
 /**
@@ -48,6 +50,7 @@ export const markAsRead = async (id: string) => {
     url: `/api/notify/${id}/read`,
     method: 'PUT'
   })
+  return res?.records || res?.list || []
 }
 
 /**
@@ -58,6 +61,7 @@ export const markAllAsRead = async () => {
     url: '/api/notify/read-all',
     method: 'PUT'
   })
+  return res?.records || res?.list || []
 }
 
 /**
@@ -68,4 +72,5 @@ export const deleteNotification = async (id: string) => {
     url: `/api/notify/${id}`,
     method: 'DELETE'
   })
+  return res?.records || res?.list || []
 }
