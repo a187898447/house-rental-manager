@@ -9,8 +9,17 @@ $u-warning: #FFB100;
 $u-error: #F5A623;
 $u-info: #999999;
 
+// 颜色变体
+$u-primary-light: mix(#0087FF, #fff, 80%);
+$u-primary-light-opacity: rgba(0, 135, 255, 0.2);
+$u-success-light: mix(#5AC725, #fff, 80%);
+$u-warning-light: mix(#FFB100, #fff, 80%);
+$u-error-light: mix(#F5A623, #fff, 80%);
+$u-info-light: mix(#999999, #fff, 80%);
+
 // 文字颜色
 $u-content-color: #333333;
+$u-content-color-light: #666666;
 $u-tips-color: #999999;
 $u-light-color: #F8F8F8;
 
@@ -40,3 +49,9 @@ $u-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.1);
 
 // 分割线
 $u-border: 1px solid #E5E5E5;
+
+// 过渡
+$u-transition-duration: 0.3s;
+
+// 蒙层
+$u-mask-color: rgba(0, 0, 0, 0.7);
