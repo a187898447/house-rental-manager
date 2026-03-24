@@ -2,7 +2,7 @@ import { request } from './index'
 import type { Repair, ApiResponse } from '@/types'
 
 /**
- * 获取报修列表
+ * 获取报修列表（租客）
  */
 export const getRepairs = async (params?: { 
   propertyId?: string
@@ -13,6 +13,40 @@ export const getRepairs = async (params?: {
     url: '/api/repair',
     method: 'GET',
     data: params
+  })
+}
+
+/**
+ * 获取报修列表（房东）
+ */
+export const getOwnerRepairs = async (params?: { 
+  propertyId?: string
+  status?: string
+}) => {
+  return request<Repair[]>({
+    url: '/api/repair/owner',
+    method: 'GET',
+    data: params
+  })
+}
+
+/**
+ * 开始处理报修
+ */
+export const handleRepair = async (id: string) => {
+  return request<Repair>({
+    url: `/api/repair/${id}/process`,
+    method: 'POST'
+  })
+}
+
+/**
+ * 完成报修处理
+ */
+export const completeRepair = async (id: string) => {
+  return request<Repair>({
+    url: `/api/repair/${id}/complete`,
+    method: 'POST'
   })
 }
 

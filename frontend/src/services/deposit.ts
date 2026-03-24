@@ -4,11 +4,21 @@ import type { Deposit, ApiResponse } from '@/types'
 /**
  * 获取押金列表
  */
-export const getDeposits = async (params?: { propertyId?: string; tenantId?: string }) => {
+export const getDeposits = async (params?: { propertyId?: string; tenantId?: string; status?: string }) => {
   return request<Deposit[]>({
-    url: '/api/deposit/tenant',
+    url: '/api/deposit/owner',
     method: 'GET',
     data: params
+  })
+}
+
+/**
+ * 获取押金详情
+ */
+export const getDepositDetail = async (id: string) => {
+  return request<Deposit>({
+    url: `/api/deposit/${id}`,
+    method: 'GET'
   })
 }
 
