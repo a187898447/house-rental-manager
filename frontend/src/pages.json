@@ -138,6 +138,31 @@
       "style": {
         "navigationBarTitleText": "联系房东"
       }
+    },
+    {
+      "path": "pages/landlord/settings/index",
+      "style": {
+        "navigationBarTitleText": "我的"
+      }
+    },
+    {
+      "path": "pages/landlord/settings/notification/index",
+      "style": {
+        "navigationBarTitleText": "通知设置"
+      }
+    },
+    {
+      "path": "pages/landlord/statistics/index",
+      "style": {
+        "navigationBarTitleText": "数据统计"
+      }
+    },
+    {
+      "path": "pages/landlord/settings/index",
+      "style": {
+        "navigationBarTitleText": "我的",
+        "navigationStyle": "custom"
+      }
     }
   ],
   "globalStyle": {
@@ -161,7 +186,7 @@
         "text": "账单"
       },
       {
-        "pagePath": "pages/landlord/tenant/list/index",
+        "pagePath": "pages/landlord/settings/index",
         "text": "我的"
       }
     ]
