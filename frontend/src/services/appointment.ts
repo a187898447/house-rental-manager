@@ -21,11 +21,12 @@ export const getMyAppointments = async (params?: {
   page?: number
   size?: number
 }) => {
-  return request<{ list: Appointment[]; total: number }>({
+  const res = await request<any>({
     url: '/api/tenant/appointment/my',
     method: 'GET',
     data: params
   })
+  return res?.records || res?.list || []
 }
 
 // 获取预约列表（房东端）
@@ -35,11 +36,12 @@ export const getOwnerAppointments = async (params?: {
   page?: number
   size?: number
 }) => {
-  return request<{ list: Appointment[]; total: number }>({
+  const res = await request<any>({
     url: '/api/tenant/appointment/owner',
     method: 'GET',
     data: params
   })
+  return res?.records || res?.list || []
 }
 
 // 创建预约

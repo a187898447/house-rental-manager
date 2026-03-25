@@ -21,11 +21,12 @@ export const getMyOtherFees = async (params?: {
   page?: number
   size?: number
 }) => {
-  return request<{ list: OtherFee[]; total: number }>({
+  const res = await request<any>({
     url: '/api/fee/tenant',
     method: 'GET',
     data: params
   })
+  return res?.records || res?.list || []
 }
 
 // 获取其他费用列表（房东端）
@@ -37,11 +38,12 @@ export const getOwnerOtherFees = async (params?: {
   page?: number
   size?: number
 }) => {
-  return request<{ list: OtherFee[]; total: number }>({
+  const res = await request<any>({
     url: '/api/fee/owner',
     method: 'GET',
     data: params
   })
+  return res?.records || res?.list || []
 }
 
 // 获取其他费用详情
