@@ -5,11 +5,12 @@ import type { Contract, ApiResponse } from '@/types'
  * 获取合同列表
  */
 export const getContracts = async (params?: { tenantId?: string; propertyId?: string }) => {
-  return request<Contract[]>({
+  const res = await request<any>({
     url: '/api/contract',
     method: 'GET',
     data: params
   })
+  return res?.records || res?.list || []
 }
 
 /**
@@ -47,7 +48,7 @@ export const createContract = async (data: {
  */
 export const signContract = async (id: string, signImageUrl: string) => {
   return request<Contract>({
-    url: `/api/contracts/${id}/sign`,
+    url: `/api/contract/${id}/sign`,
     method: 'POST',
     data: { signImageUrl }
   })
@@ -58,7 +59,7 @@ export const signContract = async (id: string, signImageUrl: string) => {
  */
 export const getContractSignUrl = async (id: string) => {
   return request<{ url: string }>({
-    url: `/api/contracts/${id}/sign-url`,
+    url: `/api/contract/${id}/sign-url`,
     method: 'GET'
   })
 }

@@ -1,21 +1,21 @@
 import { request } from './index'
-import type { Property, PropertyInput, ApiResponse, PageResponse } from '@/types'
+import type { Property, PropertyInput, PageResponse, ApiResponse } from '@/types'
 
 /**
- * 获取房源列表（分页）
+ * 获取房源列表
  */
 export const getProperties = async (params?: { 
-  status?: number; 
-  buildingId?: number;
-  keyword?: string;
-  page?: number; 
+  ownerId?: number
+  status?: number
+  page?: number
   size?: number 
 }) => {
-  return request<PageResponse<Property>>({
+  const res = await request<any>({
     url: '/api/property/list',
     method: 'GET',
     data: params
   })
+  return res?.records || res?.list || []
 }
 
 /**
@@ -29,7 +29,7 @@ export const getPropertyDetail = async (id: number) => {
 }
 
 /**
- * 新增房源
+ * 添加房源
  */
 export const createProperty = async (data: PropertyInput) => {
   return request<number>({
@@ -40,7 +40,7 @@ export const createProperty = async (data: PropertyInput) => {
 }
 
 /**
- * 编辑房源
+ * 更新房源
  */
 export const updateProperty = async (id: number, data: Partial<PropertyInput>) => {
   return request<boolean>({
@@ -57,29 +57,5 @@ export const deleteProperty = async (id: number) => {
   return request<boolean>({
     url: `/api/property/${id}`,
     method: 'DELETE'
-  })
-}
-
-/**
- * 上传房源图片
- */
-export const uploadPropertyImages = async (filePaths: string[]) => {
-  return new Promise<string[]>((resolve, reject) => {
-    const promises = filePaths.map((path) => {
-      return new Promise<string>((resolve, reject) => {
-        uni.uploadFile({
-          url: 'https://api.example.com/api/upload',
-          filePath: path,
-          name: 'file',
-          success: (res) => {
-            const data = JSON.parse(res.data) as ApiResponse<{ url: string }>
-            resolve(data.data.url)
-          },
-          fail: reject
-        })
-      })
-    })
-    
-    Promise.all(promises).then(resolve).catch(reject)
   })
 }

@@ -20,7 +20,7 @@ export const getRepairs = async (params?: {
 /**
  * 获取报修列表（房东）
  */
-export const getOwnerRepairs = async (params?: { 
+export const getOwnerRepairs = async (params?: {
   propertyId?: string
   status?: string
 }) => {

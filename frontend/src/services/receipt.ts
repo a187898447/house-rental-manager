@@ -1,33 +1,29 @@
 import { request } from './index'
-import type { ApiResponse } from '@/types'
 
 /**
  * 获取收据列表
  */
-export const getReceipts = async (params?: {
-  type?: string
-  month?: string
-  propertyId?: number
-  tenantId?: number
+export const getReceiptList = async (params?: { 
+  tenantId?: string
+  propertyId?: string
+  page?: number
+  size?: number
 }) => {
-  return request<any[]>({
+  const res = await request<any>({
     url: '/api/receipt/list',
     method: 'GET',
     data: params
   })
+  return res?.records || res?.list || []
 }
 
 /**
  * 生成收据
  */
 export const createReceipt = async (data: {
-  tenantId: number
-  propertyId: number
-  type: string
-  amount: number
-  billMonth?: string
+  rentRecordId: string
 }) => {
-  return request<{ id: number }>({
+  return request<any>({
     url: '/api/receipt',
     method: 'POST',
     data
@@ -35,11 +31,11 @@ export const createReceipt = async (data: {
 }
 
 /**
- * 导出收据 PDF
+ * 获取收据下载URL
  */
-export const exportReceiptPdf = async (id: number) => {
+export const getReceiptDownloadUrl = async (id: string) => {
   return request<{ url: string }>({
-    url: `/api/receipt/${id}/export`,
+    url: `/api/receipt/${id}`,
     method: 'GET'
   })
 }

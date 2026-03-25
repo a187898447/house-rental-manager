@@ -5,8 +5,8 @@ import type { UtilityBill, ApiResponse } from '@/types'
  * 获取水电费配置
  */
 export const getUtilityConfig = async (propertyId: string) => {
-  return request<{ waterRate: number; electricityRate: number }>({
-    url: `/api/properties/${propertyId}/utility-config`,
+  return request<any>({
+    url: `/api/utility/config/${propertyId}`,
     method: 'GET'
   })
 }
@@ -14,9 +14,12 @@ export const getUtilityConfig = async (propertyId: string) => {
 /**
  * 设置水电费单价
  */
-export const setUtilityConfig = async (propertyId: string, data: { waterRate: number; electricityRate: number }) => {
-  return request<{ success: boolean }>({
-    url: `/api/properties/${propertyId}/utility-config`,
+export const setUtilityConfig = async (propertyId: string, data: { 
+  waterRate: number
+  electricityRate: number
+}) => {
+  return request<any>({
+    url: `/api/utility/config/${propertyId}`,
     method: 'PUT',
     data
   })
@@ -30,14 +33,13 @@ export const getUtilityBills = async (params?: {
   tenantId?: number
   status?: number
   month?: string
-  page?: number
-  size?: number
 }) => {
-  return request<{ records: UtilityBill[]; total: number; size: number; current: number }>({
+  const res = await request<any>({
     url: '/api/utility/owner',
     method: 'GET',
     data: params
   })
+  return res?.records || res?.list || []
 }
 
 /**
