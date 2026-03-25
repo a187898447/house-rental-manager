@@ -69,7 +69,7 @@
     </view>
 
     <!-- 日期选择器 -->
-    <u-datetime-picker
+    <up-datetime-picker
       v-if="showDatePicker"
       :show="showDatePicker"
       mode="date"

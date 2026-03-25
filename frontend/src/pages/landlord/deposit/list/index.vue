@@ -16,11 +16,11 @@
     <!-- 列表 -->
     <scroll-view scroll-y class="deposit-list">
       <view v-if="loading && deposits.length === 0" class="loading-wrap">
-        <u-loading mode="circle"></u-loading>
+        <up-loading-icon mode="circle"></up-loading-icon>
       </view>
       
       <view v-else-if="deposits.length === 0" class="empty-wrap">
-        <u-empty text="暂无押金记录" mode="list"></u-empty>
+        <up-empty text="暂无押金记录" mode="list"></up-empty>
       </view>
       
       <view v-else class="deposit-items">

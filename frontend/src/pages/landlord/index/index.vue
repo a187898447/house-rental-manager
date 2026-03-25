@@ -1,19 +1,22 @@
 <template>
   <view class="property-list-page">
     <!-- 顶部 Tabs -->
-    <u-tabs 
-      :list="tabs" 
-      :current="currentTab" 
-      @change="onTabChange"
-      :scrollable="false"
-      lineColor="#0087FF"
-      activeStyle="{ color: '#0087FF' }"
-    />
+    <view class="tabs">
+      <view 
+        v-for="(tab, index) in tabs" 
+        :key="index"
+        class="tab-item" 
+        :class="{ active: currentTab === index }"
+        @click="onTabChange(index)"
+      >
+        {{ tab.name }}
+      </view>
+    </view>
     
     <!-- 房源列表 -->
     <view class="property-list">
       <view v-if="loading && properties.length === 0" class="loading-wrap">
-        <u-loading mode="circle"></u-loading>
+        <u-loading-icon mode="circle"></u-loading-icon>
       </view>
       
       <view v-else-if="filteredList.length === 0" class="empty-wrap">
@@ -30,7 +33,7 @@
       </view>
       
       <view v-if="loading && properties.length > 0" class="loading-more">
-        <u-loading mode="circle"></u-loading>
+        <u-loading-icon mode="circle"></u-loading-icon>
       </view>
     </view>
     
@@ -102,6 +105,26 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   background-color: #F8F8F8;
+}
+
+.tabs {
+  display: flex;
+  background-color: #fff;
+  padding: 20rpx 0;
+  
+  .tab-item {
+    flex: 1;
+    text-align: center;
+    font-size: 28rpx;
+    color: #666;
+    padding: 16rpx 0;
+    border-bottom: 4rpx solid transparent;
+    
+    &.active {
+      color: #0087FF;
+      border-bottom-color: #0087FF;
+    }
+  }
 }
 
 .property-list {

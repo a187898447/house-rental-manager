@@ -13,8 +13,13 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         additionalData: `@use "uview-plus/theme.scss" as *;`,
-        api: 'modern-compiler'
+        api: 'modern-compiler',
+        silenceDeprecations: ['import', 'global-builtin']
       }
     }
-  }
+  },
+  optimizeDeps: {
+    include: ['uview-plus']
+  },
+  transpileDependencies: ['uview-plus']
 })

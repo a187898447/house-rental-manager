@@ -3,7 +3,7 @@
     <!-- 用户信息 -->
     <view class="user-card">
       <view class="avatar">
-        <u-icon name="account-fill" size="60" color="#0087FF"></u-icon>
+        <up-icon name="account-fill" size="60" color="#0087FF"></up-icon>
       </view>
       <view class="info">
         <text class="name">{{ userInfo.name || '房东' }}</text>
@@ -14,21 +14,21 @@
     <!-- 功能菜单 -->
     <view class="menu-list">
       <view class="menu-item" @click="onEditProfile">
-        <u-icon name="account" size="40" color="#0087FF"></u-icon>
+        <up-icon name="account" size="40" color="#0087FF"></up-icon>
         <text class="label">个人信息</text>
-        <u-icon name="arrow-right" size="32" color="#999"></u-icon>
+        <up-icon name="arrow-right" size="32" color="#999"></up-icon>
       </view>
       
       <view class="menu-item" @click="onNotificationSettings">
-        <u-icon name="bell" size="40" color="#0087FF"></u-icon>
+        <up-icon name="bell" size="40" color="#0087FF"></up-icon>
         <text class="label">通知设置</text>
-        <u-icon name="arrow-right" size="32" color="#999"></u-icon>
+        <up-icon name="arrow-right" size="32" color="#999"></up-icon>
       </view>
       
       <view class="menu-item" @click="onStatistics">
-        <u-icon name="chart" size="40" color="#0087FF"></u-icon>
+        <up-icon name="chart" size="40" color="#0087FF"></up-icon>
         <text class="label">数据统计</text>
-        <u-icon name="arrow-right" size="32" color="#999"></u-icon>
+        <up-icon name="arrow-right" size="32" color="#999"></up-icon>
       </view>
     </view>
 
@@ -47,7 +47,7 @@ const userInfo = ref<any>({})
 onMounted(() => {
   const info = uni.getStorageSync('userInfo')
   if (info) {
-    userInfo.value = JSON.parse(info)
+    userInfo.value = typeof info === 'string' ? JSON.parse(info) : info
   }
 })
 

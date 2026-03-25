@@ -13,11 +13,11 @@
     <!-- 租客列表 -->
     <scroll-view scroll-y class="tenant-list" @scrolltolower="onLoadMore">
       <view v-if="loading && tenants.length === 0" class="loading-wrap">
-        <u-loading mode="circle"></u-loading>
+        <up-loading-icon mode="circle"></up-loading-icon>
       </view>
       
       <view v-else-if="tenants.length === 0" class="empty-wrap">
-        <u-empty text="暂无租客" mode="list"></u-empty>
+        <up-empty text="暂无租客" mode="list"></up-empty>
       </view>
       
       <view v-else class="tenant-items">
@@ -42,13 +42,13 @@
       </view>
       
       <view v-if="loading && tenants.length > 0" class="loading-more">
-        <u-loading mode="circle"></u-loading>
+        <up-loading-icon mode="circle"></up-loading-icon>
       </view>
     </scroll-view>
     
     <!-- 新增按钮 -->
     <view class="add-btn" @click="onCheckIn">
-      <u-icon name="plus" color="#fff" size="24"></u-icon>
+      <up-icon name="plus" color="#fff" size="24"></up-icon>
     </view>
   </view>
 </template>

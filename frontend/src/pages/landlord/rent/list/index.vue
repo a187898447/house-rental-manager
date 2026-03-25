@@ -16,11 +16,11 @@
     <!-- 账单列表 -->
     <scroll-view scroll-y class="bill-list" @scrolltolower="onLoadMore">
       <view v-if="loading && bills.length === 0" class="loading-wrap">
-        <u-loading mode="circle"></u-loading>
+        <up-loading-icon mode="circle"></up-loading-icon>
       </view>
       
       <view v-else-if="bills.length === 0" class="empty-wrap">
-        <u-empty text="暂无账单" mode="list"></u-empty>
+        <up-empty text="暂无账单" mode="list"></up-empty>
       </view>
       
       <view v-else class="bill-items">
@@ -81,11 +81,12 @@ const statusClass = (status: number) => {
 const fetchBills = async () => {
   loading.value = true
   try {
-    const status = tabs[currentTab].value
+    const status = tabs[currentTab.value].value
     const res = await getRentBills(status ? { status: Number(status) } : {})
     bills.value = res || []
-  } catch (e) {
-    uni.showToast({ title: '加载失败', icon: 'none' })
+  } catch (e: any) {
+    console.error('fetchBills error:', e)
+    uni.showToast({ title: '加载失败: ' + (e?.message || e), icon: 'none' })
   } finally {
     loading.value = false
   }

@@ -4,7 +4,7 @@
       <view class="section-title">收租提醒</view>
       <view class="switch-item">
         <text class="label">提前提醒天数</text>
-        <u-number-box v-model="notifyDays" :min="1" :max="30"></u-number-box>
+        <up-number-box v-model="notifyDays" :min="1" :max="30"></up-number-box>
       </view>
     </view>
 

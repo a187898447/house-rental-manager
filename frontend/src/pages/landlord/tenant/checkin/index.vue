@@ -75,7 +75,7 @@
     </view>
 
     <!-- 房源选择器 -->
-    <u-picker 
+    <up-picker 
       v-if="showPropertyPicker" 
       :show="showPropertyPicker" 
       :columns="[properties]" 
@@ -85,7 +85,7 @@
     />
 
     <!-- 日期选择器 -->
-    <u-datetime-picker
+    <up-datetime-picker
       v-if="showStartDate"
       :show="showStartDate"
       mode="date"
@@ -93,7 +93,7 @@
       @confirm="onStartDateConfirm"
       @cancel="showStartDate = false"
     />
-    <u-datetime-picker
+    <up-datetime-picker
       v-if="showEndDate"
       :show="showEndDate"
       mode="date"

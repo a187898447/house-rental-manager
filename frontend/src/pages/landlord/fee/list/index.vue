@@ -16,11 +16,11 @@
     <!-- 列表 -->
     <scroll-view scroll-y class="fee-list">
       <view v-if="loading && fees.length === 0" class="loading-wrap">
-        <u-loading mode="circle"></u-loading>
+        <up-loading-icon mode="circle"></up-loading-icon>
       </view>
       
       <view v-else-if="fees.length === 0" class="empty-wrap">
-        <u-empty text="暂无费用记录" mode="list"></u-empty>
+        <up-empty text="暂无费用记录" mode="list"></up-empty>
       </view>
       
       <view v-else class="fee-items">
@@ -55,7 +55,7 @@
 
     <!-- 新增按钮 -->
     <view class="add-btn" @click="onAddFee">
-      <u-icon name="plus" color="#fff" size="24"></u-icon>
+      <up-icon name="plus" color="#fff" size="24"></up-icon>
     </view>
   </view>
 </template>
