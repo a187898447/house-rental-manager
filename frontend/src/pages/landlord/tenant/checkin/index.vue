@@ -38,8 +38,8 @@
       <view class="form-item">
         <text class="label">开始日期</text>
         <view class="date-picker" @click="showStartDate = true">
-          <text :class="formData.leaseStart ? '' : 'placeholder'">
-            {{ formData.leaseStart || '请选择开始日期' }}
+          <text :class="formData.leaseStartDate ? '' : 'placeholder'">
+            {{ formData.leaseStartDate || '请选择开始日期' }}
           </text>
         </view>
       </view>
@@ -47,8 +47,8 @@
       <view class="form-item">
         <text class="label">结束日期</text>
         <view class="date-picker" @click="showEndDate = true">
-          <text :class="formData.leaseEnd ? '' : 'placeholder'">
-            {{ formData.leaseEnd || '请选择结束日期' }}
+          <text :class="formData.leaseEndDate ? '' : 'placeholder'">
+            {{ formData.leaseEndDate || '请选择结束日期' }}
           </text>
         </view>
       </view>
@@ -114,8 +114,8 @@ const formData = reactive({
   name: '',
   phone: '',
   idCard: '',
-  leaseStart: '',
-  leaseEnd: '',
+  leaseStartDate: '',
+  leaseEndDate: '',
   emergencyContact: '',
   emergencyPhone: ''
 })
@@ -146,13 +146,13 @@ const onPropertyConfirm = (e: any) => {
 
 const onStartDateConfirm = (e: any) => {
   const date = new Date(e.value)
-  formData.leaseStart = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+  formData.leaseStartDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
   showStartDate.value = false
 }
 
 const onEndDateConfirm = (e: any) => {
   const date = new Date(e.value)
-  formData.leaseEnd = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+  formData.leaseEndDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
   showEndDate.value = false
 }
 
@@ -169,7 +169,7 @@ const onSubmit = () => {
     uni.showToast({ title: '请输入手机号', icon: 'none' })
     return
   }
-  if (!formData.leaseStart || !formData.leaseEnd) {
+  if (!formData.leaseStartDate || !formData.leaseEndDate) {
     uni.showToast({ title: '请选择租约日期', icon: 'none' })
     return
   }
@@ -181,8 +181,8 @@ const onSubmit = () => {
     name: formData.name,
     phone: formData.phone,
     idCard: formData.idCard || undefined,
-    leaseStart: formData.leaseStart,
-    leaseEnd: formData.leaseEnd,
+    leaseStartDate: formData.leaseStartDate,
+    leaseEndDate: formData.leaseEndDate,
     emergencyContact: formData.emergencyContact || undefined,
     emergencyPhone: formData.emergencyPhone || undefined
   }).then(() => {
