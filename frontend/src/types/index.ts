@@ -23,7 +23,7 @@ export interface Property {
   unit?: string
   roomNumber: string
   rentAmount: number
-  rent?: number
+  rent?: number  // TODO: remove, use rentAmount
   depositAmount?: number
   status: number
   statusName?: string
@@ -129,10 +129,10 @@ export interface UtilityBill {
   propertyId: number
   billMonth: string
   waterReading?: number
-  waterReadingCurrent?: number
+  waterReadingCurrent?: number  // TODO: remove, use rentAmount
   waterAmount?: number
   electricityReading?: number
-  electricityReadingCurrent?: number
+  electricityReadingCurrent?: number  // TODO: remove, use rentAmount
   electricityAmount?: number
   source: number
   status: number

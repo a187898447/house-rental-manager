@@ -1,3 +1,4 @@
+import com.baomidou.mybatisplus.annotation.TableLogic;
 package com.rental.notify.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
@@ -11,7 +12,8 @@ import java.time.LocalDateTime;
 @TableName("notify_message")
 public class NotifyMessage {
 
-    @TableId(type = IdType.AUTO)
+    @TableLogic
+@TableId(type = IdType.AUTO)
     private Long id;
 
     private Long userId;
@@ -43,5 +45,7 @@ public class NotifyMessage {
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createdAt;
 
-    private LocalDateTime deletedAt;
+
+    @TableLogic
+    private Integer deleted;
 }

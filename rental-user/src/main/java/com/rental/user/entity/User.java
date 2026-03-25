@@ -1,3 +1,4 @@
+import com.baomidou.mybatisplus.annotation.TableLogic;
 package com.rental.user.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
@@ -11,7 +12,8 @@ import java.time.LocalDateTime;
 @TableName("t_user")
 public class User {
 
-    @TableId(type = IdType.AUTO)
+    @TableLogic
+@TableId(type = IdType.AUTO)
     private Long id;
 
     private String openid;
@@ -38,5 +40,7 @@ public class User {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
-    private LocalDateTime deletedAt;
+
+    @TableLogic
+    private Integer deleted;
 }

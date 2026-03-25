@@ -1,3 +1,4 @@
+import com.baomidou.mybatisplus.annotation.TableLogic;
 package com.rental.bill.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
@@ -11,7 +12,8 @@ import java.time.LocalDateTime;
 @TableName("appointment")
 public class Appointment {
 
-    @TableId(type = IdType.AUTO)
+    @TableLogic
+@TableId(type = IdType.AUTO)
     private Long id;
 
     private Long propertyId;
@@ -35,5 +37,7 @@ public class Appointment {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updatedAt;
 
-    private LocalDateTime deletedAt;
+
+    @TableLogic
+    private Integer deleted;
 }
