@@ -75,7 +75,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 检查手机号是否已被绑定
         User existUser = this.getOne(new LambdaQueryWrapper<User>()
                 .eq(User::getPhone, phone)
-                .isNull(User::getDeletedAt));
+                .isNull(User::getDeleted));
         if (existUser != null && !existUser.getId().equals(userId)) {
             throw new BusinessException("该手机号已被绑定");
         }
@@ -90,6 +90,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User getByOpenid(String openid) {
         return this.getOne(new LambdaQueryWrapper<User>()
                 .eq(User::getOpenid, openid)
-                .isNull(User::getDeletedAt));
+                .isNull(User::getDeleted));
     }
 }

@@ -1,4 +1,3 @@
-import com.baomidou.mybatisplus.annotation.TableLogic;
 package com.rental.bill.entity;
 
 import com.baomidou.mybatisplus.annotation.*;

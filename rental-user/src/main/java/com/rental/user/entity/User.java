@@ -1,6 +1,6 @@
-import com.baomidou.mybatisplus.annotation.TableLogic;
 package com.rental.user.entity;
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import java.time.LocalDateTime;

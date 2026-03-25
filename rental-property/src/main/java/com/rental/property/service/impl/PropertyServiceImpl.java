@@ -47,7 +47,7 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
                .eq(queryDTO.getBuildingId() != null, Property::getBuildingId, queryDTO.getBuildingId())
                .eq(queryDTO.getStatus() != null, Property::getStatus, queryDTO.getStatus())
                .like(StringUtils.hasText(queryDTO.getKeyword()), Property::getRoomNumber, queryDTO.getKeyword())
-               .isNull(Property::getDeletedAt)
+               .isNull(Property::getDeleted)
                .orderByDesc(Property::getCreatedAt);
 
         // 分页查询
@@ -61,7 +61,7 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
     @Override
     public PropertyVO getDetail(Long id) {
         Property property = this.getById(id);
-        if (property == null || property.getDeletedAt() != null) {
+        if (property == null || property.getDeleted() != null) {
             throw new BusinessException("房源不存在");
         }
 
@@ -88,7 +88,7 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
         wrapper.eq(Property::getOwnerId, dto.getOwnerId())
                .eq(Property::getBuildingId, dto.getBuildingId())
                .eq(Property::getRoomNumber, dto.getRoomNumber())
-               .isNull(Property::getDeletedAt);
+               .isNull(Property::getDeleted);
         
         Property existProperty = this.getOne(wrapper);
         if (existProperty != null) {
@@ -110,7 +110,7 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
     @Transactional(rollbackFor = Exception.class)
     public boolean updateProperty(Long id, PropertyUpdateDTO dto) {
         Property property = this.getById(id);
-        if (property == null || property.getDeletedAt() != null) {
+        if (property == null || property.getDeleted() != null) {
             throw new BusinessException("房源不存在");
         }
 
@@ -125,12 +125,11 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
     @Transactional(rollbackFor = Exception.class)
     public boolean deleteProperty(Long id) {
         Property property = this.getById(id);
-        if (property == null || property.getDeletedAt() != null) {
+        if (property == null || property.getDeleted() != null) {
             throw new BusinessException("房源不存在");
         }
 
         // 逻辑删除
-        property.setDeletedAt(java.time.LocalDateTime.now());
         boolean result = this.updateById(property);
         
         log.info("删除房源成功: id={}", id);

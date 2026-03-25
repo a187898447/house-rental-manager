@@ -1,4 +1,3 @@
-import com.baomidou.mybatisplus.annotation.TableLogic;
 package com.rental.property.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
@@ -14,7 +13,7 @@ import java.time.LocalDateTime;
 public class Property {
 
     @TableLogic
-@TableId(type = IdType.AUTO)
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     private Long ownerId;
