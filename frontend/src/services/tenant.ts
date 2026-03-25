@@ -5,11 +5,19 @@ import type { Tenant, ApiResponse } from '@/types'
  * 获取租客列表
  */
 export const getTenants = async (params?: { propertyId?: string; status?: string }) => {
-  return request<Tenant[]>({
-    url: '/api/tenants',
+  if (params?.propertyId) {
+    const res = await request<any>({
+      url: `/api/tenant/property/${params.propertyId}`,
+      method: 'GET'
+    })
+    return res?.records || res?.list || []
+  }
+  const res = await request<any>({
+    url: '/api/tenant/owner/list',
     method: 'GET',
     data: params
   })
+  return res?.records || res?.list || []
 }
 
 /**
@@ -17,7 +25,7 @@ export const getTenants = async (params?: { propertyId?: string; status?: string
  */
 export const getTenantDetail = async (id: string) => {
   return request<Tenant>({
-    url: `/api/tenants/${id}`,
+    url: `/api/tenant/${id}`,
     method: 'GET'
   })
 }
@@ -36,7 +44,7 @@ export const checkIn = async (data: {
   emergencyPhone?: string
 }) => {
   return request<Tenant>({
-    url: '/api/tenants/checkin',
+    url: '/api/tenant/checkin',
     method: 'POST',
     data
   })
@@ -47,7 +55,7 @@ export const checkIn = async (data: {
  */
 export const checkOut = async (id: string, data?: { remark?: string }) => {
   return request<Tenant>({
-    url: `/api/tenants/${id}/checkout`,
+    url: `/api/tenant/${id}/checkout`,
     method: 'POST',
     data
   })
@@ -58,7 +66,7 @@ export const checkOut = async (id: string, data?: { remark?: string }) => {
  */
 export const deleteTenant = async (id: string) => {
   return request<{ success: boolean }>({
-    url: `/api/tenants/${id}`,
+    url: `/api/tenant/${id}`,
     method: 'DELETE'
   })
 }
