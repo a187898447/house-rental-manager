@@ -1,37 +1,4 @@
 /**
  * 全局样式变量
+ * uview-plus 主题变量通过 vite.config.ts 自动注入
  */
-
-// 主题色
-$primary-color: #0087FF;
-$success-color: #5AC725;
-$warning-color: #FFB100;
-$error-color: #F5A623;
-$info-color: #999999;
-
-// 文字颜色
-$text-color: #333333;
-$text-color-light: #666666;
-$text-color-muted: #999999;
-
-// 背景色
-$bg-color: #F8F8F8;
-$bg-color-white: #FFFFFF;
-
-// 边框颜色
-$border-color: #E5E5E5;
-
-// 字体大小
-$font-size-sm: 24rpx;
-$font-size-base: 28rpx;
-$font-size-lg: 32rpx;
-
-// 间距
-$spacing-sm: 10rpx;
-$spacing-base: 20rpx;
-$spacing-lg: 30rpx;
-
-// 圆角
-$border-radius-sm: 8rpx;
-$border-radius-base: 12rpx;
-$border-radius-lg: 16rpx;

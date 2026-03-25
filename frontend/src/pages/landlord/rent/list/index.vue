@@ -81,7 +81,7 @@ const statusClass = (status: number) => {
 const fetchBills = async () => {
   loading.value = true
   try {
-    const status = tabs[currentTab.value].value
+    const status = tabs[currentTab].value
     const res = await getRentBills(status ? { status: Number(status) } : {})
     bills.value = res || []
   } catch (e) {

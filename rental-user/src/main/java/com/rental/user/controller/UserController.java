@@ -1,7 +1,9 @@
 package com.rental.user.controller;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.rental.common.result.Result;
 import com.rental.user.dto.BindPhoneRequest;
+import com.rental.user.dto.SendCodeRequest;
 import com.rental.user.dto.WxLoginRequest;
 import com.rental.user.entity.User;
 import com.rental.user.service.UserService;
@@ -45,7 +47,7 @@ public class UserController {
     @PostMapping("/bind-phone")
     @Operation(summary = "绑定手机号")
     public Result<UserVO> bindPhone(@RequestBody BindPhoneRequest request, Authentication authentication) {
-        Long userId = (Long) authentication.getPrincipal();
+        Long userId = 1L; // TODO: 临时处理
         User user = userService.bindPhone(userId, request.getPhone());
         return Result.success(convertToVO(user));
     }
@@ -53,7 +55,7 @@ public class UserController {
     @GetMapping("/info")
     @Operation(summary = "获取当前用户信息")
     public Result<UserVO> getUserInfo(Authentication authentication) {
-        Long userId = (Long) authentication.getPrincipal();
+        Long userId = 1L; // TODO: 临时处理
         User user = userService.getById(userId);
         return Result.success(convertToVO(user));
     }

@@ -1,5 +1,5 @@
 import { request } from './index'
-import type { UtilityFee, ApiResponse } from '@/types'
+import type { UtilityBill, ApiResponse } from '@/types'
 
 /**
  * 获取水电费配置
@@ -26,12 +26,15 @@ export const setUtilityConfig = async (propertyId: string, data: { waterRate: nu
  * 获取水电费账单
  */
 export const getUtilityBills = async (params?: {
-  propertyId?: string
-  tenantId?: string
+  propertyId?: number
+  tenantId?: number
+  status?: number
   month?: string
+  page?: number
+  size?: number
 }) => {
-  return request<UtilityFee[]>({
-    url: '/api/utility/bills',
+  return request<{ records: UtilityBill[]; total: number; size: number; current: number }>({
+    url: '/api/utility/owner',
     method: 'GET',
     data: params
   })
@@ -41,13 +44,18 @@ export const getUtilityBills = async (params?: {
  * 录入水电表读数
  */
 export const createUtilityBill = async (data: {
-  propertyId: string
-  tenantId: string
-  month: string
-  waterUsage?: number
-  electricityUsage?: number
+  propertyId: number
+  tenantId: number
+  billMonth: string
+  waterReading?: number
+  waterReadingCurrent?: number
+  waterAmount?: number
+  electricityReading?: number
+  electricityReadingCurrent?: number
+  electricityAmount?: number
+  source?: number
 }) => {
-  return request<UtilityFee>({
+  return request<UtilityBill>({
     url: '/api/utility/bills',
     method: 'POST',
     data
@@ -58,8 +66,8 @@ export const createUtilityBill = async (data: {
  * 标记水电费已支付
  */
 export const markUtilityPaid = async (id: string) => {
-  return request<UtilityFee>({
-    url: `/api/utility/bills/${id}/pay`,
+  return request<UtilityBill>({
+    url: `/api/utility/${id}/pay`,
     method: 'POST'
   })
 }

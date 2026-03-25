@@ -6,15 +6,29 @@ spring:
     name: rental-gateway
   cloud:
     nacos:
-      discovery:
-        server-addr: 127.0.0.1:8848
-        namespace: public
       config:
         server-addr: 127.0.0.1:8848
         namespace: public
         file-extension: yaml
-    gateway:
+        import-check:
+          enabled: false
       discovery:
+        ip: 127.0.0.1
+        server-addr: 127.0.0.1:8848
+        namespace: public
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins:
+              - "http://localhost:5173"
+              - "http://localhost:8080"
+            allowed-methods: "*"
+            allowed-headers: "*"
+            allow-credentials: true
+            max-age: 3600
+      discovery:
+        ip: 127.0.0.1
         locator:
           enabled: true
           lower-case-service-id: true
@@ -90,7 +104,7 @@ spring:
         - id: rental-bill-otherfee
           uri: lb://rental-bill
           predicates:
-            - Path=/api/other-fee/**
+            - Path=/api/fee/**
           filters:
             - StripPrefix=1
         # 通知服务 - /api/notify/** -> /notify

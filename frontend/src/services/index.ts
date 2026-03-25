@@ -1,4 +1,37 @@
 /**
+ * 请求封装
+ */
+const baseURL = 'http://localhost:8080'
+
+const request = (options: any) => {
+  return new Promise((resolve, reject) => {
+    const token = uni.getStorageSync('token')
+    uni.request({
+      ...options,
+      url: baseURL + options.url,
+      header: {
+        ...options.header,
+        'Authorization': token ? `Bearer ${token}` : ''
+      },
+      success: (res: any) => {
+        if (res.statusCode === 200) {
+          resolve(res.data)
+        } else {
+          uni.showToast({ title: res.data.message || '请求失败', icon: 'none' })
+          reject(res)
+        }
+      },
+      fail: (err: any) => {
+        uni.showToast({ title: '网络错误', icon: 'none' })
+        reject(err)
+      }
+    })
+  })
+}
+
+export { request }
+
+/**
  * 用户类型
  */
 export interface User {
@@ -19,17 +52,20 @@ export interface Property {
   ownerId: number
   buildingId?: number
   buildingName?: string
+  building?: string
   unit?: string
   roomNumber: string
   rentAmount: number
+  rent?: number
   depositAmount?: number
   status: number
   statusName?: string
-  dailyRate?: number
   area?: number
-  remark?: string
-  createdAt?: string
-  updatedAt?: string
+  images?: string[]
+  floor?: string
+  orientation?: string
+  layout?: string
+  facilities?: string[]
 }
 
 /**
@@ -38,6 +74,10 @@ export interface Property {
 export interface PropertyInput {
   ownerId?: number
   buildingId?: number
+  name?: string
+  address?: string
+  building?: string
+  type?: string
   unit?: string
   roomNumber: string
   rentAmount: number

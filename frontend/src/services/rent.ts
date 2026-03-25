@@ -2,7 +2,7 @@ import { request } from './index'
 import type { RentBill, BillInput, ApiResponse } from '@/types'
 
 /**
- * 获取租金账单列表
+ * 获取租金账单列表（房东）
  */
 export const getRentBills = async (params?: { 
   propertyId?: string
@@ -10,11 +10,12 @@ export const getRentBills = async (params?: {
   status?: string
   month?: string
 }) => {
-  return request<RentBill[]>({
-    url: '/api/rent/bills',
+  const res = await request<any>({
+    url: '/api/rent/bills/owner',
     method: 'GET',
     data: params
   })
+  return res?.records || []
 }
 
 /**

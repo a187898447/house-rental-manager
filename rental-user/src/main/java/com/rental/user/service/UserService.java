@@ -1,12 +1,13 @@
 package com.rental.user.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.rental.user.entity.User;
 import com.rental.user.vo.LoginVO;
 
 /**
  * 用户服务接口
  */
-public interface UserService {
+public interface UserService extends IService<User> {
 
     /**
      * 微信登录
@@ -22,11 +23,6 @@ public interface UserService {
      * @return 用户信息
      */
     User bindPhone(Long userId, String phone);
-
-    /**
-     * 根据ID获取用户
-     */
-    User getById(Long userId);
 
     /**
      * 根据openid获取用户

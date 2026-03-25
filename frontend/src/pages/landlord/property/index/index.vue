@@ -42,8 +42,8 @@
         <PropertyCard
           v-for="item in filteredList"
           :key="item.id"
-          :data="item"
-          @click="goToDetail(String(item.id))"
+          :property="item"
+          @click="goToDetail(item.id)"
         />
       </view>
 
@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { usePropertyStore } from '@/stores/property'
 import PropertyCard from '@/components/PropertyCard.vue'
 
@@ -75,12 +75,11 @@ const pageSize = ref(10)
 
 const loading = computed(() => propertyStore.loading)
 
-// 直接使用 store 中的 properties，不需要 computed 包装
-const properties = propertyStore.properties
+const properties = computed(() => propertyStore.properties)
 
 const filteredList = computed(() => {
-  const statusMap = [0, 1, 2]
-  return properties.filter(p => p.status === statusMap[currentTab.value])
+  const statusMap = ['vacant', 'rented_unpaid', 'rented_paid']
+  return properties.value.filter(p => p.status === statusMap[currentTab.value])
 })
 
 // 标签页切换

@@ -19,14 +19,21 @@ export interface Property {
   ownerId: number
   buildingId?: number
   buildingName?: string
+  building?: string
   unit?: string
   roomNumber: string
   rentAmount: number
+  rent?: number
   depositAmount?: number
   status: number
   statusName?: string
   dailyRate?: number
   area?: number
+  images?: string[]
+  floor?: string
+  orientation?: string
+  layout?: string
+  facilities?: string[]
   remark?: string
   createdAt?: string
   updatedAt?: string
@@ -38,6 +45,7 @@ export interface Property {
 export interface PropertyInput {
   ownerId?: number
   buildingId?: number
+  building?: string
   unit?: string
   roomNumber: string
   rentAmount: number
@@ -58,6 +66,9 @@ export interface Tenant {
   phone: string
   leaseStartDate?: string
   leaseEndDate?: string
+  idCard?: string
+  emergencyContact?: string
+  emergencyPhone?: string
   status: number
   createdAt?: string
   updatedAt?: string
@@ -118,8 +129,10 @@ export interface UtilityBill {
   propertyId: number
   billMonth: string
   waterReading?: number
+  waterReadingCurrent?: number
   waterAmount?: number
   electricityReading?: number
+  electricityReadingCurrent?: number
   electricityAmount?: number
   source: number
   status: number

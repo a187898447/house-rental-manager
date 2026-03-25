@@ -81,7 +81,7 @@ const statusClass = (status: number) => {
 const fetchDeposits = async () => {
   loading.value = true
   try {
-    const status = tabs[currentTab.value].value
+    const status = tabs[currentTab].value
     const res = await getDeposits(status ? { status: Number(status) } : {})
     deposits.value = res || []
   } catch (e) {

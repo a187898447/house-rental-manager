@@ -76,7 +76,7 @@ const statusClass = (status: number) => {
 const fetchRepairs = async () => {
   loading.value = true
   try {
-    const status = tabs[currentTab.value].value
+    const status = tabs[currentTab].value
     const res = await getOwnerRepairs(status ? { status } : {})
     repairs.value = res || []
   } catch (e) {

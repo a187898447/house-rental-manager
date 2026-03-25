@@ -6,7 +6,7 @@ import type { Contract, ApiResponse } from '@/types'
  */
 export const getContracts = async (params?: { tenantId?: string; propertyId?: string }) => {
   return request<Contract[]>({
-    url: '/api/contracts',
+    url: '/api/contract',
     method: 'GET',
     data: params
   })
@@ -17,7 +17,7 @@ export const getContracts = async (params?: { tenantId?: string; propertyId?: st
  */
 export const getContractDetail = async (id: string) => {
   return request<Contract>({
-    url: `/api/contracts/${id}`,
+    url: `/api/contract/${id}`,
     method: 'GET'
   })
 }
@@ -36,7 +36,7 @@ export const createContract = async (data: {
   leaseEnd: string
 }) => {
   return request<Contract>({
-    url: '/api/contracts',
+    url: '/api/contract',
     method: 'POST',
     data
   })
