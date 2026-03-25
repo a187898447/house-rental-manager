@@ -41,7 +41,7 @@
       <view class="form-item">
         <text class="label">租金(元/月)</text>
         <input 
-          v-model.number="formData.rent" 
+          v-model.number="formData.rentAmount" 
           type="digit"
           class="input" 
           placeholder="请输入租金" 
@@ -114,7 +114,7 @@ const formData = reactive({
   building: '',
   unit: '',
   roomNumber: '',
-  rent: '',
+  rentAmount: '',
   area: '',
   images: [] as string[],
   remark: ''
@@ -148,7 +148,7 @@ const onSubmit = async () => {
     uni.showToast({ title: '请输入房间号', icon: 'none' })
     return
   }
-  if (!formData.rent) {
+  if (!formData.rentAmount) {
     uni.showToast({ title: '请输入租金', icon: 'none' })
     return
   }
@@ -191,7 +191,7 @@ onMounted(async () => {
       formData.building = detail.building || ''
       formData.unit = detail.unit || ''
       formData.roomNumber = detail.roomNumber || ''
-      formData.rent = detail.rentAmount || detail.rent || ''
+      formData.rentAmount = detail.rentAmount || detail.rent || ''
       formData.area = detail.area || ''
       formData.images = detail.images || []
       formData.remark = detail.remark || ''
