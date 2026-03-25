@@ -50,7 +50,7 @@ public class TenantServiceController {
             Authentication authentication,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        Long ownerId = 1L; // TODO: 临时处理，正式环境要用 JWT
+        Long ownerId = (Long) authentication.getPrincipal();
         Page<AppointmentVO> result = tenantService.getOwnerAppointments(ownerId, page, size);
         return Result.success(result);
     }
@@ -101,7 +101,7 @@ public class TenantServiceController {
             @RequestParam(required = false) Integer status,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        Long ownerId = 1L; // TODO: 临时处理，正式环境要用 JWT
+        Long ownerId = (Long) authentication.getPrincipal();
         Page<TenantVO> result = tenantService.getOwnerTenants(ownerId, status, page, size);
         return Result.success(result);
     }

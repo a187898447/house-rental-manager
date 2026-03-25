@@ -211,21 +211,6 @@ public class ContractServiceImpl implements ContractService {
         return contractMapper.updateById(contract) > 0;
     }
 
-    @Override
-    public String getSignUrl(Long id) {
-        Contract contract = contractMapper.selectById(id);
-        if (contract == null) {
-            throw new BusinessException("合同不存在");
-        }
-        // 只有待签署状态的合同才能获取签署URL
-        if (contract.getStatus() != 0) {
-            throw new BusinessException("合同状态不正确，当前无法签署");
-        }
-        // 返回小程序签署页面URL（需要根据实际小程序配置）
-        // 这里返回一个示例URL，实际使用需要配置小程序AppID和页面路径
-        return "/pages/contract/sign?id=" + id;
-    }
-
     private ContractVO convertToVO(Contract contract) {
         ContractVO vo = new ContractVO();
         vo.setId(contract.getId());

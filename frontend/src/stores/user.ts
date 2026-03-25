@@ -11,7 +11,6 @@ export const useUserStore = defineStore('user', () => {
   const setUserInfo = (info: User) => {
     userInfo.value = info
     role.value = info.role
-    uni.setStorageSync('userInfo', info)
   }
 
   // 设置 Token

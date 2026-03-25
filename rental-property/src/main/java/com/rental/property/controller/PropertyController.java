@@ -7,7 +7,6 @@ import com.rental.property.dto.PropertyUpdateDTO;
 import com.rental.property.entity.Property;
 import com.rental.property.service.PropertyService;
 import com.rental.property.vo.PropertyVO;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,9 +27,9 @@ public class PropertyController {
 
     @GetMapping("/list")
     @Operation(summary = "分页查询房源列表")
-    public Result<Page<PropertyVO>> list(PropertyQueryDTO queryDTO, Authentication authentication) {
+    public Result<PropertyVO> list(PropertyQueryDTO queryDTO, Authentication authentication) {
         // 从认证信息获取房东ID
-        Long ownerId = 1L; // TODO: 临时处理
+        Long ownerId = (Long) authentication.getPrincipal();
         queryDTO.setOwnerId(ownerId);
         
         var page = propertyService.queryPage(queryDTO);
@@ -48,7 +47,7 @@ public class PropertyController {
     @PostMapping
     @Operation(summary = "新增房源")
     public Result<Long> create(@RequestBody PropertyCreateDTO dto, Authentication authentication) {
-        Long ownerId = 1L; // TODO: 临时处理
+        Long ownerId = (Long) authentication.getPrincipal();
         dto.setOwnerId(ownerId);
         
         Long id = propertyService.create(dto);
@@ -75,7 +74,7 @@ public class PropertyController {
 
     @GetMapping("/public/list")
     @Operation(summary = "公开房源列表（无需登录）")
-    public Result<Page<PropertyVO>> getPublicList(PropertyQueryDTO queryDTO) {
+    public Result<PropertyVO> getPublicList(PropertyQueryDTO queryDTO) {
         // 不需要ownerId筛选，返回所有公开房源
         queryDTO.setOwnerId(null);
         var page = propertyService.queryPage(queryDTO);

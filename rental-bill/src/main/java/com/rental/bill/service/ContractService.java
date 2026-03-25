@@ -49,9 +49,4 @@ public interface ContractService {
      * 解除合同
      */
     boolean terminate(Long id);
-    
-    /**
-     * 获取合同签署URL（用于微信小程序签名）
-     */
-    String getSignUrl(Long id);
 }

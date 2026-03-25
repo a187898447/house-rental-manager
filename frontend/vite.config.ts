@@ -8,13 +8,5 @@ export default defineConfig({
     alias: {
       '@': resolve(__dirname, 'src')
     }
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `@use "uview-plus/theme.scss" as *;`,
-        api: 'modern-compiler'
-      }
-    }
   }
 })

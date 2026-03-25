@@ -2,34 +2,18 @@ import { request } from './index'
 import type { Repair, ApiResponse } from '@/types'
 
 /**
- * 获取报修列表（租客）
+ * 获取报修列表
  */
 export const getRepairs = async (params?: { 
   propertyId?: string
   tenantId?: string
   status?: string
 }) => {
-  const res = await request<any>({
-    url: '/api/repair',
+  return request<Repair[]>({
+    url: '/api/repairs',
     method: 'GET',
     data: params
   })
-  return res?.records || res?.list || []
-}
-
-/**
- * 获取报修列表（房东）
- */
-export const getOwnerRepairs = async (params?: { 
-  propertyId?: string
-  status?: string
-}) => {
-  const res = await request<any>({
-    url: '/api/repair/owner',
-    method: 'GET',
-    data: params
-  })
-  return res?.records || res?.list || []
 }
 
 /**
@@ -37,7 +21,7 @@ export const getOwnerRepairs = async (params?: {
  */
 export const getRepairDetail = async (id: string) => {
   return request<Repair>({
-    url: `/api/repair/${id}`,
+    url: `/api/repairs/${id}`,
     method: 'GET'
   })
 }
@@ -53,7 +37,7 @@ export const createRepair = async (data: {
   contactPhone?: string
 }) => {
   return request<Repair>({
-    url: '/api/repair',
+    url: '/api/repairs',
     method: 'POST',
     data
   })
@@ -67,28 +51,8 @@ export const updateRepairStatus = async (id: string, data: {
   remark?: string
 }) => {
   return request<Repair>({
-    url: `/api/repair/${id}/status`,
+    url: `/api/repairs/${id}/status`,
     method: 'PUT',
     data
-  })
-}
-
-/**
- * 开始处理报修
- */
-export const handleRepair = async (id: string) => {
-  return request<Repair>({
-    url: `/api/repair/${id}/process`,
-    method: 'POST'
-  })
-}
-
-/**
- * 完成报修处理
- */
-export const completeRepair = async (id: string) => {
-  return request<Repair>({
-    url: `/api/repair/${id}/complete`,
-    method: 'POST'
   })
 }

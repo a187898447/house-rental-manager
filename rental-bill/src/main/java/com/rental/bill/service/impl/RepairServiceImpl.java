@@ -160,20 +160,6 @@ public class RepairServiceImpl implements RepairService {
         return repairMapper.updateById(repair) > 0;
     }
 
-    @Override
-    @Transactional
-    public boolean updateStatus(Long id, Integer status, String remark) {
-        Repair repair = repairMapper.selectById(id);
-        if (repair == null) {
-            throw new BusinessException("报修不存在");
-        }
-        repair.setStatus(status);
-        if (remark != null) {
-            repair.setHandleRemark(remark);
-        }
-        return repairMapper.updateById(repair) > 0;
-    }
-
     private RepairVO convertToVO(Repair repair) {
         RepairVO vo = new RepairVO();
         vo.setId(repair.getId());

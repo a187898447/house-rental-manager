@@ -11,7 +11,12 @@
     />
     
     <!-- 房源列表 -->
-    <view class="property-list">
+    <scroll-view 
+      scroll-y 
+      class="property-list"
+      @scrolltolower="onLoadMore"
+      :lower-threshold="100"
+    >
       <view v-if="loading && properties.length === 0" class="loading-wrap">
         <u-loading mode="circle"></u-loading>
       </view>
@@ -32,7 +37,7 @@
       <view v-if="loading && properties.length > 0" class="loading-more">
         <u-loading mode="circle"></u-loading>
       </view>
-    </view>
+    </scroll-view>
     
     <!-- 新增按钮 -->
     <view class="add-btn" @click="onAddProperty">
@@ -42,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import type { Property } from '@/types'
 import { usePropertyStore } from '@/stores/property'
 import PropertyCard from '@/components/PropertyCard.vue'
@@ -52,19 +57,18 @@ const currentTab = ref(0)
 const loading = ref(false)
 
 const tabs = [
-  { name: '未出租', value: 0 },
-  { name: '已出租未缴费', value: 1 },
-  { name: '已出租已缴费', value: 2 }
+  { name: '未出租', value: 'vacant' },
+  { name: '已出租未缴费', value: 'rented_unpaid' },
+  { name: '已出租已缴费', value: 'rented_paid' }
 ]
 
-const statusMap = [0, 1, 2]
+const statusMap = ['vacant', 'rented_unpaid', 'rented_paid']
 
-// 直接使用 store 中的 properties，不需要 computed 包装
-const properties = propertyStore.properties
+const properties = computed(() => propertyStore.properties)
 
 const filteredList = computed(() => {
   const status = statusMap[currentTab.value]
-  return properties.filter((p: Property) => p.status === status)
+  return properties.value.filter(p => p.status === status)
 })
 
 const onTabChange = (index: number) => {
@@ -107,10 +111,6 @@ onMounted(() => {
 .property-list {
   flex: 1;
   padding: 20rpx;
-}
-
-.scroll-view {
-  height: 100%;
 }
 
 .property-items {

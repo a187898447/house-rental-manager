@@ -44,7 +44,7 @@ public class DepositController {
             @RequestParam(required = false) Integer status,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        Long ownerId = 1L; // TODO: 临时处理
+        Long ownerId = (Long) authentication.getPrincipal();
         return Result.success(depositService.getOwnerDeposits(ownerId, status, page, size));
     }
 

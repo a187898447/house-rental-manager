@@ -45,7 +45,7 @@ public class ContractController {
             Authentication authentication,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        Long ownerId = 1L; // TODO: 临时处理
+        Long ownerId = (Long) authentication.getPrincipal();
         Page<ContractVO> result = contractService.getOwnerContracts(ownerId, page, size);
         return Result.success(result);
     }
@@ -74,14 +74,6 @@ public class ContractController {
     public Result<Boolean> sign(@PathVariable Long id, @RequestParam String signUrl) {
         boolean result = contractService.sign(id, signUrl);
         return Result.success("合同签署成功", result);
-    }
-
-    @GetMapping("/{id}/sign-url")
-    @Operation(summary = "获取合同签署URL")
-    @Parameter(name = "id", description = "合同ID")
-    public Result<String> getSignUrl(@PathVariable Long id) {
-        String url = contractService.getSignUrl(id);
-        return Result.success(url);
     }
 
     @PutMapping("/{id}/status")

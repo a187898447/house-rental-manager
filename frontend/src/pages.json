@@ -1,13 +1,6 @@
 {
   "pages": [
     {
-      "path": "pages/login/index",
-      "style": {
-        "navigationBarTitleText": "登录",
-        "navigationStyle": "custom"
-      }
-    },
-    {
       "path": "pages/landlord/index/index",
       "style": {
         "navigationBarTitleText": "房源管理",
@@ -27,9 +20,21 @@
       }
     },
     {
+      "path": "pages/landlord/property/detail/index",
+      "style": {
+        "navigationBarTitleText": "房源详情"
+      }
+    },
+    {
       "path": "pages/landlord/tenant/list/index",
       "style": {
         "navigationBarTitleText": "租客管理"
+      }
+    },
+    {
+      "path": "pages/landlord/tenant/detail/index",
+      "style": {
+        "navigationBarTitleText": "租客详情"
       }
     },
     {
@@ -66,6 +71,12 @@
       "path": "pages/landlord/utility/config/index",
       "style": {
         "navigationBarTitleText": "水电配置"
+      }
+    },
+    {
+      "path": "pages/landlord/utility/list/index",
+      "style": {
+        "navigationBarTitleText": "水电账单"
       }
     },
     {
