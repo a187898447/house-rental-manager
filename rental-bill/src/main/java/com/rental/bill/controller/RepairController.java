@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -52,12 +52,12 @@ public class RepairController {
     @GetMapping("/owner")
     @Operation(summary = "房东报修列表")
     public Result<Page<RepairVO>> getOwnerRepairs(
-            HttpServletRequest request,
+            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "1") String userId,
             @RequestParam(required = false) Long propertyId,
             @RequestParam(required = false) Integer status,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        Long ownerId = Long.valueOf(request.getHeader("X-User-Id"));
+        Long ownerId = Long.valueOf(userId);
         Page<RepairVO> result = repairService.getOwnerRepairs(ownerId, propertyId, status, page, size);
         return Result.success(result);
     }

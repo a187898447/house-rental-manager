@@ -6,7 +6,7 @@ import com.rental.bill.vo.DepositVO;
 import com.rental.common.result.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,11 +39,11 @@ public class DepositController {
     @GetMapping("/owner")
     @Operation(summary = "房东押金列表")
     public Result<Page<DepositVO>> getOwnerDeposits(
-            HttpServletRequest request,
+            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "1") String userId,
             @RequestParam(required = false) Integer status,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        Long ownerId = Long.valueOf(request.getHeader("X-User-Id"));
+        Long ownerId = Long.valueOf(userId);
         return Result.success(depositService.getOwnerDeposits(ownerId, status, page, size));
     }
 

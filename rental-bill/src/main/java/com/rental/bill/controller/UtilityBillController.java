@@ -7,7 +7,7 @@ import com.rental.bill.vo.UtilityBillVO;
 import com.rental.common.result.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
@@ -61,11 +61,11 @@ public class UtilityBillController {
     @GetMapping("/owner")
     @Operation(summary = "房东水电账单列表")
     public Result<Page<UtilityBillVO>> getOwnerBills(
-            HttpServletRequest request,
+            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "1") String userId,
             @RequestParam(required = false) Integer status,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        Long ownerId = Long.valueOf(request.getHeader("X-User-Id"));
+        Long ownerId = Long.valueOf(userId);
         return Result.success(utilityBillService.getOwnerBills(ownerId, status, page, size));
     }
 
