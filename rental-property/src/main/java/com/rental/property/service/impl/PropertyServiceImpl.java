@@ -195,6 +195,9 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
     private Page<PropertyVO> convertPage(Page<Property> page) {
         Page<PropertyVO> voPage = new Page<>(page.getCurrent(), page.getSize(), page.getTotal());
         
+        // 创建新的 ArrayList，避免原 page.getRecords() 不可修改的问题
+        voPage.setRecords(new java.util.ArrayList<>());
+        
         for (Property property : page.getRecords()) {
             PropertyVO vo = new PropertyVO();
             BeanUtils.copyProperties(property, vo);
