@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,10 +43,10 @@ public class ContractController {
     @GetMapping("/owner/list")
     @Operation(summary = "房东合同列表")
     public Result<Page<ContractVO>> getOwnerContracts(
-            Authentication authentication,
+            HttpServletRequest request,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        Long ownerId = 1L; // TODO: 临时处理
+        Long ownerId = Long.valueOf(request.getHeader("X-User-Id"));
         Page<ContractVO> result = contractService.getOwnerContracts(ownerId, page, size);
         return Result.success(result);
     }

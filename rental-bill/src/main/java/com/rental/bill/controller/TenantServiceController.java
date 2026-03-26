@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,10 +48,10 @@ public class TenantServiceController {
     @GetMapping("/appointment/owner")
     @Operation(summary = "收到的预约列表（房东）")
     public Result<Page<AppointmentVO>> getOwnerAppointments(
-            Authentication authentication,
+            HttpServletRequest request,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        Long ownerId = 1L; // TODO: 临时处理，正式环境要用 JWT
+        Long ownerId = Long.valueOf(request.getHeader("X-User-Id"));
         Page<AppointmentVO> result = tenantService.getOwnerAppointments(ownerId, page, size);
         return Result.success(result);
     }
@@ -97,11 +98,11 @@ public class TenantServiceController {
     @GetMapping("/owner/list")
     @Operation(summary = "房东所有租客")
     public Result<Page<TenantVO>> getOwnerTenants(
-            Authentication authentication,
+            HttpServletRequest request,
             @RequestParam(required = false) Integer status,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        Long ownerId = 1L; // TODO: 临时处理，正式环境要用 JWT
+        Long ownerId = Long.valueOf(request.getHeader("X-User-Id"));
         Page<TenantVO> result = tenantService.getOwnerTenants(ownerId, status, page, size);
         return Result.success(result);
     }

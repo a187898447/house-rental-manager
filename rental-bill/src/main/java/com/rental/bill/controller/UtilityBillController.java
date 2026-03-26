@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,11 +64,11 @@ public class UtilityBillController {
     @GetMapping("/owner")
     @Operation(summary = "房东水电账单列表")
     public Result<Page<UtilityBillVO>> getOwnerBills(
-            Authentication authentication,
+            HttpServletRequest request,
             @RequestParam(required = false) Integer status,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        Long ownerId = 1L; // TODO: 临时处理
+        Long ownerId = Long.valueOf(request.getHeader("X-User-Id"));
         return Result.success(utilityBillService.getOwnerBills(ownerId, status, page, size));
     }
 

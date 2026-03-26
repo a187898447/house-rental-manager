@@ -28,9 +28,10 @@ public class PropertyController {
 
     @GetMapping("/list")
     @Operation(summary = "分页查询房源列表")
-    public Result<Page<PropertyVO>> list(PropertyQueryDTO queryDTO, Authentication authentication) {
-        // 从认证信息获取房东ID
-        Long ownerId = 1L; // TODO: 临时处理
+    public Result<Page<PropertyVO>> list(PropertyQueryDTO queryDTO, 
+            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "1") String userId) {
+        // 从 Header 获取房东ID (JwtAuthFilter 设置)
+        Long ownerId = Long.valueOf(userId);
         queryDTO.setOwnerId(ownerId);
         
         var page = propertyService.queryPage(queryDTO);
@@ -47,8 +48,10 @@ public class PropertyController {
 
     @PostMapping
     @Operation(summary = "新增房源")
-    public Result<Long> create(@RequestBody PropertyCreateDTO dto, Authentication authentication) {
-        Long ownerId = 1L; // TODO: 临时处理
+    public Result<Long> create(@RequestBody PropertyCreateDTO dto,
+            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "1") String userId) {
+        // 从 Header 获取房东ID (JwtAuthFilter 设置)
+        Long ownerId = Long.valueOf(userId);
         dto.setOwnerId(ownerId);
         
         Long id = propertyService.create(dto);

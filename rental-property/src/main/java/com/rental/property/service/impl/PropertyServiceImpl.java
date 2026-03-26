@@ -129,8 +129,8 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
             throw new BusinessException("房源不存在");
         }
 
-        // 逻辑删除
-        boolean result = this.updateById(property);
+        // 逻辑删除 - 使用 removeById 触发 @TableLogic
+        boolean result = this.removeById(id);
         
         log.info("删除房源成功: id={}", id);
         return result;
