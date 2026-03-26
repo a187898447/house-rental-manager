@@ -215,14 +215,6 @@ public class TenantServiceImpl implements TenantService {
         log.info("租客删除成功: id={}", id);
         return result;
     }
-            throw new BusinessException("租客不存在");
-        }
-        if (tenant.getStatus() == 1) {
-            throw new BusinessException("已入住的租客无法删除");
-        }
-        
-        return tenantMapper.deleteById(id) > 0;
-    }
 
     // ==================== 转换方法 ====================
 
