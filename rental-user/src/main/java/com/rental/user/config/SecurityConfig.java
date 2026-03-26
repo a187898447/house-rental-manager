@@ -37,7 +37,7 @@ public class SecurityConfig {
             // 配置请求授权
             .authorizeHttpRequests(auth -> auth
                 // 登录接口无需认证
-                .requestMatchers("/user/login", "/user/bind-phone", "/doc.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers("/user/login", "/user/bind-phone", "/user/info", "/user", "/doc.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 // 其他请求需要认证
                 .anyRequest().authenticated())
             // 禁用默认登录页
