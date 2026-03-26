@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -25,7 +24,7 @@ public class NotifyController {
     @GetMapping("/list")
     @Operation(summary = "通知列表")
     public Result<Page<NotifyMessageVO>> getList(
-            Authentication authentication,
+            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "1") String userId,
             @RequestParam(required = false) String type,
             @RequestParam(required = false) Integer readStatus,
             @RequestParam(defaultValue = "1") Integer page,
