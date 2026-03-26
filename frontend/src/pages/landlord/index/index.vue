@@ -62,12 +62,13 @@ const tabs = [
 
 const statusMap = [0, 1, 2]
 
-// 直接使用 store 中的 properties，不需要 computed 包装
+// 直接使用 store 中的 properties
 const properties = propertyStore.properties
 
 const filteredList = computed(() => {
   const status = statusMap[currentTab.value]
-  return properties.filter((p: Property) => p.status === status)
+  console.log('currentTab:', currentTab.value, 'status:', status, 'properties:', properties.value)
+  return properties.value.filter((p: any) => p.status === status)
 })
 
 const onTabChange = (index: number) => {
