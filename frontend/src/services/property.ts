@@ -34,10 +34,12 @@ export const getProperties = async (params?: {
  * 获取房源详情
  */
 export const getPropertyDetail = async (id: number) => {
-  return request<Property>({
+  const res = await request<any>({
     url: `/api/property/${id}`,
     method: 'GET'
   })
+  // 后端返回 Result<PropertyVO> 结构: { code, message, data: PropertyVO }
+  return res?.data || res
 }
 
 /**

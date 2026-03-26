@@ -10,17 +10,18 @@ export const getDeposits = async (params?: { propertyId?: string; tenantId?: str
     method: 'GET',
     data: params
   })
-  return res?.records || res?.list || []
+  return res?.data?.records || res?.records || res?.list || []
 }
 
 /**
  * 获取押金详情
  */
 export const getDepositDetail = async (id: string) => {
-  return request<Deposit>({
+  const res = await request<any>({
     url: `/api/deposit/${id}`,
     method: 'GET'
   })
+  return res?.data || res
 }
 
 /**
@@ -31,30 +32,33 @@ export const createDeposit = async (data: {
   tenantId: string
   amount: number
 }) => {
-  return request<Deposit>({
+  const res = await request<any>({
     url: '/api/deposit',
     method: 'POST',
     data
   })
+  return res?.data || res
 }
 
 /**
  * 退还押金
  */
 export const refundDeposit = async (id: string, data: { amount: number; remark?: string }) => {
-  return request<Deposit>({
+  const res = await request<any>({
     url: `/api/deposit/${id}/refund`,
     method: 'POST',
     data
   })
+  return res?.data || res
 }
 
 /**
  * 确认收款（缴纳押金）
  */
 export const payDeposit = async (id: string, payMethod: string) => {
-  return request<Deposit>({
+  const res = await request<any>({
     url: `/api/deposit/${id}/pay?payMethod=${payMethod}`,
     method: 'POST'
   })
+  return res?.data || res
 }

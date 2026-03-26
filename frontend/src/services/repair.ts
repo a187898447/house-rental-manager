@@ -14,7 +14,7 @@ export const getRepairs = async (params?: {
     method: 'GET',
     data: params
   })
-  return res?.records || res?.list || []
+  return res?.data?.records || res?.records || res?.list || []
 }
 
 /**
@@ -29,17 +29,18 @@ export const getOwnerRepairs = async (params?: {
     method: 'GET',
     data: params
   })
-  return res?.records || res?.list || []
+  return res?.data?.records || res?.records || res?.list || []
 }
 
 /**
  * 获取报修详情
  */
 export const getRepairDetail = async (id: string) => {
-  return request<Repair>({
+  const res = await request<any>({
     url: `/api/repair/${id}`,
     method: 'GET'
   })
+  return res?.data || res
 }
 
 /**
@@ -52,11 +53,12 @@ export const createRepair = async (data: {
   images?: string[]
   contactPhone?: string
 }) => {
-  return request<Repair>({
+  const res = await request<any>({
     url: '/api/repair',
     method: 'POST',
     data
   })
+  return res?.data || res
 }
 
 /**
@@ -66,49 +68,54 @@ export const updateRepairStatus = async (id: string, data: {
   status: 'processing' | 'completed' | 'cancelled'
   remark?: string
 }) => {
-  return request<Repair>({
+  const res = await request<any>({
     url: `/api/repair/${id}/status`,
     method: 'PUT',
     data
   })
+  return res?.data || res
 }
 
 /**
  * 开始处理报修
  */
 export const handleRepair = async (id: string) => {
-  return request<Repair>({
+  const res = await request<any>({
     url: `/api/repair/${id}/process`,
     method: 'POST'
   })
+  return res?.data || res
 }
 
 /**
  * 完成报修处理
  */
 export const completeRepair = async (id: string) => {
-  return request<Repair>({
+  const res = await request<any>({
     url: `/api/repair/${id}/complete`,
     method: 'POST'
   })
+  return res?.data || res
 }
 
 /**
  * 开始处理报修（房东）
  */
 export const startRepairProcess = async (id: string) => {
-  return request<Repair>({
+  const res = await request<any>({
     url: `/api/repair/${id}/process`,
     method: 'POST'
   })
+  return res?.data || res
 }
 
 /**
  * 取消报修
  */
 export const cancelRepair = async (id: string) => {
-  return request<Repair>({
+  const res = await request<any>({
     url: `/api/repair/${id}/cancel`,
     method: 'POST'
   })
+  return res?.data || res
 }

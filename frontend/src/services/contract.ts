@@ -10,17 +10,18 @@ export const getContracts = async (params?: { tenantId?: string; propertyId?: st
     method: 'GET',
     data: params
   })
-  return res?.records || res?.list || []
+  return res?.data?.records || res?.records || res?.list || []
 }
 
 /**
  * 获取合同详情
  */
 export const getContractDetail = async (id: string) => {
-  return request<Contract>({
+  const res = await request<any>({
     url: `/api/contract/${id}`,
     method: 'GET'
   })
+  return res?.data || res
 }
 
 /**
@@ -36,30 +37,33 @@ export const createContract = async (data: {
   leaseStart: string
   leaseEnd: string
 }) => {
-  return request<Contract>({
+  const res = await request<any>({
     url: '/api/contract',
     method: 'POST',
     data
   })
+  return res?.data || res
 }
 
 /**
  * 签署合同
  */
 export const signContract = async (id: string, signImageUrl: string) => {
-  return request<Contract>({
+  const res = await request<any>({
     url: `/api/contract/${id}/sign`,
     method: 'POST',
     data: { signImageUrl }
   })
+  return res?.data || res
 }
 
 /**
  * 获取合同签署 URL（用于微信小程序签名）
  */
 export const getContractSignUrl = async (id: string) => {
-  return request<{ url: string }>({
+  const res = await request<any>({
     url: `/api/contract/${id}/sign-url`,
     method: 'GET'
   })
+  return res?.data || res
 }

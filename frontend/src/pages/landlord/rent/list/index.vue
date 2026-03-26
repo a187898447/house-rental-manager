@@ -217,9 +217,6 @@ onMounted(() => {
     }
   }
 }
-    }
-  }
-}
 
 .bill-list {
   height: calc(100vh - 100rpx);

@@ -42,8 +42,8 @@
         <PropertyCard
           v-for="item in filteredList"
           :key="item.id"
-          :property="item"
-          @click="goToDetail(item.id)"
+          :data="item"
+          @click="goToDetail(String(item.id))"
         />
       </view>
 
@@ -55,16 +55,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { toRaw } from 'vue'
 import { usePropertyStore } from '@/stores/property'
 import PropertyCard from '@/components/PropertyCard.vue'
 
 const propertyStore = usePropertyStore()
 
 const tabs = [
-  { name: '未出租', value: 'vacant' },
-  { name: '已出租未缴费', value: 'rented_unpaid' },
-  { name: '已出租已缴费', value: 'rented_paid' }
+  { name: '全部', value: '' },
+  { name: '未出租', value: 0 },
+  { name: '已出租', value: 1 }
 ]
 
 const currentTab = ref(0)
@@ -75,11 +76,15 @@ const pageSize = ref(10)
 
 const loading = computed(() => propertyStore.loading)
 
-const properties = computed(() => propertyStore.properties)
+// 使用 toRaw 处理 Proxy
+const properties = computed(() => toRaw(propertyStore.properties))
 
 const filteredList = computed(() => {
-  const statusMap = ['vacant', 'rented_unpaid', 'rented_paid']
-  return properties.value.filter(p => p.status === statusMap[currentTab.value])
+  const statusMap = [null, 0, 1]
+  const list = properties.value || []
+  // 全部 tab
+  if (currentTab.value === 0) return list
+  return list.filter((p: any) => p.status === statusMap[currentTab.value])
 })
 
 // 标签页切换

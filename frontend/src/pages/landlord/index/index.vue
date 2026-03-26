@@ -30,7 +30,7 @@
     
     <!-- 房源列表 -->
     <view class="property-list">
-      <view v-if="loading && properties.length === 0" class="loading-wrap">
+      <view v-if="loading && toRaw(properties).length === 0" class="loading-wrap">
         <u-loading-icon mode="circle"></u-loading-icon>
       </view>
       
@@ -47,7 +47,7 @@
         />
       </view>
       
-      <view v-if="loading && properties.length > 0" class="loading-more">
+      <view v-if="loading && toRaw(properties).length > 0" class="loading-more">
         <u-loading-icon mode="circle"></u-loading-icon>
       </view>
     </view>
@@ -77,18 +77,33 @@ const tabs = [
 
 const statusMap = [null, 0, 1]
 
-// 统计
-const vacantCount = computed(() => properties.value.filter((p: any) => p.status === 0).length)
-const rentedCount = computed(() => properties.value.filter((p: any) => p.status === 1).length)
-
 // 直接使用 store 中的 properties
+// Pinia setup 语法返回的是响应式对象
 const properties = propertyStore.properties
+
+console.log('propertyStore.properties:', properties)
+console.log('length:', properties?.length)
+
+// 统计 - 使用 toRaw 获取原始数组
+import { toRaw } from 'vue'
+const rawList = toRaw(properties)
+console.log('raw list:', rawList)
+
+const vacantCount = computed(() => {
+  const list = toRaw(properties) || []
+  return list.filter((p: any) => p.status === 0).length
+})
+const rentedCount = computed(() => {
+  const list = toRaw(properties) || []
+  return list.filter((p: any) => p.status === 1).length
+})
 
 const filteredList = computed(() => {
   const status = statusMap[currentTab.value]
-  const list = properties.value || []
-  console.log('currentTab:', currentTab.value, 'status:', status, 'properties:', list)
-  if (status === null || status === '') return list
+  const list = toRaw(properties) || []
+  console.log('currentTab:', currentTab.value, 'status:', status, 'list length:', list.length)
+  // 全部 tab 时 status 为 null，返回全部
+  if (currentTab.value === 0) return list
   return list.filter((p: any) => p.status === status)
 })
 

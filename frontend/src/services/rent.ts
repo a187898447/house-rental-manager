@@ -15,17 +15,19 @@ export const getRentBills = async (params?: {
     method: 'GET',
     data: params
   })
-  return res?.records || []
+  // 后端返回 Result<Page> 结构: { code, message, data: { records, total, ... } }
+  return res?.data?.records || res?.records || []
 }
 
 /**
  * 获取账单详情
  */
 export const getRentBillDetail = async (id: string) => {
-  return request<RentBill>({
+  const res = await request<any>({
     url: `/api/rent/bills/${id}`,
     method: 'GET'
   })
+  return res?.data || res
 }
 
 /**

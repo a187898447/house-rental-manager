@@ -10,24 +10,25 @@ export const getTenants = async (params?: { propertyId?: string; status?: string
       url: `/api/tenant/property/${params.propertyId}`,
       method: 'GET'
     })
-    return res?.records || res?.list || []
+    return res?.data?.records || res?.records || res?.list || []
   }
   const res = await request<any>({
     url: '/api/tenant/owner/list',
     method: 'GET',
     data: params
   })
-  return res?.records || res?.list || []
+  return res?.data?.records || res?.records || res?.list || []
 }
 
 /**
  * 获取租客详情
  */
 export const getTenantDetail = async (id: string) => {
-  return request<Tenant>({
+  const res = await request<any>({
     url: `/api/tenant/${id}`,
     method: 'GET'
   })
+  return res?.data || res
 }
 
 /**
@@ -43,30 +44,33 @@ export const checkIn = async (data: {
   emergencyContact?: string
   emergencyPhone?: string
 }) => {
-  return request<Tenant>({
+  const res = await request<any>({
     url: '/api/tenant/checkin',
     method: 'POST',
     data
   })
+  return res?.data || res
 }
 
 /**
  * 退租办理
  */
 export const checkOut = async (id: string, data?: { remark?: string }) => {
-  return request<Tenant>({
+  const res = await request<any>({
     url: `/api/tenant/${id}/checkout`,
     method: 'POST',
     data
   })
+  return res?.data || res
 }
 
 /**
  * 删除租客
  */
 export const deleteTenant = async (id: string) => {
-  return request<{ success: boolean }>({
+  const res = await request<any>({
     url: `/api/tenant/${id}`,
     method: 'DELETE'
   })
+  return res?.data || res
 }
