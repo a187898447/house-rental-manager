@@ -40,6 +40,16 @@ public class Property {
      */
     private Integer status;
 
+    /**
+     * 水费单价（元/吨）
+     */
+    private BigDecimal waterPrice;
+
+    /**
+     * 电费单价（元/度）
+     */
+    private BigDecimal electricityPrice;
+
     private BigDecimal dailyRate;
 
     private String remark;

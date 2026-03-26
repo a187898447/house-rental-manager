@@ -48,4 +48,20 @@ public interface PropertyService extends IService<Property> {
      * @return 是否成功
      */
     boolean deleteProperty(Long id);
+
+    /**
+     * 获取水电费配置
+     * @param propertyId 房源ID
+     * @return 水电费配置
+     */
+    Map<String, Object> getUtilityConfig(Long propertyId);
+
+    /**
+     * 设置水电费单价
+     * @param propertyId 房源ID
+     * @param waterPrice 水费单价
+     * @param electricityPrice 电费单价
+     * @return 是否成功
+     */
+    boolean setUtilityConfig(Long propertyId, BigDecimal waterPrice, BigDecimal electricityPrice);
 }

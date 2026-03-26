@@ -6,7 +6,7 @@ import type { UtilityBill, ApiResponse } from '@/types'
  */
 export const getUtilityConfig = async (propertyId: string) => {
   return request<any>({
-    url: `/api/utility/config/${propertyId}`,
+    url: `/api/property/${propertyId}/utility-config`,
     method: 'GET'
   })
 }
@@ -19,9 +19,12 @@ export const setUtilityConfig = async (propertyId: string, data: {
   electricityRate: number
 }) => {
   return request<any>({
-    url: `/api/utility/config/${propertyId}`,
+    url: `/api/property/${propertyId}/utility-config`,
     method: 'PUT',
-    data
+    data: {
+      waterPrice: data.waterRate,
+      electricityPrice: data.electricityRate
+    }
   })
 }
 

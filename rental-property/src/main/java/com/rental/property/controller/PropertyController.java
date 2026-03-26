@@ -12,8 +12,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.Map;
 
 /**
  * 房源控制器
@@ -91,5 +93,25 @@ public class PropertyController {
     public Result<PropertyVO> getPublicDetail(@PathVariable Long id) {
         PropertyVO vo = propertyService.getDetail(id);
         return Result.success(vo);
+    }
+
+    // ========== 水电费配置 ==========
+
+    @GetMapping("/{id}/utility-config")
+    @Operation(summary = "获取水电费配置")
+    @Parameter(name = "id", description = "房源ID")
+    public Result<Map<String, Object>> getUtilityConfig(@PathVariable Long id) {
+        return Result.success(propertyService.getUtilityConfig(id));
+    }
+
+    @PutMapping("/{id}/utility-config")
+    @Operation(summary = "设置水电费单价")
+    @Parameter(name = "id", description = "房源ID")
+    public Result<Boolean> setUtilityConfig(
+            @PathVariable Long id,
+            @RequestParam BigDecimal waterPrice,
+            @RequestParam BigDecimal electricityPrice) {
+        boolean result = propertyService.setUtilityConfig(id, waterPrice, electricityPrice);
+        return Result.success("水电费配置更新成功", result);
     }
 }

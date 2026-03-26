@@ -139,6 +139,55 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
         return result;
     }
 
+    @Override
+    public Map<String, Object> getUtilityConfig(Long propertyId) {
+        Property property = this.getById(propertyId);
+        if (property == null || property.getDeleted() != null) {
+            throw new BusinessException("房源不存在");
+        }
+        
+        // 优先使用房源自己的单价，否则使用楼栋的单价
+        BigDecimal waterPrice = property.getWaterPrice();
+        BigDecimal electricityPrice = property.getElectricityPrice();
+        
+        if ((waterPrice == null || electricityPrice == null) && property.getBuildingId() != null) {
+            // 从楼栋获取单价
+            var building = buildingMapper.selectById(property.getBuildingId());
+            if (building != null) {
+                if (waterPrice == null) waterPrice = building.getWaterPrice();
+                if (electricityPrice == null) electricityPrice = building.getElectricityPrice();
+            }
+        }
+        
+        // 如果都没有，设置默认值
+        if (waterPrice == null) waterPrice = new BigDecimal("3.0");
+        if (electricityPrice == null) electricityPrice = new BigDecimal("0.6");
+        
+        Map<String, Object> config = new HashMap<>();
+        config.put("propertyId", propertyId);
+        config.put("propertyName", property.getName());
+        config.put("waterPrice", waterPrice);
+        config.put("electricityPrice", electricityPrice);
+        
+        return config;
+    }
+
+    @Override
+    public boolean setUtilityConfig(Long propertyId, BigDecimal waterPrice, BigDecimal electricityPrice) {
+        Property property = this.getById(propertyId);
+        if (property == null || property.getDeleted() != null) {
+            throw new BusinessException("房源不存在");
+        }
+        
+        property.setWaterPrice(waterPrice);
+        property.setElectricityPrice(electricityPrice);
+        
+        boolean result = this.updateById(property);
+        log.info("水电费配置更新成功: propertyId={}, waterPrice={}, electricityPrice={}", 
+                propertyId, waterPrice, electricityPrice);
+        return result;
+    }
+
     /**
      * 分页结果转换
      */
