@@ -92,3 +92,23 @@ export const completeRepair = async (id: string) => {
     method: 'POST'
   })
 }
+
+/**
+ * 开始处理报修（房东）
+ */
+export const startRepairProcess = async (id: string) => {
+  return request<Repair>({
+    url: `/api/repair/${id}/process`,
+    method: 'POST'
+  })
+}
+
+/**
+ * 取消报修
+ */
+export const cancelRepair = async (id: string) => {
+  return request<Repair>({
+    url: `/api/repair/${id}/cancel`,
+    method: 'POST'
+  })
+}
