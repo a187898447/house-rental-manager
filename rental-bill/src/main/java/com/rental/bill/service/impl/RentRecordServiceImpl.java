@@ -61,8 +61,11 @@ public class RentRecordServiceImpl implements RentRecordService {
 
     @Override
     public Page<RentRecordVO> getOwnerBills(Long ownerId, Long propertyId, Integer status, String month, Integer page, Integer size) {
+        // 通过 property 表关联过滤 ownerId
         Page<RentRecord> pageParam = new Page<>(page, size);
         LambdaQueryWrapper<RentRecord> wrapper = new LambdaQueryWrapper<RentRecord>()
+                .inSql(RentRecord::getPropertyId, 
+                    "SELECT id FROM property WHERE owner_id = " + ownerId + " AND deleted IS NULL")
                 .eq(propertyId != null, RentRecord::getPropertyId, propertyId)
                 .eq(status != null, RentRecord::getStatus, status)
                 .eq(month != null, RentRecord::getPayMonth, month)

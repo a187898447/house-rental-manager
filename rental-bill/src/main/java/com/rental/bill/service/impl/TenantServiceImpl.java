@@ -80,9 +80,11 @@ public class TenantServiceImpl implements TenantService {
 
     @Override
     public Page<AppointmentVO> getOwnerAppointments(Long ownerId, Integer page, Integer size) {
-        // TODO: 需要关联property表过滤ownerId
+        // 通过 property 表关联过滤 ownerId
         Page<Appointment> pageParam = new Page<>(page, size);
         LambdaQueryWrapper<Appointment> wrapper = new LambdaQueryWrapper<Appointment>()
+                .inSql(Appointment::getPropertyId, 
+                    "SELECT id FROM property WHERE owner_id = " + ownerId + " AND deleted IS NULL")
                 .orderByDesc(Appointment::getCreatedAt);
         
         Page<Appointment> result = appointmentMapper.selectPage(pageParam, wrapper);
@@ -161,9 +163,11 @@ public class TenantServiceImpl implements TenantService {
 
     @Override
     public Page<TenantVO> getOwnerTenants(Long ownerId, Integer status, Integer page, Integer size) {
-        // TODO: 需要关联property表查询ownerId
+        // 通过 property 表关联过滤 ownerId
         Page<Tenant> pageParam = new Page<>(page, size);
         LambdaQueryWrapper<Tenant> wrapper = new LambdaQueryWrapper<Tenant>()
+                .inSql(Tenant::getPropertyId, 
+                    "SELECT id FROM property WHERE owner_id = " + ownerId + " AND deleted IS NULL")
                 .eq(status != null, Tenant::getStatus, status)
                 .orderByDesc(Tenant::getCreatedAt);
         

@@ -86,9 +86,11 @@ public class RepairServiceImpl implements RepairService {
 
     @Override
     public Page<RepairVO> getOwnerRepairs(Long ownerId, Long propertyId, Integer status, Integer page, Integer size) {
-        // TODO: 关联property表过滤ownerId
+        // 通过 property 表关联过滤 ownerId
         Page<Repair> pageParam = new Page<>(page, size);
         LambdaQueryWrapper<Repair> wrapper = new LambdaQueryWrapper<Repair>()
+                .inSql(Repair::getPropertyId, 
+                    "SELECT id FROM property WHERE owner_id = " + ownerId + " AND deleted IS NULL")
                 .eq(propertyId != null, Repair::getPropertyId, propertyId)
                 .eq(status != null, Repair::getStatus, status)
                 .orderByDesc(Repair::getCreatedAt);

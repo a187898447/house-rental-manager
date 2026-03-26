@@ -70,8 +70,11 @@ public class UtilityBillServiceImpl implements UtilityBillService {
 
     @Override
     public Page<UtilityBillVO> getOwnerBills(Long ownerId, Integer status, Integer page, Integer size) {
+        // 通过 property 表关联过滤 ownerId
         Page<UtilityBill> p = new Page<>(page, size);
         LambdaQueryWrapper<UtilityBill> w = new LambdaQueryWrapper<UtilityBill>()
+                .inSql(UtilityBill::getPropertyId, 
+                    "SELECT id FROM property WHERE owner_id = " + ownerId + " AND deleted IS NULL")
                 .eq(status != null, UtilityBill::getStatus, status)
                 .orderByDesc(UtilityBill::getCreatedAt);
         Page<UtilityBill> result = utilityBillMapper.selectPage(p, w);

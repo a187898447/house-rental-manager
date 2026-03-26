@@ -66,9 +66,11 @@ public class OtherFeeServiceImpl implements OtherFeeService {
 
     @Override
     public Page<OtherFeeVO> getOwnerFees(Long ownerId, Integer status, Integer page, Integer size) {
-        // TODO: 关联property表过滤ownerId
+        // 通过 property 表关联过滤 ownerId
         Page<OtherFee> p = new Page<>(page, size);
         LambdaQueryWrapper<OtherFee> w = new LambdaQueryWrapper<OtherFee>()
+                .inSql(OtherFee::getPropertyId, 
+                    "SELECT id FROM property WHERE owner_id = " + ownerId + " AND deleted IS NULL")
                 .eq(status != null, OtherFee::getStatus, status)
                 .orderByDesc(OtherFee::getCreatedAt);
         Page<OtherFee> result = otherFeeMapper.selectPage(p, w);

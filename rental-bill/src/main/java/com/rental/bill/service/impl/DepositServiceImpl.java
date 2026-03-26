@@ -63,11 +63,16 @@ public class DepositServiceImpl implements DepositService {
 
     @Override
     public Page<DepositVO> getOwnerDeposits(Long ownerId, Integer status, Integer page, Integer size) {
-        // TODO: 关联property表过滤ownerId
+        // 通过 property 表关联过滤 ownerId
         Page<Deposit> p = new Page<>(page, size);
+        
+        // 使用子查询：通过 property 表获取该房东的房源ID列表
         LambdaQueryWrapper<Deposit> w = new LambdaQueryWrapper<Deposit>()
+                .inSql(Deposit::getPropertyId, 
+                    "SELECT id FROM property WHERE owner_id = " + ownerId + " AND deleted IS NULL")
                 .eq(status != null, Deposit::getStatus, status)
                 .orderByDesc(Deposit::getCreatedAt);
+        
         Page<Deposit> result = depositMapper.selectPage(p, w);
         Page<DepositVO> voPage = new Page<>(result.getCurrent(), result.getSize(), result.getTotal());
         voPage.setRecords(result.getRecords().stream().map(this::convertToVO).toList());
