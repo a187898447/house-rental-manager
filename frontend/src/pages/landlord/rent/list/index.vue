@@ -41,8 +41,13 @@
             <view class="amount">¥{{ item.amount }}</view>
           </view>
           <view class="bill-footer">
-            <text class="date">创建于 {{ item.createdAt }}</text>
-            <view class="actions" v-if="item.status === 0">
+            <view class="info">
+              <text class="date">创建于 {{ item.createdAt }}</text>
+              <text v-if="item.remindCount > 0" class="remind-info">
+                已催租{{ item.remindCount }}次 · {{ item.remindStatusName }}
+              </text>
+            </view>
+            <view class="actions" v-if="item.status === 0 || item.status === 2">
               <text class="remind-btn" @click.stop="onRemind(item)">催租</text>
               <text class="pay-btn" @click.stop="onPay(item)">确认收款</text>
             </view>
@@ -55,7 +60,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { getRentBills } from '@/services/rent'
+import { getRentBills, sendRentReminder, markBillPaid } from '@/services/rent'
 
 const tabs = [
   { name: '全部', value: '' },
@@ -105,18 +110,31 @@ const onBillClick = (item: any) => {
   uni.navigateTo({ url: `/pages/landlord/rent/detail/index?id=${item.id}` })
 }
 
-const onRemind = (item: any) => {
-  uni.showToast({ title: '催租提醒已发送', icon: 'success' })
+const onRemind = async (item: any) => {
+  try {
+    await sendRentReminder(item.id)
+    uni.showToast({ title: '催租提醒已发送', icon: 'success' })
+    fetchBills()
+  } catch (e: any) {
+    console.error('sendRentReminder error:', e)
+    uni.showToast({ title: '发送失败: ' + (e?.message || e), icon: 'none' })
+  }
 }
 
-const onPay = (item: any) => {
+const onPay = async (item: any) => {
   uni.showModal({
     title: '确认收款',
     content: `确认收到 ${item.amount} 元租金吗？`,
-    success: (res) => {
+    success: async (res) => {
       if (res.confirm) {
-        uni.showToast({ title: '已确认收款', icon: 'success' })
-        fetchBills()
+        try {
+          await markBillPaid(item.id)
+          uni.showToast({ title: '已确认收款', icon: 'success' })
+          fetchBills()
+        } catch (e: any) {
+          console.error('markBillPaid error:', e)
+          uni.showToast({ title: '确认失败: ' + (e?.message || e), icon: 'none' })
+        }
       }
     }
   })
