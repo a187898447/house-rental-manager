@@ -5,7 +5,7 @@
 -- ----------------------------------------
 -- 1. 用户表
 -- ----------------------------------------
-CREATE TABLE `user` (
+CREATE TABLE `t_user` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键',
     `openid` VARCHAR(100) COMMENT '微信openid',
     `phone` VARCHAR(20) COMMENT '手机号',
@@ -266,7 +266,7 @@ CREATE TABLE `receipt` (
 -- ----------------------------------------
 -- 12. 报修表
 -- ----------------------------------------
-CREATE TABLE `repair_request` (
+CREATE TABLE `repair` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键',
     `tenant_id` BIGINT NOT NULL COMMENT '租客ID',
     `property_id` BIGINT NOT NULL COMMENT '房源ID',
@@ -286,9 +286,9 @@ CREATE TABLE `repair_request` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='报修表';
 
 -- ----------------------------------------
--- 13. 消息表
+-- 13. 通知消息表
 -- ----------------------------------------
-CREATE TABLE `message` (
+CREATE TABLE `notify_message` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键',
     `tenant_id` BIGINT NOT NULL COMMENT '发送者ID（租客）',
     `owner_id` BIGINT NOT NULL COMMENT '接收者ID（房东）',
