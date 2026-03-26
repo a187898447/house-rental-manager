@@ -35,9 +35,11 @@ public class User {
     private Integer status;
 
     @TableField(fill = FieldFill.INSERT)
+    @TableField("created_at")
     private LocalDateTime createTime;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
+    @TableField("updated_at")
     private LocalDateTime updateTime;
 
 
