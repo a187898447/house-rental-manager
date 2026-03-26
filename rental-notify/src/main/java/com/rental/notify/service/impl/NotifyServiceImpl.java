@@ -7,6 +7,7 @@ import com.rental.notify.mapper.NotifyMessageMapper;
 import com.rental.notify.service.NotifyService;
 import com.rental.notify.vo.NotifyMessageVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 /**
  * 通知服务实现
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class NotifyServiceImpl implements NotifyService {
@@ -45,6 +47,7 @@ public class NotifyServiceImpl implements NotifyService {
         message.setReadStatus(0);
         
         notifyMessageMapper.insert(message);
+        log.info("通知消息发送成功: id={}, userId={}, type={}", message.getId(), userId, type);
         return message.getId();
     }
 

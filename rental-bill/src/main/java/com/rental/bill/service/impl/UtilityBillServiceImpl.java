@@ -9,6 +9,7 @@ import com.rental.bill.service.UtilityBillService;
 import com.rental.bill.vo.UtilityBillVO;
 import com.rental.common.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UtilityBillServiceImpl implements UtilityBillService {
@@ -39,13 +41,17 @@ public class UtilityBillServiceImpl implements UtilityBillService {
         bill.setSource(dto.getSource() != null ? dto.getSource() : 0);
         bill.setStatus(0);
         utilityBillMapper.insert(bill);
+        log.info("水电账单创建成功: id={}, tenantId={}, month={}", bill.getId(), dto.getTenantId(), dto.getBillMonth());
         return bill.getId();
     }
 
     @Override
     public UtilityBillVO getDetail(Long id) {
         UtilityBill bill = utilityBillMapper.selectById(id);
-        if (bill == null) throw new BusinessException("水电账单不存在");
+        if (bill == null) {
+            log.warn("水电账单不存在: id={}", id);
+            throw new BusinessException("水电账单不存在");
+        }
         return convertToVO(bill);
     }
 
@@ -78,12 +84,20 @@ public class UtilityBillServiceImpl implements UtilityBillService {
     @Transactional
     public boolean pay(Long id) {
         UtilityBill bill = utilityBillMapper.selectById(id);
-        if (bill == null) throw new BusinessException("水电账单不存在");
-        if (bill.getStatus() != 0) throw new BusinessException("状态不正确");
+        if (bill == null) {
+            log.warn("水电账单不存在: id={}", id);
+            throw new BusinessException("水电账单不存在");
+        }
+        if (bill.getStatus() != 0) {
+            log.warn("水电账单状态不正确: id={}, status={}", id, bill.getStatus());
+            throw new BusinessException("状态不正确");
+        }
         bill.setStatus(1); // 已支付
         bill.setPayDate(LocalDate.now());
         bill.setUpdatedAt(LocalDateTime.now());
-        return utilityBillMapper.updateById(bill) > 0;
+        boolean result = utilityBillMapper.updateById(bill) > 0;
+        log.info("水电账单支付成功: id={}", id);
+        return result;
     }
 
     private UtilityBillVO convertToVO(UtilityBill b) {

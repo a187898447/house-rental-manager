@@ -9,6 +9,7 @@ import com.rental.bill.service.RentRecordService;
 import com.rental.bill.vo.RentRecordVO;
 import com.rental.common.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.List;
 /**
  * 租金账单服务实现
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RentRecordServiceImpl implements RentRecordService {
@@ -43,6 +45,7 @@ public class RentRecordServiceImpl implements RentRecordService {
         record.setRemindCount(0);
         
         rentRecordMapper.insert(record);
+        log.info("租金账单创建成功: id={}, tenantId={}, amount={}", record.getId(), dto.getTenantId(), dto.getAmount());
         return record.getId();
     }
 
@@ -50,6 +53,7 @@ public class RentRecordServiceImpl implements RentRecordService {
     public RentRecordVO getDetail(Long id) {
         RentRecord record = rentRecordMapper.selectById(id);
         if (record == null) {
+            log.warn("账单不存在: id={}", id);
             throw new BusinessException("账单不存在");
         }
         return convertToVO(record);
@@ -93,16 +97,20 @@ public class RentRecordServiceImpl implements RentRecordService {
     public boolean markPaid(Long id) {
         RentRecord record = rentRecordMapper.selectById(id);
         if (record == null) {
+            log.warn("账单不存在: id={}", id);
             throw new BusinessException("账单不存在");
         }
         if (!PAYABLE_STATUSES.contains(record.getStatus())) {
+            log.warn("账单状态不正确: id={}, status={}", id, record.getStatus());
             throw new BusinessException("账单状态不正确");
         }
         
         record.setStatus(1); // 已支付
         record.setPayDate(LocalDate.now());
         
-        return rentRecordMapper.updateById(record) > 0;
+        boolean result = rentRecordMapper.updateById(record) > 0;
+        log.info("租金账单支付成功: id={}", id);
+        return result;
     }
 
     @Override
@@ -110,12 +118,14 @@ public class RentRecordServiceImpl implements RentRecordService {
     public boolean sendReminder(Long id) {
         RentRecord record = rentRecordMapper.selectById(id);
         if (record == null) {
+            log.warn("账单不存在: id={}", id);
             throw new BusinessException("账单不存在");
         }
         
         record.setRemindCount(record.getRemindCount() + 1);
         
         // TODO: 调用通知服务发送提醒
+        log.info("租金账单催缴成功: id={}, remindCount={}", id, record.getRemindCount());
         
         return rentRecordMapper.updateById(record) > 0;
     }
@@ -125,15 +135,19 @@ public class RentRecordServiceImpl implements RentRecordService {
     public boolean cancel(Long id) {
         RentRecord record = rentRecordMapper.selectById(id);
         if (record == null) {
+            log.warn("账单不存在: id={}", id);
             throw new BusinessException("账单不存在");
         }
         if (record.getStatus() != 0) {
+            log.warn("账单状态不正确，无法取消: id={}, status={}", id, record.getStatus());
             throw new BusinessException("只有待支付的账单可以取消");
         }
         
         record.setStatus(3); // 已取消
         
-        return rentRecordMapper.updateById(record) > 0;
+        boolean result = rentRecordMapper.updateById(record) > 0;
+        log.info("租金账单取消成功: id={}", id);
+        return result;
     }
 
     private RentRecordVO convertToVO(RentRecord record) {

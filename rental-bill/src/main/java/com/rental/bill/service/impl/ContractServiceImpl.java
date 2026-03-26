@@ -70,6 +70,7 @@ public class ContractServiceImpl implements ContractService {
     public ContractVO getDetail(Long id) {
         Contract contract = contractMapper.selectById(id);
         if (contract == null) {
+            log.warn("合同不存在: id={}", id);
             throw new BusinessException("合同不存在");
         }
         return convertToVO(contract);
@@ -110,6 +111,7 @@ public class ContractServiceImpl implements ContractService {
     public boolean update(Long id, ContractUpdateDTO dto) {
         Contract contract = contractMapper.selectById(id);
         if (contract == null) {
+            log.warn("合同不存在: id={}", id);
             throw new BusinessException("合同不存在");
         }
         
@@ -135,7 +137,9 @@ public class ContractServiceImpl implements ContractService {
             contract.setEndDate(dto.getEndDate());
         }
         
-        return contractMapper.updateById(contract) > 0;
+        boolean result = contractMapper.updateById(contract) > 0;
+        log.info("合同更新成功: id={}", id);
+        return result;
     }
 
     @Override
@@ -171,11 +175,13 @@ public class ContractServiceImpl implements ContractService {
     @Transactional
     public boolean updateStatus(Long id, Integer status) {
         if (!VALID_STATUSES.contains(status)) {
+            log.warn("无效的合同状态: status={}", status);
             throw new BusinessException("无效的合同状态");
         }
         
         Contract contract = contractMapper.selectById(id);
         if (contract == null) {
+            log.warn("合同不存在: id={}", id);
             throw new BusinessException("合同不存在");
         }
         
@@ -186,7 +192,9 @@ public class ContractServiceImpl implements ContractService {
             // TODO: 定时任务检查到期
         }
         
-        return contractMapper.updateById(contract) > 0;
+        boolean result = contractMapper.updateById(contract) > 0;
+        log.info("合同状态更新成功: id={}, status={}", id, status);
+        return result;
     }
 
     @Override
@@ -194,9 +202,11 @@ public class ContractServiceImpl implements ContractService {
     public boolean terminate(Long id) {
         Contract contract = contractMapper.selectById(id);
         if (contract == null) {
+            log.warn("合同不存在: id={}", id);
             throw new BusinessException("合同不存在");
         }
         if (!TERMINABLE_STATUSES.contains(contract.getStatus())) {
+            log.warn("当前状态无法解除合同: id={}, status={}", id, contract.getStatus());
             throw new BusinessException("当前状态无法解除合同");
         }
         
@@ -208,13 +218,16 @@ public class ContractServiceImpl implements ContractService {
         //     notifyClient.notifyContractSigned(tenantId, propertyName, false);
         // }
         
-        return contractMapper.updateById(contract) > 0;
+        boolean result = contractMapper.updateById(contract) > 0;
+        log.info("合同解除成功: id={}", id);
+        return result;
     }
 
     @Override
     public String getSignUrl(Long id) {
         Contract contract = contractMapper.selectById(id);
         if (contract == null) {
+            log.warn("合同不存在: id={}", id);
             throw new BusinessException("合同不存在");
         }
         // 只有待签署状态的合同才能获取签署URL

@@ -62,6 +62,7 @@ public class RepairServiceImpl implements RepairService {
     public RepairVO getDetail(Long id) {
         Repair repair = repairMapper.selectById(id);
         if (repair == null) {
+            log.warn("报修不存在: id={}", id);
             throw new BusinessException("报修不存在");
         }
         return convertToVO(repair);
@@ -105,9 +106,11 @@ public class RepairServiceImpl implements RepairService {
     public boolean startProcess(Long id, Long handlerId) {
         Repair repair = repairMapper.selectById(id);
         if (repair == null) {
+            log.warn("报修不存在: id={}", id);
             throw new BusinessException("报修不存在");
         }
         if (!PROCESSABLE_STATUSES.contains(repair.getStatus())) {
+            log.warn("报修状态不正确: id={}, status={}", id, repair.getStatus());
             throw new BusinessException("报修状态不正确");
         }
         
@@ -119,7 +122,9 @@ public class RepairServiceImpl implements RepairService {
         //     notifyClient.sendNotify(tenantId, "repair", "报修已开始处理", ...);
         // }
         
-        return repairMapper.updateById(repair) > 0;
+        boolean result = repairMapper.updateById(repair) > 0;
+        log.info("报修开始处理: id={}, handlerId={}", id, handlerId);
+        return result;
     }
 
     @Override
@@ -127,9 +132,11 @@ public class RepairServiceImpl implements RepairService {
     public boolean complete(Long id, String remark) {
         Repair repair = repairMapper.selectById(id);
         if (repair == null) {
+            log.warn("报修不存在: id={}", id);
             throw new BusinessException("报修不存在");
         }
         if (!COMPLETABLE_STATUSES.contains(repair.getStatus())) {
+            log.warn("报修状态不正确，无法完成: id={}, status={}", id, repair.getStatus());
             throw new BusinessException("只有处理中的报修可以完成");
         }
         
@@ -141,7 +148,9 @@ public class RepairServiceImpl implements RepairService {
         //     notifyClient.sendNotify(tenantId, "repair", "报修已完成", ...);
         // }
         
-        return repairMapper.updateById(repair) > 0;
+        boolean result = repairMapper.updateById(repair) > 0;
+        log.info("报修完成: id={}", id);
+        return result;
     }
 
     @Override
@@ -149,15 +158,19 @@ public class RepairServiceImpl implements RepairService {
     public boolean cancel(Long id) {
         Repair repair = repairMapper.selectById(id);
         if (repair == null) {
+            log.warn("报修不存在: id={}", id);
             throw new BusinessException("报修不存在");
         }
         if (!CANCELABLE_STATUSES.contains(repair.getStatus())) {
+            log.warn("报修状态不正确，无法取消: id={}, status={}", id, repair.getStatus());
             throw new BusinessException("只有待处理的报修可以取消");
         }
         
         repair.setStatus(3); // 已取消
         
-        return repairMapper.updateById(repair) > 0;
+        boolean result = repairMapper.updateById(repair) > 0;
+        log.info("报修取消: id={}", id);
+        return result;
     }
 
     @Override
@@ -165,13 +178,16 @@ public class RepairServiceImpl implements RepairService {
     public boolean updateStatus(Long id, Integer status, String remark) {
         Repair repair = repairMapper.selectById(id);
         if (repair == null) {
+            log.warn("报修不存在: id={}", id);
             throw new BusinessException("报修不存在");
         }
         repair.setStatus(status);
         if (remark != null) {
             repair.setHandleRemark(remark);
         }
-        return repairMapper.updateById(repair) > 0;
+        boolean result = repairMapper.updateById(repair) > 0;
+        log.info("报修状态更新: id={}, status={}", id, status);
+        return result;
     }
 
     private RepairVO convertToVO(Repair repair) {

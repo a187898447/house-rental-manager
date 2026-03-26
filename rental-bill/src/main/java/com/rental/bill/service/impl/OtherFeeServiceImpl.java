@@ -9,6 +9,7 @@ import com.rental.bill.service.OtherFeeService;
 import com.rental.bill.vo.OtherFeeVO;
 import com.rental.common.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OtherFeeServiceImpl implements OtherFeeService {
@@ -35,13 +37,17 @@ public class OtherFeeServiceImpl implements OtherFeeService {
         fee.setRemark(dto.getRemark());
         fee.setStatus(0); // 待支付
         otherFeeMapper.insert(fee);
+        log.info("其他费用创建成功: id={}, tenantId={}, amount={}", fee.getId(), dto.getTenantId(), dto.getAmount());
         return fee.getId();
     }
 
     @Override
     public OtherFeeVO getDetail(Long id) {
         OtherFee fee = otherFeeMapper.selectById(id);
-        if (fee == null) throw new BusinessException("费用记录不存在");
+        if (fee == null) {
+            log.warn("费用记录不存在: id={}", id);
+            throw new BusinessException("费用记录不存在");
+        }
         return convertToVO(fee);
     }
 
@@ -75,21 +81,37 @@ public class OtherFeeServiceImpl implements OtherFeeService {
     @Transactional
     public boolean pay(Long id) {
         OtherFee fee = otherFeeMapper.selectById(id);
-        if (fee == null) throw new BusinessException("费用记录不存在");
-        if (fee.getStatus() != 0) throw new BusinessException("状态不正确");
+        if (fee == null) {
+            log.warn("费用记录不存在: id={}", id);
+            throw new BusinessException("费用记录不存在");
+        }
+        if (fee.getStatus() != 0) {
+            log.warn("费用状态不正确: id={}, status={}", id, fee.getStatus());
+            throw new BusinessException("状态不正确");
+        }
         fee.setStatus(1); // 已支付
         fee.setPayDate(LocalDate.now());
         fee.setUpdatedAt(LocalDateTime.now());
-        return otherFeeMapper.updateById(fee) > 0;
+        boolean result = otherFeeMapper.updateById(fee) > 0;
+        log.info("其他费用支付成功: id={}", id);
+        return result;
     }
 
     @Override
     @Transactional
     public boolean delete(Long id) {
         OtherFee fee = otherFeeMapper.selectById(id);
-        if (fee == null) throw new BusinessException("费用记录不存在");
-        if (fee.getStatus() == 1) throw new BusinessException("已支付的费用不能删除");
-        return otherFeeMapper.deleteById(id) > 0;
+        if (fee == null) {
+            log.warn("费用记录不存在: id={}", id);
+            throw new BusinessException("费用记录不存在");
+        }
+        if (fee.getStatus() == 1) {
+            log.warn("已支付的费用不能删除: id={}", id);
+            throw new BusinessException("已支付的费用不能删除");
+        }
+        boolean result = otherFeeMapper.deleteById(id) > 0;
+        log.info("其他费用删除成功: id={}", id);
+        return result;
     }
 
     private OtherFeeVO convertToVO(OtherFee f) {

@@ -62,6 +62,7 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
     public PropertyVO getDetail(Long id) {
         Property property = this.getById(id);
         if (property == null || property.getDeleted() != null) {
+            log.warn("房源不存在: id={}", id);
             throw new BusinessException("房源不存在");
         }
 
@@ -111,6 +112,7 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
     public boolean updateProperty(Long id, PropertyUpdateDTO dto) {
         Property property = this.getById(id);
         if (property == null || property.getDeleted() != null) {
+            log.warn("房源不存在: id={}", id);
             throw new BusinessException("房源不存在");
         }
 
@@ -126,6 +128,7 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
     public boolean deleteProperty(Long id) {
         Property property = this.getById(id);
         if (property == null || property.getDeleted() != null) {
+            log.warn("房源不存在: id={}", id);
             throw new BusinessException("房源不存在");
         }
 

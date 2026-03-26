@@ -129,6 +129,7 @@ public class TenantServiceImpl implements TenantService {
         tenant.setStatus(0); // 待入住
         
         tenantMapper.insert(tenant);
+        log.info("租客入住登记成功: id={}, propertyId={}, name={}", tenant.getId(), dto.getPropertyId(), dto.getName());
         return tenant.getId();
     }
 
@@ -136,6 +137,7 @@ public class TenantServiceImpl implements TenantService {
     public TenantVO getDetail(Long id) {
         Tenant tenant = tenantMapper.selectById(id);
         if (tenant == null) {
+            log.warn("租客不存在: id={}", id);
             throw new BusinessException("租客不存在");
         }
         return convertToVO(tenant);
@@ -178,9 +180,11 @@ public class TenantServiceImpl implements TenantService {
     public boolean checkOut(Long id, String remark) {
         Tenant tenant = tenantMapper.selectById(id);
         if (tenant == null) {
+            log.warn("租客不存在: id={}", id);
             throw new BusinessException("租客不存在");
         }
         if (!CHECKOUT_ALLOWED_STATUSES.contains(tenant.getStatus())) {
+            log.warn("租客状态不正确，无法退租: id={}, status={}", id, tenant.getStatus());
             throw new BusinessException("只有已入住的租客可以办理退租");
         }
         
@@ -189,7 +193,9 @@ public class TenantServiceImpl implements TenantService {
             tenant.setRemark(remark);
         }
         
-        return tenantMapper.updateById(tenant) > 0;
+        boolean result = tenantMapper.updateById(tenant) > 0;
+        log.info("租客退租成功: id={}", id);
+        return result;
     }
 
     @Override
@@ -197,6 +203,14 @@ public class TenantServiceImpl implements TenantService {
     public boolean delete(Long id) {
         Tenant tenant = tenantMapper.selectById(id);
         if (tenant == null) {
+            log.warn("租客不存在: id={}", id);
+            throw new BusinessException("租客不存在");
+        }
+        
+        boolean result = tenantMapper.deleteById(id) > 0;
+        log.info("租客删除成功: id={}", id);
+        return result;
+    }
             throw new BusinessException("租客不存在");
         }
         if (tenant.getStatus() == 1) {
