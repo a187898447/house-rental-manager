@@ -48,3 +48,13 @@ export const refundDeposit = async (id: string, data: { amount: number; remark?:
     data
   })
 }
+
+/**
+ * 确认收款（缴纳押金）
+ */
+export const payDeposit = async (id: string, payMethod: string) => {
+  return request<Deposit>({
+    url: `/api/deposit/${id}/pay?payMethod=${payMethod}`,
+    method: 'POST'
+  })
+}

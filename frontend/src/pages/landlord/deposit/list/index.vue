@@ -24,7 +24,7 @@
       </view>
       
       <view v-else class="deposit-items">
-        <view v-for="item in deposits" :key="item.id" class="deposit-card">
+        <view v-for="item in deposits" :key="item.id" class="deposit-card" @click="goDetail(item)">
           <view class="deposit-header">
             <text class="property">{{ item.propertyName }}</text>
             <text class="status" :class="statusClass(item.status)">
@@ -98,6 +98,10 @@ const onTabChange = (index: number) => {
 
 const onRefund = (item: any) => {
   uni.navigateTo({ url: `/pages/landlord/deposit/refund/index?id=${item.id}` })
+}
+
+const goDetail = (item: any) => {
+  uni.navigateTo({ url: `/pages/landlord/deposit/detail/index?id=${item.id}` })
 }
 
 onMounted(() => {

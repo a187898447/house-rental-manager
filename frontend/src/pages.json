@@ -63,6 +63,12 @@
       }
     },
     {
+      "path": "pages/landlord/deposit/detail/index",
+      "style": {
+        "navigationBarTitleText": "押金详情"
+      }
+    },
+    {
       "path": "pages/landlord/utility/config/index",
       "style": {
         "navigationBarTitleText": "水电配置"
