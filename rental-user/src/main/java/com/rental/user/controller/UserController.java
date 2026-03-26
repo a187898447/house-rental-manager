@@ -46,17 +46,19 @@ public class UserController {
 
     @PostMapping("/bind-phone")
     @Operation(summary = "绑定手机号")
-    public Result<UserVO> bindPhone(@RequestBody BindPhoneRequest request, Authentication authentication) {
-        Long userId = 1L; // TODO: 临时处理
-        User user = userService.bindPhone(userId, request.getPhone());
+    public Result<UserVO> bindPhone(@RequestBody BindPhoneRequest request,
+            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "1") String userId) {
+        Long userIdLong = Long.valueOf(userId);
+        User user = userService.bindPhone(userIdLong, request.getPhone());
         return Result.success(convertToVO(user));
     }
 
     @GetMapping("/info")
     @Operation(summary = "获取当前用户信息")
-    public Result<UserVO> getUserInfo(Authentication authentication) {
-        Long userId = 1L; // TODO: 临时处理
-        User user = userService.getById(userId);
+    public Result<UserVO> getUserInfo(
+            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "1") String userId) {
+        Long userIdLong = Long.valueOf(userId);
+        User user = userService.getById(userIdLong);
         return Result.success(convertToVO(user));
     }
 

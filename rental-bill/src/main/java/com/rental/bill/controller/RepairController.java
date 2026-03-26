@@ -66,8 +66,9 @@ public class RepairController {
     @PostMapping("/{id}/process")
     @Operation(summary = "开始处理")
     @Parameter(name = "id", description = "报修ID")
-    public Result<Boolean> startProcess(@PathVariable Long id, Authentication authentication) {
-        Long handlerId = 1L; // TODO: 临时处理
+    public Result<Boolean> startProcess(@PathVariable Long id, 
+            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "1") String userId) {
+        Long handlerId = Long.valueOf(userId); // 从 Header 获取处理人ID
         boolean result = repairService.startProcess(id, handlerId);
         return Result.success("已开始处理", result);
     }

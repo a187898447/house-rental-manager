@@ -30,16 +30,17 @@ public class NotifyController {
             @RequestParam(required = false) Integer readStatus,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        Long userId = 1L; // TODO: 临时处理
-        Page<NotifyMessageVO> result = notifyService.getList(userId, type, readStatus, page, size);
+        Long userIdLong = Long.valueOf(userId);
+        Page<NotifyMessageVO> result = notifyService.getList(userIdLong, type, readStatus, page, size);
         return Result.success(result);
     }
 
     @GetMapping("/unread-count")
     @Operation(summary = "未读数量")
-    public Result<Long> getUnreadCount(Authentication authentication) {
-        Long userId = 1L; // TODO: 临时处理
-        long count = notifyService.getUnreadCount(userId);
+    public Result<Long> getUnreadCount(
+            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "1") String userId) {
+        Long userIdLong = Long.valueOf(userId);
+        long count = notifyService.getUnreadCount(userIdLong);
         return Result.success(count);
     }
 
@@ -53,9 +54,10 @@ public class NotifyController {
 
     @PutMapping("/read-all")
     @Operation(summary = "全部已读")
-    public Result<Boolean> markAllRead(Authentication authentication) {
-        Long userId = 1L; // TODO: 临时处理
-        boolean result = notifyService.markAllRead(userId);
+    public Result<Boolean> markAllRead(
+            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "1") String userId) {
+        Long userIdLong = Long.valueOf(userId);
+        boolean result = notifyService.markAllRead(userIdLong);
         return Result.success(result);
     }
 
