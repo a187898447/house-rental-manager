@@ -36,11 +36,11 @@ public class User {
 
     @TableField(fill = FieldFill.INSERT)
     @TableField("created_at")
-    private LocalDateTime createTime;
+    private LocalDateTime created_at;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     @TableField("updated_at")
-    private LocalDateTime updateTime;
+    private LocalDateTime updated_at;
 
 
     @TableLogic
