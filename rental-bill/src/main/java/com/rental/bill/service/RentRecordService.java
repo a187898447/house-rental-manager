@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.rental.bill.dto.RentRecordCreateDTO;
 import com.rental.bill.vo.RentRecordVO;
 
+import java.util.List;
+
 /**
  * 租金账单服务接口
  */

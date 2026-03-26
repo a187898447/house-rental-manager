@@ -210,7 +210,9 @@ public class TenantServiceImpl implements TenantService {
             log.warn("租客不存在: id={}", id);
             throw new BusinessException("租客不存在");
         }
-        
+        if (tenant.getStatus() == 1) {
+            throw new BusinessException("已入住的租客无法删除");
+        }
         boolean result = tenantMapper.deleteById(id) > 0;
         log.info("租客删除成功: id={}", id);
         return result;
