@@ -8,6 +8,9 @@ import com.rental.property.dto.PropertyUpdateDTO;
 import com.rental.property.entity.Property;
 import com.rental.property.vo.PropertyVO;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
 /**
  * 房源服务接口
  */
