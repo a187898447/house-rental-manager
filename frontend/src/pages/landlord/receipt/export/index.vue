@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getReceipts } from '@/services/receipt'
+import { getOwnerReceipts } from '@/services/receipt'
 
 const typeOptions = ['全部', '租金', '押金', '水电', '其他']
 const currentType = ref(0)
@@ -85,7 +85,7 @@ const fetchReceipts = async () => {
     if (currentMonth.value) {
       params.month = currentMonth.value
     }
-    const res = await getReceipts(params)
+    const res = await getOwnerReceipts(params)
     receipts.value = res || []
   } catch (e) {
     uni.showToast({ title: '加载失败', icon: 'none' })
@@ -105,7 +105,21 @@ const onMonthChange = (e: any) => {
 }
 
 const onExport = (item: any) => {
-  uni.showToast({ title: '导出功能开发中', icon: 'none' })
+  if (item.fileUrl) {
+    uni.downloadFile({
+      url: item.fileUrl,
+      success: (res) => {
+        uni.saveImageToPhotosAlbum({
+          filePath: res.tempFilePath,
+          success: () => {
+            uni.showToast({ title: '已保存到相册', icon: 'success' })
+          }
+        })
+      }
+    })
+  } else {
+    uni.showToast({ title: '暂无可用收据', icon: 'none' })
+  }
 }
 
 onMounted(() => {

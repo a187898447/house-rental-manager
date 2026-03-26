@@ -1,16 +1,17 @@
+// 收据服务
 import { request } from './index'
 
 /**
- * 获取收据列表
+ * 获取收据列表（房东端）
  */
-export const getReceiptList = async (params?: { 
-  tenantId?: string
-  propertyId?: string
+export const getOwnerReceipts = async (params?: {
+  type?: string
+  month?: string
   page?: number
   size?: number
 }) => {
   const res = await request<any>({
-    url: '/api/receipt/list',
+    url: '/api/receipt/owner',
     method: 'GET',
     data: params
   })
@@ -18,23 +19,10 @@ export const getReceiptList = async (params?: {
 }
 
 /**
- * 生成收据
+ * 获取收据详情
  */
-export const createReceipt = async (data: {
-  rentRecordId: string
-}) => {
+export const getReceiptDetail = async (id: string) => {
   return request<any>({
-    url: '/api/receipt',
-    method: 'POST',
-    data
-  })
-}
-
-/**
- * 获取收据下载URL
- */
-export const getReceiptDownloadUrl = async (id: string) => {
-  return request<{ url: string }>({
     url: `/api/receipt/${id}`,
     method: 'GET'
   })
