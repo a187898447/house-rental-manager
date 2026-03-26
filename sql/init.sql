@@ -241,19 +241,26 @@ CREATE TABLE `tenant_invite` (
 -- ----------------------------------------
 CREATE TABLE `receipt` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `type` VARCHAR(20) NOT NULL COMMENT '收据类型: rent-租金, deposit-押金, utility-水电, other-其他',
+    `business_id` BIGINT COMMENT '关联的业务ID',
     `tenant_id` BIGINT NOT NULL COMMENT '租客ID',
     `property_id` BIGINT NOT NULL COMMENT '房源ID',
-    `type` VARCHAR(50) NOT NULL COMMENT '收据类型: rent-租金, deposit-押金, utility-水电, other-其他',
+    `owner_id` BIGINT NOT NULL COMMENT '房东ID',
     `amount` DECIMAL(10,2) NOT NULL COMMENT '金额',
+    `pay_method` VARCHAR(20) COMMENT '支付方式: cash-现金, alipay-支付宝, wechat-微信, bank-银行',
+    `month` VARCHAR(10) COMMENT '收据月份',
+    `remark` VARCHAR(500) COMMENT '备注',
     `file_url` VARCHAR(500) COMMENT '文件URL',
     `file_type` VARCHAR(20) COMMENT '文件类型: PDF, IMG',
-    `bill_month` VARCHAR(10) COMMENT '账单月份',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     `deleted` TINYINT DEFAULT 0 COMMENT '是否删除: 0-否, 1-是',
     PRIMARY KEY (`id`),
     INDEX `idx_receipt_tenant` (`tenant_id`),
-    INDEX `idx_receipt_property` (`property_id`)
+    INDEX `idx_receipt_property` (`property_id`),
+    INDEX `idx_receipt_owner` (`owner_id`),
+    INDEX `idx_receipt_type` (`type`),
+    INDEX `idx_receipt_month` (`month`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='收据表';
 
 -- ----------------------------------------
@@ -324,24 +331,3 @@ CREATE TABLE `appointment` (
 -- ----------------------------------------
 -- 收据表
 -- ----------------------------------------
-CREATE TABLE IF NOT EXISTS `receipt` (
-    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `type` VARCHAR(20) NOT NULL COMMENT '关联类型: rent-租金, deposit-押金, utility-水电, other-其他',
-    `business_id` BIGINT COMMENT '关联的业务ID',
-    `property_id` BIGINT NOT NULL COMMENT '房源ID',
-    `tenant_id` BIGINT NOT NULL COMMENT '租客ID',
-    `owner_id` BIGINT NOT NULL COMMENT '房东ID',
-    `amount` DECIMAL(10,2) NOT NULL COMMENT '金额',
-    `pay_method` VARCHAR(20) COMMENT '支付方式: cash-现金, alipay-支付宝, wechat-微信, bank-银行',
-    `month` VARCHAR(10) COMMENT '收据月份',
-    `remark` VARCHAR(500) COMMENT '备注',
-    `file_url` VARCHAR(500) COMMENT '收据文件URL',
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `deleted` TINYINT DEFAULT 0 COMMENT '是否删除: 0-否, 1-是',
-    PRIMARY KEY (`id`),
-    INDEX `idx_receipt_owner` (`owner_id`),
-    INDEX `idx_receipt_property` (`property_id`),
-    INDEX `idx_receipt_type` (`type`),
-    INDEX `idx_receipt_month` (`month`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='收据表';
