@@ -69,6 +69,12 @@
       }
     },
     {
+      "path": "pages/landlord/utility/reading/index",
+      "style": {
+        "navigationBarTitleText": "水电录入"
+      }
+    },
+    {
       "path": "pages/landlord/fee/list/index",
       "style": {
         "navigationBarTitleText": "其他费用"
