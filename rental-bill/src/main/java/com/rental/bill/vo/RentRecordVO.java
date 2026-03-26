@@ -41,6 +41,12 @@ public class RentRecordVO {
     
     private Integer remindCount;
     
+    private LocalDate lastRemindDate;
+    
+    private Integer remindStatus;
+    
+    private String remindStatusName;
+    
     private String remark;
     
     private LocalDateTime createdAt;

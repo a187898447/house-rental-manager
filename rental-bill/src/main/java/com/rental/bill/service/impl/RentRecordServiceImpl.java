@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 
@@ -125,12 +126,58 @@ public class RentRecordServiceImpl implements RentRecordService {
             throw new BusinessException("账单不存在");
         }
         
-        record.setRemindCount(record.getRemindCount() + 1);
+        // 催租提醒逻辑：D+0 → D+2 → D+3
+        LocalDate today = LocalDate.now();
+        LocalDate payDate = record.getPayDate();
+        if (payDate == null) {
+            throw new BusinessException("账单支付日期未设置");
+        }
         
-        // TODO: 调用通知服务发送提醒
-        log.info("租金账单催缴成功: id={}, remindCount={}", id, record.getRemindCount());
+        long overdueDays = ChronoUnit.DAYS.between(payDate, today);
+        int currentStatus = record.getRemindStatus() != null ? record.getRemindStatus() : 0;
+        
+        // 根据逾期天数判断提醒阶段
+        if (overdueDays <= 0) {
+            // D+0: 首次提醒（到期日当天）
+            if (currentStatus < 1) {
+                record.setRemindStatus(1);
+                log.info("账单 {} 处于到期日，发送 D+0 提醒", id);
+            }
+        } else if (overdueDays <= 2) {
+            // D+2: 逾期2天内
+            if (currentStatus < 2) {
+                record.setRemindStatus(2);
+                log.info("账单 {} 逾期 {} 天，发送 D+2 提醒", id, overdueDays);
+            }
+        } else {
+            // D+3: 逾期3天及以上
+            if (currentStatus < 3) {
+                record.setRemindStatus(3);
+                log.info("账单 {} 逾期 {} 天，发送 D+3 提醒（租客+房东）", id, overdueDays);
+                // TODO: 通知房东（等通知服务对接后实现）
+            }
+        }
+        
+        record.setRemindCount(record.getRemindCount() + 1);
+        record.setLastRemindDate(today);
+        
+        log.info("租金账单催缴: id={}, remindCount={}, remindStatus={}, overdueDays={}", 
+                id, record.getRemindCount(), record.getRemindStatus(), overdueDays);
         
         return rentRecordMapper.updateById(record) > 0;
+    }
+
+    @Override
+    public List<Long> getBillsNeedReminder() {
+        // 查找所有待支付和已逾期的账单，且提醒状态未完成的
+        LambdaQueryWrapper<RentRecord> wrapper = new LambdaQueryWrapper<RentRecord>()
+                .in(RentRecord::getStatus, 0, 2) // 待支付或已逾期
+                .lt(RentRecord::getRemindStatus, 3); // remindStatus < 3 (还未完成 D+3 提醒)
+        
+        List<RentRecord> records = rentRecordMapper.selectList(wrapper);
+        log.info("需要催租提醒的账单数量: {}", records.size());
+        
+        return records.stream().map(RentRecord::getId).toList();
     }
 
     @Override
@@ -166,6 +213,9 @@ public class RentRecordServiceImpl implements RentRecordService {
         vo.setStatus(record.getStatus());
         vo.setStatusName(getStatusName(record.getStatus()));
         vo.setRemindCount(record.getRemindCount());
+        vo.setLastRemindDate(record.getLastRemindDate());
+        vo.setRemindStatus(record.getRemindStatus());
+        vo.setRemindStatusName(getRemindStatusName(record.getRemindStatus()));
         vo.setRemark(record.getRemark());
         vo.setCreatedAt(record.getCreatedAt());
         vo.setUpdatedAt(record.getUpdatedAt());
@@ -178,6 +228,17 @@ public class RentRecordServiceImpl implements RentRecordService {
             case 1 -> "已支付";
             case 2 -> "已逾期";
             case 3 -> "已取消";
+            default -> "未知";
+        };
+    }
+    
+    private String getRemindStatusName(Integer status) {
+        if (status == null) return "未提醒";
+        return switch (status) {
+            case 0 -> "未提醒";
+            case 1 -> "D+0已提醒";
+            case 2 -> "D+2已提醒";
+            case 3 -> "D+3已提醒";
             default -> "未知";
         };
     }

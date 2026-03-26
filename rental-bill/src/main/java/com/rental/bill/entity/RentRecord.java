@@ -39,6 +39,16 @@ public class RentRecord {
     private Integer remindCount;
 
     /**
+     * 上次提醒日期
+     */
+    private LocalDate lastRemindDate;
+
+    /**
+     * 提醒状态：0-未提醒 1-D+0已提醒 2-D+2已提醒 3-D+3已提醒
+     */
+    private Integer remindStatus;
+
+    /**
      * 支付方式：cash-现金、transfer-转账、wechat-微信、alipay-支付宝
      */
     private String payMethod;

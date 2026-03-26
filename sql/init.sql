@@ -106,6 +106,8 @@ CREATE TABLE `rent_record` (
     `pay_date` DATE COMMENT '实际支付日期',
     `status` INT DEFAULT 0 COMMENT '状态: 0-待支付, 1-已支付, 2-已逾期, 3-已取消',
     `remind_count` INT DEFAULT 0 COMMENT '催租提醒次数',
+    `last_remind_date` DATE COMMENT '上次提醒日期',
+    `remind_status` INT DEFAULT 0 COMMENT '提醒状态: 0-未提醒, 1-D+0已提醒, 2-D+2已提醒, 3-D+3已提醒',
     `pay_method` VARCHAR(20) COMMENT '支付方式: cash-现金, transfer-转账, wechat-微信, alipay-支付宝',
     `remark` VARCHAR(500) COMMENT '备注',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

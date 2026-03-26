@@ -40,6 +40,11 @@ public interface RentRecordService {
     boolean sendReminder(Long id);
     
     /**
+     * 获取需要催租的账单列表（用于定时任务）
+     */
+    List<Long> getBillsNeedReminder();
+    
+    /**
      * 取消账单
      */
     boolean cancel(Long id);
