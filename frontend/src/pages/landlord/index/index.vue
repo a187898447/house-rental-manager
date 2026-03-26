@@ -1,5 +1,20 @@
 <template>
   <view class="property-list-page">
+    <!-- 顶部标题区域 -->
+    <view class="header">
+      <view class="title">我的房源</view>
+      <view class="stats">
+        <view class="stat-item">
+          <text class="num">{{ vacantCount }}</text>
+          <text class="label">待出租</text>
+        </view>
+        <view class="stat-item">
+          <text class="num">{{ rentedCount }}</text>
+          <text class="label">已出租</text>
+        </view>
+      </view>
+    </view>
+    
     <!-- 顶部 Tabs -->
     <view class="tabs">
       <view 
@@ -55,20 +70,25 @@ const currentTab = ref(0)
 const loading = ref(false)
 
 const tabs = [
+  { name: '全部', value: '' },
   { name: '未出租', value: 0 },
-  { name: '已出租未缴费', value: 1 },
-  { name: '已出租已缴费', value: 2 }
+  { name: '已出租', value: 1 }
 ]
 
-const statusMap = [0, 1, 2]
+const statusMap = [null, 0, 1]
+
+// 统计
+const vacantCount = computed(() => properties.value.filter((p: any) => p.status === 0).length)
+const rentedCount = computed(() => properties.value.filter((p: any) => p.status === 1).length)
 
 // 直接使用 store 中的 properties
 const properties = propertyStore.properties
 
 const filteredList = computed(() => {
   const status = statusMap[currentTab.value]
-  const list = properties || []
+  const list = properties.value || []
   console.log('currentTab:', currentTab.value, 'status:', status, 'properties:', list)
+  if (status === null || status === '') return list
   return list.filter((p: any) => p.status === status)
 })
 
@@ -103,35 +123,75 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .property-list-page {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #F8F8F8;
+  background-color: #F5F7FA;
+}
+
+/* 顶部搜索栏区域 */
+.header {
+  background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+  padding: 30rpx;
+  
+  .title {
+    font-size: 40rpx;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 20rpx;
+  }
+  
+  .search-box {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 40rpx;
+    padding: 16rpx 30rpx;
+    display: flex;
+    align-items: center;
+    
+    .placeholder {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 28rpx;
+    }
+  }
 }
 
 .tabs {
   display: flex;
   background-color: #fff;
-  padding: 20rpx 0;
+  padding: 0 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
   
   .tab-item {
     flex: 1;
     text-align: center;
     font-size: 28rpx;
-    color: #666;
-    padding: 16rpx 0;
-    border-bottom: 4rpx solid transparent;
+    color: #999;
+    padding: 28rpx 0;
+    position: relative;
+    transition: all 0.3s ease;
     
     &.active {
-      color: #0087FF;
-      border-bottom-color: #0087FF;
+      color: #667EEA;
+      font-weight: 600;
+    }
+    
+    &.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60rpx;
+      height: 6rpx;
+      background: linear-gradient(90deg, #667EEA, #764BA2);
+      border-radius: 3rpx;
     }
   }
 }
 
 .property-list {
   flex: 1;
-  padding: 20rpx;
+  padding: 24rpx;
 }
 
 .scroll-view {
@@ -141,7 +201,7 @@ onMounted(() => {
 .property-items {
   display: flex;
   flex-direction: column;
-  gap: 20rpx;
+  gap: 24rpx;
 }
 
 .loading-wrap,
@@ -150,20 +210,24 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 60rpx 0;
+  padding: 100rpx 0;
 }
 
 .add-btn {
   position: fixed;
-  right: 30rpx;
-  bottom: 30rpx;
-  width: 100rpx;
-  height: 100rpx;
-  background-color: #0087FF;
+  right: 40rpx;
+  bottom: 60rpx;
+  width: 120rpx;
+  height: 120rpx;
+  background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 4rpx 20rpx rgba(0, 135, 255, 0.4);
+  box-shadow: 0 8rpx 30rpx rgba(102, 126, 234, 0.5);
+  
+  &:active {
+    transform: scale(0.95);
+  }
 }
 </style>
