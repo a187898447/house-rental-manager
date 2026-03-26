@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class User {
 
     @TableLogic
-@TableId(type = IdType.AUTO)
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     private String openid;
@@ -35,13 +35,10 @@ public class User {
     private Integer status;
 
     @TableField(fill = FieldFill.INSERT)
-    @TableField("created_at")
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @TableField("updated_at")
-    private LocalDateTime updated_at;
-
+    private LocalDateTime updatedAt;
 
     @TableLogic
     private Integer deleted;
