@@ -67,8 +67,9 @@ const properties = propertyStore.properties
 
 const filteredList = computed(() => {
   const status = statusMap[currentTab.value]
-  console.log('currentTab:', currentTab.value, 'status:', status, 'properties:', properties.value)
-  return properties.value.filter((p: any) => p.status === status)
+  const list = properties || []
+  console.log('currentTab:', currentTab.value, 'status:', status, 'properties:', list)
+  return list.filter((p: any) => p.status === status)
 })
 
 const onTabChange = (index: number) => {

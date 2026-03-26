@@ -48,7 +48,6 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
                .eq(queryDTO.getBuildingId() != null, Property::getBuildingId, queryDTO.getBuildingId())
                .eq(queryDTO.getStatus() != null, Property::getStatus, queryDTO.getStatus())
                .like(StringUtils.hasText(queryDTO.getKeyword()), Property::getRoomNumber, queryDTO.getKeyword())
-               .isNull(Property::getDeleted)
                .orderByDesc(Property::getCreatedAt);
 
         // 分页查询
@@ -62,7 +61,7 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
     @Override
     public PropertyVO getDetail(Long id) {
         Property property = this.getById(id);
-        if (property == null || property.getDeleted() != null) {
+        if (property == null) {
             log.warn("房源不存在: id={}", id);
             throw new BusinessException("房源不存在");
         }
@@ -89,8 +88,7 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
         LambdaQueryWrapper<Property> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Property::getOwnerId, dto.getOwnerId())
                .eq(Property::getBuildingId, dto.getBuildingId())
-               .eq(Property::getRoomNumber, dto.getRoomNumber())
-               .isNull(Property::getDeleted);
+               .eq(Property::getRoomNumber, dto.getRoomNumber());
         
         Property existProperty = this.getOne(wrapper);
         if (existProperty != null) {
@@ -112,7 +110,7 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
     @Transactional(rollbackFor = Exception.class)
     public boolean updateProperty(Long id, PropertyUpdateDTO dto) {
         Property property = this.getById(id);
-        if (property == null || property.getDeleted() != null) {
+        if (property == null) {
             log.warn("房源不存在: id={}", id);
             throw new BusinessException("房源不存在");
         }
@@ -128,7 +126,7 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
     @Transactional(rollbackFor = Exception.class)
     public boolean deleteProperty(Long id) {
         Property property = this.getById(id);
-        if (property == null || property.getDeleted() != null) {
+        if (property == null) {
             log.warn("房源不存在: id={}", id);
             throw new BusinessException("房源不存在");
         }
@@ -143,7 +141,7 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
     @Override
     public Map<String, Object> getUtilityConfig(Long propertyId) {
         Property property = this.getById(propertyId);
-        if (property == null || property.getDeleted() != null) {
+        if (property == null) {
             throw new BusinessException("房源不存在");
         }
         
@@ -176,7 +174,7 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
     @Override
     public boolean setUtilityConfig(Long propertyId, BigDecimal waterPrice, BigDecimal electricityPrice) {
         Property property = this.getById(propertyId);
-        if (property == null || property.getDeleted() != null) {
+        if (property == null) {
             throw new BusinessException("房源不存在");
         }
         
