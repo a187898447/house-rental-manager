@@ -15,7 +15,19 @@ export const getProperties = async (params?: {
     method: 'GET',
     data: params
   })
-  return res?.records || res?.list || []
+  console.log('getProperties res:', res)
+  // 后端返回 Result<Page> 结构: { code, message, data: { records, total, ... } }
+  const pageData = res?.data
+  if (pageData && Array.isArray(pageData.records)) {
+    return pageData.records
+  }
+  if (Array.isArray(res?.records)) {
+    return res.records
+  }
+  if (Array.isArray(res?.list)) {
+    return res.list
+  }
+  return []
 }
 
 /**
