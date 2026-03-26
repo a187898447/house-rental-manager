@@ -56,6 +56,8 @@ CREATE TABLE `property` (
     `area` DECIMAL(10,2) COMMENT '面积（㎡）',
     `rent_amount` DECIMAL(10,2) NOT NULL COMMENT '月租金',
     `deposit_amount` DECIMAL(10,2) COMMENT '押金',
+    `water_price` DECIMAL(10,2) DEFAULT 3.5 COMMENT '水费单价（元/吨）',
+    `electricity_price` DECIMAL(10,2) DEFAULT 0.6 COMMENT '电费单价（元/度）',
     `status` INT DEFAULT 0 COMMENT '状态: 0-未出租, 1-已出租',
     `daily_rate` DECIMAL(10,2) COMMENT '日租金（按天出租）',
     `remark` VARCHAR(500) COMMENT '备注',
