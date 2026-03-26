@@ -137,9 +137,9 @@ const handleClick = () => {
   }
   
   .rent {
-    font-size: 32rpx;
-    font-weight: 600;
-    color: #0087FF;
+    font-size: 34rpx;
+    font-weight: 700;
+    color: #667EEA;
   }
   
   .area {

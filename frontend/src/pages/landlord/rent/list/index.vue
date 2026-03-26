@@ -148,25 +148,75 @@ onMounted(() => {
 <style scoped lang="scss">
 .rent-list-page {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #F5F7FA;
+}
+
+/* 顶部统计卡片 */
+.stats-bar {
+  display: flex;
+  padding: 30rpx;
+  gap: 20rpx;
+  
+  .stat-card {
+    flex: 1;
+    background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+    border-radius: 20rpx;
+    padding: 30rpx;
+    color: #fff;
+    
+    &.warning {
+      background: linear-gradient(135deg, #F6D365 0%, #FDA085 100%);
+    }
+    
+    &.danger {
+      background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);
+    }
+    
+    .num {
+      font-size: 48rpx;
+      font-weight: bold;
+    }
+    
+    .label {
+      font-size: 24rpx;
+      opacity: 0.9;
+      margin-top: 8rpx;
+    }
+  }
 }
 
 .tabs {
   display: flex;
   background-color: #fff;
-  padding: 20rpx 0;
+  padding: 0 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
   
   .tab {
     flex: 1;
     text-align: center;
     font-size: 28rpx;
-    color: #666;
-    padding: 16rpx 0;
-    border-bottom: 4rpx solid transparent;
+    color: #999;
+    padding: 28rpx 0;
+    position: relative;
     
     &.active {
-      color: #0087FF;
-      border-bottom-color: #0087FF;
+      color: #667EEA;
+      font-weight: 600;
+    }
+    
+    &.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40rpx;
+      height: 6rpx;
+      background: linear-gradient(90deg, #667EEA, #764BA2);
+      border-radius: 3rpx;
+    }
+  }
+}
     }
   }
 }
