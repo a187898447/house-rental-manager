@@ -1,7 +1,9 @@
 package com.rental.bill.task;
 
+import com.rental.bill.entity.Contract;
 import com.rental.bill.entity.RentRecord;
 import com.rental.bill.entity.Tenant;
+import com.rental.bill.mapper.ContractMapper;
 import com.rental.bill.mapper.RentRecordMapper;
 import com.rental.bill.mapper.TenantMapper;
 import com.rental.common.notify.NotifyClient;
@@ -25,6 +27,7 @@ public class BillTask {
 
     private final TenantMapper tenantMapper;
     private final RentRecordMapper rentRecordMapper;
+    private final ContractMapper contractMapper;
 
     @Autowired(required = false)
     private NotifyClient notifyClient;
@@ -59,15 +62,39 @@ public class BillTask {
                     continue;
                 }
                 
-                // TODO: 从合同表获取租金金额，这里简化处理
-                // 实际应查询contract表获取rentAmount
+                // 从合同表获取租金金额
+                Contract contract = contractMapper.selectOne(
+                    new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<Contract>()
+                        .eq(Contract::getTenantId, tenant.getId())
+                        .eq(Contract::getStatus, 2) // 已生效
+                        .orderByDesc(Contract::getCreatedAt)
+                        .last("LIMIT 1")
+                );
                 
-                log.info("为租客 {} 生成 {} 月账单", tenant.getId(), currentMonth);
+                if (contract == null) {
+                    log.warn("租客 {} 无有效合同，跳过", tenant.getId());
+                    continue;
+                }
                 
-                // TODO: 发送通知给租客
-                // if (notifyClient != null) {
-                //     notifyClient.notifyBillCreated(tenant.getUserId(), propertyName, amount, currentMonth);
-                // }
+                // 创建租金账单
+                RentRecord record = new RentRecord();
+                record.setTenantId(tenant.getId());
+                record.setPropertyId(tenant.getPropertyId());
+                record.setAmount(contract.getRentAmount());
+                record.setPayMonth(currentMonth);
+                record.setStatus(0); // 待支付
+                record.setRemindCount(0);
+                
+                // 设置支付日期为当月最后一天
+                LocalDate payDate = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
+                record.setPayDate(payDate);
+                
+                rentRecordMapper.insert(record);
+                
+                log.info("为租客 {} 生成 {} 月账单: amount={}", tenant.getId(), currentMonth, contract.getRentAmount());
+                
+                // 记录日志（通知功能暂缓）
+                log.info("租客 {} 账单生成完成，待支付金额: {}", tenant.getId(), contract.getRentAmount());
                 
             } catch (Exception e) {
                 log.error("生成账单失败: tenantId={}, error={}", tenant.getId(), e.getMessage());
@@ -99,8 +126,7 @@ public class BillTask {
                 bill.setStatus(2); // 已逾期
                 rentRecordMapper.updateById(bill);
                 
-                // TODO: 发送逾期通知
-                log.info("账单 {} 已逾期", bill.getId());
+                log.info("账单 {} 已逾期，状态已更新", bill.getId());
                 
             } catch (Exception e) {
                 log.error("更新逾期状态失败: billId={}, error={}", bill.getId(), e.getMessage());
@@ -134,7 +160,7 @@ public class BillTask {
                 bill.setRemindCount(bill.getRemindCount() + 1);
                 rentRecordMapper.updateById(bill);
                 
-                // TODO: 发送微信模板消息
+                // 微信模板消息通知（暂缓）
                 log.info("发送租金提醒: billId={}, remindCount={}", bill.getId(), bill.getRemindCount());
                 
             } catch (Exception e) {
