@@ -166,6 +166,12 @@
       }
     },
     {
+      "path": "pages/landlord/settings/profile/index",
+      "style": {
+        "navigationBarTitleText": "个人信息"
+      }
+    },
+    {
       "path": "pages/landlord/settings/notification/index",
       "style": {
         "navigationBarTitleText": "通知设置"
