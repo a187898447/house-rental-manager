@@ -24,7 +24,7 @@
       </view>
       
       <view v-else class="fee-items">
-        <view v-for="item in fees" :key="item.id" class="fee-card">
+        <view v-for="item in fees" :key="item.id" class="fee-card" @click="goDetail(item)">
           <view class="fee-header">
             <text class="type">{{ typeText(item.feeType) }}</text>
             <text class="status" :class="item.status === 1 ? 'paid' : 'pending'">
@@ -98,7 +98,11 @@ const onTabChange = (index: number) => {
 }
 
 const onAddFee = () => {
-  uni.navigateTo({ url: '/pages/landlord/fee/add/index' })
+  uni.navigateTo({ url: '/pages/landlord/fee/create/index' })
+}
+
+const goDetail = (item: any) => {
+  uni.navigateTo({ url: `/pages/landlord/fee/detail/index?id=${item.id}` })
 }
 
 onMounted(() => {
