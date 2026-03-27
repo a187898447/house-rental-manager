@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onShow } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { getRentBills, sendRentReminder, markBillPaid } from '@/services/rent'
 
 const tabs = [
@@ -72,11 +72,6 @@ const tabs = [
 const currentTab = ref(0)
 const bills = ref<any[]>([])
 const loading = ref(false)
-
-// 每次页面显示时刷新数据
-onShow(() => {
-  fetchBills()
-})
 
 const statusText = (status: number) => {
   const map = { 0: '待支付', 1: '已支付', 2: '已逾期', 3: '已取消' }

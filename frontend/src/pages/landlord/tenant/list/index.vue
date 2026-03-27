@@ -55,7 +55,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { onShow } from '@dcloudio/vue-esc'
 import { getTenants } from '@/services/tenant'
 import type { Tenant } from '@/types'
 
@@ -92,11 +91,6 @@ const onCheckIn = () => {
 }
 
 onMounted(() => {
-  fetchTenants()
-})
-
-// 每次页面显示时刷新数据
-onShow(() => {
   fetchTenants()
 })
 </script>

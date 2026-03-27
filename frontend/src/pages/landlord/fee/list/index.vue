@@ -62,7 +62,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { onShow } from '@dcloudio/vue-esc'
 import { getOwnerOtherFees, createOtherFee } from '@/services/otherfee'
 
 const tabs = [
@@ -76,7 +75,7 @@ const fees = ref<any[]>([])
 const loading = ref(false)
 
 const typeText = (type: string) => {
-  const map = { management: '管理费', network: '网络费', garbage: '垃圾费', other: '其他' }
+  const map: Record<string, string> = { management: '管理费', network: '网络费', garbage: '垃圾费', other: '其他' }
   return map[type] || '其他'
 }
 
@@ -107,11 +106,6 @@ const goDetail = (item: any) => {
 }
 
 onMounted(() => {
-  fetchFees()
-})
-
-// 每次页面显示时刷新数据
-onShow(() => {
   fetchFees()
 })
 </script>

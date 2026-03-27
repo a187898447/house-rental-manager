@@ -56,7 +56,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { onShow } from '@dcloudio/vue-esc'
 import { getDeposits, refundDeposit } from '@/services/deposit'
 
 const tabs = [
@@ -70,20 +69,20 @@ const deposits = ref<any[]>([])
 const loading = ref(false)
 
 const statusText = (status: number) => {
-  const map = { 0: '待退还', 1: '已退还', 2: '部分退还' }
+  const map: Record<number, string> = { 0: '待退还', 1: '已退还', 2: '部分退还' }
   return map[status] || '未知'
 }
 
 const statusClass = (status: number) => {
-  const map = { 0: 'pending', 1: 'paid', 2: 'partial' }
+  const map: Record<number, string> = { 0: 'pending', 1: 'paid', 2: 'partial' }
   return map[status] || ''
 }
 
 const fetchDeposits = async () => {
   loading.value = true
   try {
-    const status = tabs[currentTab].value
-    const res = await getDeposits(status ? { status: Number(status) } : {})
+    const statusValue = tabs[currentTab.value].value
+    const res = await getDeposits(statusValue ? { status: statusValue } : {})
     deposits.value = res || []
   } catch (e) {
     uni.showToast({ title: '加载失败', icon: 'none' })
@@ -106,11 +105,6 @@ const goDetail = (item: any) => {
 }
 
 onMounted(() => {
-  fetchDeposits()
-})
-
-// 每次页面显示时刷新数据
-onShow(() => {
   fetchDeposits()
 })
 </script>
@@ -150,13 +144,6 @@ onShow(() => {
       height: 6rpx;
       background: linear-gradient(90deg, #667EEA, #764BA2);
       border-radius: 3rpx;
-    }
-  }
-}
-    
-    &.active {
-      color: #0087FF;
-      border-bottom-color: #0087FF;
     }
   }
 }

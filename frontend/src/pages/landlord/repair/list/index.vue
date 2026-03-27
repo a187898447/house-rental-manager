@@ -50,7 +50,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { onShow } from '@dcloudio/vue-esc'
 import { getOwnerRepairs, handleRepair, completeRepair } from '@/services/repair'
 
 const tabs = [
@@ -119,11 +118,6 @@ const onComplete = (item: any) => {
 }
 
 onMounted(() => {
-  fetchRepairs()
-})
-
-// 每次页面显示时刷新数据
-onShow(() => {
   fetchRepairs()
 })
 </script>

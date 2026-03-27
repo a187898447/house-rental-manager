@@ -81,8 +81,6 @@ const tabs = [
 
 const statusMap = [null, 0, 1]
 
-console.log('properties:', properties.value)
-
 // 统计
 const vacantCount = computed(() => {
   const list = toRaw(properties.value) || []
@@ -127,11 +125,6 @@ onMounted(() => {
   propertyStore.fetchProperties().finally(() => {
     loading.value = false
   })
-})
-
-// 每次页面显示时刷新数据
-onShow(() => {
-  propertyStore.fetchProperties()
 })
 </script>
 

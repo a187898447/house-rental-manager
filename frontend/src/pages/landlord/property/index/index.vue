@@ -56,7 +56,6 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, toRaw } from 'vue'
-import { onShow } from '@dcloudio/vue-esc'
 import { storeToRefs } from 'pinia'
 import { usePropertyStore } from '@/stores/property'
 import PropertyCard from '@/components/PropertyCard.vue'
@@ -96,7 +95,6 @@ const onTabChange = (index: number) => {
 
 // 获取数据
 const fetchData = async () => {
-  const status = tabs[currentTab.value].value
   await propertyStore.fetchProperties()
 }
 
@@ -133,11 +131,6 @@ const goToDetail = (id: string) => {
 
 // 页面加载
 onMounted(() => {
-  fetchData()
-})
-
-// 每次页面显示时刷新数据
-onShow(() => {
   fetchData()
 })
 </script>
