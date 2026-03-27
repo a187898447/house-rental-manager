@@ -128,6 +128,11 @@ onMounted(() => {
     loading.value = false
   })
 })
+
+// 每次页面显示时刷新数据
+onShow(() => {
+  propertyStore.fetchProperties()
+})
 </script>
 
 <style lang="scss" scoped>

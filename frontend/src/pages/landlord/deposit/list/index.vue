@@ -56,6 +56,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { onShow } from '@dcloudio/vue-esc'
 import { getDeposits, refundDeposit } from '@/services/deposit'
 
 const tabs = [
@@ -105,6 +106,11 @@ const goDetail = (item: any) => {
 }
 
 onMounted(() => {
+  fetchDeposits()
+})
+
+// 每次页面显示时刷新数据
+onShow(() => {
   fetchDeposits()
 })
 </script>

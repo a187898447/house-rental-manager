@@ -62,6 +62,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { onShow } from '@dcloudio/vue-esc'
 import { getOwnerOtherFees, createOtherFee } from '@/services/otherfee'
 
 const tabs = [
@@ -106,6 +107,11 @@ const goDetail = (item: any) => {
 }
 
 onMounted(() => {
+  fetchFees()
+})
+
+// 每次页面显示时刷新数据
+onShow(() => {
   fetchFees()
 })
 </script>
