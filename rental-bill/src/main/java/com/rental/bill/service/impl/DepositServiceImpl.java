@@ -160,4 +160,11 @@ public class DepositServiceImpl implements DepositService {
             default -> "未知";
         };
     }
+    
+    @Override
+    public BigDecimal getTotalDeposits(Long ownerId) {
+        // 查询该房东所有已缴纳的押金总额
+        BigDecimal total = depositMapper.selectSumByOwnerAndStatus(ownerId, 1);
+        return total != null ? total : BigDecimal.ZERO;
+    }
 }

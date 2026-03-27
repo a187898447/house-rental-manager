@@ -17,7 +17,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 租金账单服务实现
@@ -241,5 +243,32 @@ public class RentRecordServiceImpl implements RentRecordService {
             case 3 -> "D+3已提醒";
             default -> "未知";
         };
+    }
+    
+    @Override
+    public Map<String, Object> getOwnerStats(Long ownerId) {
+        Map<String, Object> stats = new HashMap<>();
+        
+        // 统计总金额
+        BigDecimal totalAmount = rentRecordMapper.selectSumByOwner(ownerId);
+        stats.put("totalAmount", totalAmount != null ? totalAmount : BigDecimal.ZERO);
+        
+        // 统计已支付金额
+        BigDecimal paidAmount = rentRecordMapper.selectSumByOwnerAndStatus(ownerId, 1);
+        stats.put("paidAmount", paidAmount != null ? paidAmount : BigDecimal.ZERO);
+        
+        // 统计待支付金额
+        BigDecimal pendingAmount = rentRecordMapper.selectSumByOwnerAndStatus(ownerId, 0);
+        stats.put("pendingAmount", pendingAmount != null ? pendingAmount : BigDecimal.ZERO);
+        
+        // 统计待支付数量
+        long pendingCount = rentRecordMapper.selectCount(
+                new LambdaQueryWrapper<RentRecord>()
+                        .eq(RentRecord::getOwnerId, ownerId)
+                        .in(RentRecord::getStatus, 0, 2));
+        stats.put("pendingCount", pendingCount);
+        
+        log.info("获取房东租金统计: ownerId={}, stats={}", ownerId, stats);
+        return stats;
     }
 }

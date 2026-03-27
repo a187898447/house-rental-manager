@@ -187,6 +187,33 @@ public class PropertyServiceImpl extends ServiceImpl<PropertyMapper, Property> i
         return result;
     }
 
+    @Override
+    public Map<String, Object> getStatistics(Long ownerId) {
+        Map<String, Object> stats = new HashMap<>();
+        
+        // 统计总数
+        long total = this.count(new LambdaQueryWrapper<Property>()
+                .eq(Property::getOwnerId, ownerId)
+                .ne(Property::getStatus, -1)); // 排除已删除
+        
+        // 统计已出租 (status = 1)
+        long rented = this.count(new LambdaQueryWrapper<Property>()
+                .eq(Property::getOwnerId, ownerId)
+                .eq(Property::getStatus, 1));
+        
+        // 统计未出租 (status = 0)
+        long vacant = this.count(new LambdaQueryWrapper<Property>()
+                .eq(Property::getOwnerId, ownerId)
+                .eq(Property::getStatus, 0));
+        
+        stats.put("total", total);
+        stats.put("rented", rented);
+        stats.put("vacant", vacant);
+        
+        log.info("获取房东房源统计: ownerId={}, stats={}", ownerId, stats);
+        return stats;
+    }
+
     /**
      * 分页结果转换
      */

@@ -11,4 +11,9 @@ public interface OtherFeeService {
     Page<OtherFeeVO> getOwnerFees(Long ownerId, Integer status, Integer page, Integer size);
     boolean pay(Long id);
     boolean delete(Long id);
+    
+    /**
+     * 获取房东其他费用总收入
+     */
+    java.math.BigDecimal getTotalByOwner(Long ownerId);
 }

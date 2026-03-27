@@ -102,6 +102,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { usePropertyStore } from '@/stores/property'
+import { getPropertyDetail } from '@/services/property'
 
 const propertyStore = usePropertyStore()
 
@@ -172,7 +173,7 @@ const onSubmit = async () => {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   // 获取页面参数
   const pages = getCurrentPages()
   const currentPage = pages[pages.length - 1] as any
@@ -181,7 +182,25 @@ onMounted(() => {
   if (options.id) {
     isEdit.value = true
     propertyId.value = options.id
-    // TODO: 获取房源详情并填充表单
+    // 获取房源详情并填充表单
+    try {
+      const detail = await getPropertyDetail(options.id)
+      if (detail) {
+        formData.building = detail.building || ''
+        formData.unit = detail.unit || ''
+        formData.roomNumber = detail.roomNumber || ''
+        formData.floor = detail.floor || ''
+        formData.totalFloors = detail.totalFloors || ''
+        formData.area = detail.area || ''
+        formData.rent = detail.rent || ''
+        formData.propertyType = detail.propertyType || 'apartment'
+        formData.orientation = detail.orientation || '南'
+        formData.status = detail.status || 0
+        formData.description = detail.description || ''
+      }
+    } catch (e) {
+      console.error('获取房源详情失败', e)
+    }
   }
 })
 </script>

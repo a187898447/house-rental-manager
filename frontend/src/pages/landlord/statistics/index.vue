@@ -62,7 +62,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onShow } from 'vue'
+import { getStatistics } from '@/services/statistics'
 
 const stats = ref({
   totalProperties: 0,
@@ -76,7 +77,32 @@ const stats = ref({
   otherIncome: 0
 })
 
-// TODO: 调用后端 API 获取统计数据
+const loading = ref(false)
+
+// 每次页面显示时获取统计数据
+onShow(async () => {
+  loading.value = true
+  try {
+    const data = await getStatistics()
+    if (data) {
+      stats.value = {
+        totalProperties: data.totalProperties || 0,
+        rentedCount: data.rentedCount || 0,
+        vacantCount: data.vacantCount || 0,
+        pendingCount: data.pendingCount || 0,
+        monthlyRent: data.monthlyRent || 0,
+        pendingAmount: data.pendingAmount || 0,
+        rentIncome: data.rentIncome || 0,
+        depositIncome: data.depositIncome || 0,
+        otherIncome: data.otherIncome || 0
+      }
+    }
+  } catch (e) {
+    console.error('获取统计数据失败', e)
+  } finally {
+    loading.value = false
+  }
+})
 </script>
 
 <style scoped lang="scss">

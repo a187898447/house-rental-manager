@@ -150,4 +150,10 @@ public class OtherFeeServiceImpl implements OtherFeeService {
             default -> "未知";
         };
     }
+    
+    @Override
+    public BigDecimal getTotalByOwner(Long ownerId) {
+        BigDecimal total = otherFeeMapper.selectSumByOwner(ownerId);
+        return total != null ? total : BigDecimal.ZERO;
+    }
 }

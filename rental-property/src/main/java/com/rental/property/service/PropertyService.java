@@ -67,4 +67,11 @@ public interface PropertyService extends IService<Property> {
      * @return 是否成功
      */
     boolean setUtilityConfig(Long propertyId, BigDecimal waterPrice, BigDecimal electricityPrice);
+    
+    /**
+     * 获取房东房源统计
+     * @param ownerId 房东ID
+     * @return 统计数据
+     */
+    Map<String, Object> getStatistics(Long ownerId);
 }

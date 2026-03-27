@@ -14,4 +14,9 @@ public interface DepositService {
     Page<DepositVO> getOwnerDeposits(Long ownerId, Integer status, Integer page, Integer size);
     boolean pay(Long id, String payMethod);
     boolean refund(Long id, java.math.BigDecimal refundAmount);
+    
+    /**
+     * 获取房东押金总收入
+     */
+    java.math.BigDecimal getTotalDeposits(Long ownerId);
 }

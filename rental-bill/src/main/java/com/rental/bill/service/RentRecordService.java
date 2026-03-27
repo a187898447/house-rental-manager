@@ -50,4 +50,9 @@ public interface RentRecordService {
      * 取消账单
      */
     boolean cancel(Long id);
+    
+    /**
+     * 获取房东统计数据
+     */
+    java.util.Map<String, Object> getOwnerStats(Long ownerId);
 }
