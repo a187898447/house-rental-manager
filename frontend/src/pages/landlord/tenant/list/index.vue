@@ -98,17 +98,29 @@ onMounted(() => {
 <style scoped lang="scss">
 .tenant-list-page {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #F5F7FA;
+}
+
+.header {
+  background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+  padding: 30rpx;
+  
+  .title {
+    font-size: 36rpx;
+    font-weight: bold;
+    color: #fff;
+  }
 }
 
 .search-bar {
   padding: 20rpx 30rpx;
   background-color: #fff;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
   
   .search-input {
     height: 72rpx;
     padding: 0 30rpx;
-    background-color: #f5f5f5;
+    background-color: #F5F7FA;
     border-radius: 36rpx;
     font-size: 28rpx;
   }
@@ -132,8 +144,9 @@ onMounted(() => {
   align-items: center;
   padding: 30rpx;
   background-color: #fff;
-  border-radius: 16rpx;
+  border-radius: 20rpx;
   margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
 }
 
 .tenant-info {

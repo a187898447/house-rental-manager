@@ -125,32 +125,45 @@ onMounted(() => {
 <style scoped lang="scss">
 .repair-list-page {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #F5F7FA;
 }
 
 .tabs {
   display: flex;
   background-color: #fff;
-  padding: 20rpx 0;
+  padding: 0 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
   
   .tab {
     flex: 1;
     text-align: center;
     font-size: 28rpx;
-    color: #666;
-    padding: 16rpx 0;
-    border-bottom: 4rpx solid transparent;
+    color: #999;
+    padding: 28rpx 0;
+    position: relative;
     
     &.active {
-      color: #0087FF;
-      border-bottom-color: #0087FF;
+      color: #667EEA;
+      font-weight: 600;
+    }
+    
+    &.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40rpx;
+      height: 6rpx;
+      background: linear-gradient(90deg, #667EEA, #764BA2);
+      border-radius: 3rpx;
     }
   }
 }
 
 .repair-list {
   height: calc(100vh - 100rpx);
-  padding: 20rpx;
+  padding: 24rpx;
 }
 
 .loading-wrap, .empty-wrap {
@@ -159,9 +172,10 @@ onMounted(() => {
 
 .repair-card {
   background-color: #fff;
-  border-radius: 16rpx;
+  border-radius: 20rpx;
   padding: 30rpx;
   margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
 }
 
 .repair-header {

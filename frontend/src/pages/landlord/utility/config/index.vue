@@ -145,15 +145,17 @@ onMounted(() => {
   right: 30rpx;
   bottom: 40rpx;
   height: 88rpx;
-  background-color: #0087FF;
+  background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
   border-radius: 44rpx;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4rpx 20rpx rgba(102, 126, 234, 0.4);
   
   text {
     color: #fff;
     font-size: 32rpx;
+    font-weight: 600;
   }
 }
 </style>
