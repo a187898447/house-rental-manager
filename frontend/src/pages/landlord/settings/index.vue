@@ -81,22 +81,23 @@ const onLogout = () => {
 <style scoped lang="scss">
 .settings-page {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #F5F7FA;
   padding: 30rpx;
 }
 
 .user-card {
   display: flex;
   align-items: center;
-  background-color: #fff;
-  border-radius: 16rpx;
-  padding: 40rpx;
+  background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+  border-radius: 24rpx;
+  padding: 50rpx 40rpx;
   margin-bottom: 30rpx;
+  box-shadow: 0 8rpx 30rpx rgba(102, 126, 234, 0.3);
   
   .avatar {
     width: 120rpx;
     height: 120rpx;
-    background-color: #e6f7ff;
+    background-color: rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -106,16 +107,16 @@ const onLogout = () => {
   
   .info {
     .name {
-      font-size: 36rpx;
+      font-size: 40rpx;
       font-weight: bold;
-      color: #333;
+      color: #fff;
       display: block;
       margin-bottom: 10rpx;
     }
     
     .phone {
       font-size: 28rpx;
-      color: #666;
+      color: rgba(255, 255, 255, 0.8);
     }
   }
 }
@@ -124,16 +125,25 @@ const onLogout = () => {
   background-color: #fff;
   border-radius: 16rpx;
   overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
 }
 
 .menu-item {
   display: flex;
   align-items: center;
-  padding: 30rpx;
-  border-bottom: 1px solid #f5f5f5;
+  padding: 32rpx 30rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+  background-color: #fff;
+  
+  &:first-child {
+    border-top-left-radius: 16rpx;
+    border-top-right-radius: 16rpx;
+  }
   
   &:last-child {
     border-bottom: none;
+    border-bottom-left-radius: 16rpx;
+    border-bottom-right-radius: 16rpx;
   }
   
   .label {
@@ -147,6 +157,19 @@ const onLogout = () => {
 .logout-btn {
   margin-top: 60rpx;
   height: 88rpx;
+  background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+  border-radius: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 20rpx rgba(102, 126, 234, 0.4);
+  
+  text {
+    color: #fff;
+    font-size: 32rpx;
+    font-weight: 600;
+  }
+}
   background-color: #fff;
   border-radius: 44rpx;
   display: flex;

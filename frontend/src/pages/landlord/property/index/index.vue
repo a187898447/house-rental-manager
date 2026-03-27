@@ -140,7 +140,7 @@ onMounted(() => {
 <style scoped lang="scss">
 .property-list-page {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #F5F7FA;
 }
 
 .header {
@@ -148,18 +148,19 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 30rpx 30rpx 20rpx;
-  background-color: #fff;
+  background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
 
   .title {
-    font-size: 36rpx;
+    font-size: 40rpx;
     font-weight: bold;
-    color: #333;
+    color: #fff;
   }
 
   .add-btn {
-    padding: 12rpx 24rpx;
-    background-color: #0087FF;
-    border-radius: 8rpx;
+    padding: 16rpx 30rpx;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 30rpx;
+    border: 1rpx solid rgba(255, 255, 255, 0.4);
 
     text {
       color: #fff;
@@ -172,31 +173,31 @@ onMounted(() => {
   display: flex;
   background-color: #fff;
   padding: 0 30rpx;
-  border-bottom: 1rpx solid #eee;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
 
   .tab-item {
     flex: 1;
     text-align: center;
-    padding: 24rpx 0;
+    padding: 28rpx 0;
     font-size: 28rpx;
-    color: #666;
+    color: #999;
     position: relative;
-
+    
     &.active {
-      color: #0087FF;
-      font-weight: bold;
-
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 60rpx;
-        height: 4rpx;
-        background-color: #0087FF;
-        border-radius: 2rpx;
-      }
+      color: #667EEA;
+      font-weight: 600;
+    }
+    
+    &.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50rpx;
+      height: 6rpx;
+      background: linear-gradient(90deg, #667EEA, #764BA2);
+      border-radius: 3rpx;
     }
   }
 }

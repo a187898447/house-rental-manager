@@ -82,46 +82,50 @@ const stats = ref({
 <style scoped lang="scss">
 .statistics-page {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #F5F7FA;
   padding: 30rpx;
 }
 
 .summary-cards {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20rpx;
+  gap: 24rpx;
   margin-bottom: 30rpx;
 }
 
 .card {
   background-color: #fff;
-  border-radius: 16rpx;
+  border-radius: 20rpx;
   padding: 40rpx 20rpx;
   text-align: center;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
   
   .value {
-    font-size: 44rpx;
+    font-size: 48rpx;
     font-weight: bold;
-    color: #0087FF;
+    background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     display: block;
     margin-bottom: 10rpx;
   }
   
   .label {
-    font-size: 24rpx;
+    font-size: 26rpx;
     color: #666;
   }
 }
 
 .chart-section, .recent-section {
   background-color: #fff;
-  border-radius: 16rpx;
+  border-radius: 20rpx;
   padding: 30rpx;
   margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
 }
 
 .section-title {
-  font-size: 30rpx;
+  font-size: 32rpx;
   font-weight: bold;
   color: #333;
   margin-bottom: 24rpx;
