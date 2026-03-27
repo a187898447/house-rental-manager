@@ -107,6 +107,13 @@ spring:
             - Path=/api/fee/**
           filters:
             - StripPrefix=1
+        # 数据统计
+        - id: rental-bill-statistics
+          uri: lb://rental-bill
+          predicates:
+            - Path=/api/statistics/**
+          filters:
+            - StripPrefix=1
         # 通知服务 - /api/notify/** -> /notify
         - id: rental-notify
           uri: lb://rental-notify
