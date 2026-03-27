@@ -114,4 +114,12 @@ public class PropertyController {
         boolean result = propertyService.setUtilityConfig(id, waterPrice, electricityPrice);
         return Result.success("水电费配置更新成功", result);
     }
+
+    @GetMapping("/statistics/{ownerId}")
+    @Operation(summary = "获取房东房源统计")
+    @Parameter(name = "ownerId", description = "房东ID")
+    public Result<Map<String, Object>> getStatistics(@PathVariable Long ownerId) {
+        Map<String, Object> stats = propertyService.getStatistics(ownerId);
+        return Result.success(stats);
+    }
 }
