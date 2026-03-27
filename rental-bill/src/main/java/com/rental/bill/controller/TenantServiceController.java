@@ -66,6 +66,17 @@ public class TenantServiceController {
         return Result.success("状态更新成功", result);
     }
 
+    @PostMapping("/appointment/{id}/cancel")
+    @Operation(summary = "取消预约")
+    @Parameter(name = "id", description = "预约ID")
+    public Result<Boolean> cancelAppointment(
+            @PathVariable Long id,
+            @RequestBody(required = false) java.util.Map<String, String> body) {
+        String remark = body != null ? body.get("remark") : null;
+        boolean result = tenantService.updateAppointmentStatus(id, 3); // 3-已取消
+        return Result.success("预约已取消", result);
+    }
+
     // ==================== 租客管理 ====================
 
     @PostMapping("/checkin")

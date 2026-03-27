@@ -39,6 +39,20 @@ public class DepositServiceImpl implements DepositService {
     }
 
     @Override
+    @Transactional
+    public Long createDeposit(Long propertyId, Long tenantId, BigDecimal amount) {
+        Deposit deposit = new Deposit();
+        deposit.setTenantId(tenantId);
+        deposit.setPropertyId(propertyId);
+        deposit.setAmount(amount);
+        deposit.setStatus(0); // 待缴纳
+        depositMapper.insert(deposit);
+        log.info("押金创建成功(简化): id={}, propertyId={}, tenantId={}, amount={}", 
+                deposit.getId(), propertyId, tenantId, amount);
+        return deposit.getId();
+    }
+
+    @Override
     public DepositVO getDetail(Long id) {
         Deposit deposit = depositMapper.selectById(id);
         if (deposit == null) {

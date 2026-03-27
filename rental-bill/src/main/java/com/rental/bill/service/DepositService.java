@@ -8,6 +8,7 @@ import com.rental.bill.vo.DepositVO;
  */
 public interface DepositService {
     Long create(Long tenantId, Long propertyId, Long contractId, java.math.BigDecimal amount);
+    Long createDeposit(Long propertyId, Long tenantId, java.math.BigDecimal amount);
     DepositVO getDetail(Long id);
     Page<DepositVO> getTenantDeposits(Long tenantId, Integer status, Integer page, Integer size);
     Page<DepositVO> getOwnerDeposits(Long ownerId, Integer status, Integer page, Integer size);

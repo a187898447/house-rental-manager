@@ -58,4 +58,14 @@ public class DepositController {
     public Result<Boolean> refund(@PathVariable Long id, @RequestParam BigDecimal refundAmount) {
         return Result.success(depositService.refund(id, refundAmount));
     }
+
+    @PostMapping
+    @Operation(summary = "创建押金")
+    public Result<Long> create(@RequestBody java.util.Map<String, Object> data) {
+        Long propertyId = Long.valueOf(data.get("propertyId").toString());
+        Long tenantId = Long.valueOf(data.get("tenantId").toString());
+        BigDecimal amount = new BigDecimal(data.get("amount").toString());
+        Long id = depositService.createDeposit(propertyId, tenantId, amount);
+        return Result.success("押金创建成功", id);
+    }
 }
