@@ -1,8 +1,8 @@
 package com.rental.bill.controller;
 
+import com.rental.bill.feign.PropertyFeignClient;
 import com.rental.bill.service.*;
 import com.rental.common.result.Result;
-import com.rental.property.service.PropertyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class StatisticsController {
 
     private final RentRecordService rentRecordService;
     private final DepositService depositService;
-    private final PropertyService propertyService;
+    private final PropertyFeignClient propertyFeignClient;
     private final OtherFeeService otherFeeService;
 
     @GetMapping("/dashboard")
@@ -36,11 +36,25 @@ public class StatisticsController {
         
         Map<String, Object> stats = new HashMap<>();
         
-        // 房源统计 - 从 property 服务获取
-        Map<String, Object> propertyStats = propertyService.getStatistics(ownerId);
-        stats.put("totalProperties", propertyStats.getOrDefault("total", 0));
-        stats.put("rentedCount", propertyStats.getOrDefault("rented", 0));
-        stats.put("vacantCount", propertyStats.getOrDefault("vacant", 0));
+        // 房源统计 - 通过Feign调用property服务
+        try {
+            var propertyResult = propertyFeignClient.getStatistics(ownerId);
+            if (propertyResult != null && propertyResult.getData() != null) {
+                Map<String, Object> propertyStats = propertyResult.getData();
+                stats.put("totalProperties", propertyStats.getOrDefault("total", 0));
+                stats.put("rentedCount", propertyStats.getOrDefault("rented", 0));
+                stats.put("vacantCount", propertyStats.getOrDefault("vacant", 0));
+            } else {
+                stats.put("totalProperties", 0);
+                stats.put("rentedCount", 0);
+                stats.put("vacantCount", 0);
+            }
+        } catch (Exception e) {
+            log.warn("调用property服务失败: {}", e.getMessage());
+            stats.put("totalProperties", 0);
+            stats.put("rentedCount", 0);
+            stats.put("vacantCount", 0);
+        }
         
         // 租金统计
         Map<String, Object> rentStats = rentRecordService.getOwnerStats(ownerId);
