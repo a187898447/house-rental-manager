@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onShow } from 'vue'
+import { ref, onMounted } from 'vue'
 import { getNotificationSettings, updateNotificationSettings } from '@/services/notification'
 
 const notifyDays = ref(3)
@@ -33,8 +33,8 @@ const smsEnabled = ref(true)
 const wechatEnabled = ref(true)
 const loading = ref(false)
 
-// 每次页面显示时刷新数据
-onShow(async () => {
+// 获取通知设置
+const fetchSettings = async () => {
   loading.value = true
   try {
     const settings = await getNotificationSettings()
@@ -48,7 +48,7 @@ onShow(async () => {
   } finally {
     loading.value = false
   }
-})
+}
 
 const onSave = async () => {
   loading.value = true
@@ -66,6 +66,10 @@ const onSave = async () => {
     loading.value = false
   }
 }
+
+onMounted(() => {
+  fetchSettings()
+})
 </script>
 
 <style scoped lang="scss">

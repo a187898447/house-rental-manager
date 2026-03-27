@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, onShow } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { getUserInfo, updateUserInfo } from '@/services/auth'
 
 const formData = reactive({
@@ -160,11 +160,6 @@ const onSave = () => {
 }
 
 onMounted(() => {
-  fetchUserInfo()
-})
-
-// 每次页面显示时刷新数据
-onShow(() => {
   fetchUserInfo()
 })
 </script>

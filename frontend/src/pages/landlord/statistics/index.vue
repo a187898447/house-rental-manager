@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onShow } from 'vue'
+import { ref, onMounted } from 'vue'
 import { getStatistics } from '@/services/statistics'
 
 const stats = ref({
@@ -79,8 +79,8 @@ const stats = ref({
 
 const loading = ref(false)
 
-// 每次页面显示时获取统计数据
-onShow(async () => {
+// 获取统计数据
+const fetchStats = async () => {
   loading.value = true
   try {
     const data = await getStatistics()
@@ -102,6 +102,10 @@ onShow(async () => {
   } finally {
     loading.value = false
   }
+}
+
+onMounted(() => {
+  fetchStats()
 })
 </script>
 

@@ -40,23 +40,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onShow } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const userInfo = ref<any>({})
 
-// 每次页面显示时刷新用户信息
-onShow(() => {
+// 加载用户信息
+const loadUserInfo = () => {
   const info = uni.getStorageSync('userInfo')
   if (info) {
     userInfo.value = typeof info === 'string' ? JSON.parse(info) : info
   }
-})
+}
 
 onMounted(() => {
-  const info = uni.getStorageSync('userInfo')
-  if (info) {
-    userInfo.value = typeof info === 'string' ? JSON.parse(info) : info
-  }
+  loadUserInfo()
 })
 
 const onEditProfile = () => {
