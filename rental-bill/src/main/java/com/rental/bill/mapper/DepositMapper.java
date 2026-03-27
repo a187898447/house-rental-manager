@@ -14,8 +14,8 @@ import java.math.BigDecimal;
 @Mapper
 public interface DepositMapper extends BaseMapper<Deposit> {
     
-    @Select("SELECT COALESCE(SUM(d.amount), 0) FROM t_deposit d " +
-            "INNER JOIN t_property p ON d.property_id = p.id " +
+    @Select("SELECT COALESCE(SUM(d.amount), 0) FROM deposit d " +
+            "INNER JOIN property p ON d.property_id = p.id " +
             "WHERE p.owner_id = #{ownerId} AND d.status = #{status}")
     BigDecimal selectSumByOwnerAndStatus(@Param("ownerId") Long ownerId, @Param("status") Integer status);
 }
