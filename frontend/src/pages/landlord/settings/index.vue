@@ -40,9 +40,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onShow } from 'vue'
 
 const userInfo = ref<any>({})
+
+// 每次页面显示时刷新用户信息
+onShow(() => {
+  const info = uni.getStorageSync('userInfo')
+  if (info) {
+    userInfo.value = typeof info === 'string' ? JSON.parse(info) : info
+  }
+})
 
 onMounted(() => {
   const info = uni.getStorageSync('userInfo')

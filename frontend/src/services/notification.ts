@@ -55,3 +55,22 @@ export const markAllAsRead = async () => {
 export const deleteNotification = async (id: string) => {
   return request({ url: `/api/notify/${id}`, method: 'DELETE' })
 }
+
+/**
+ * 获取通知设置
+ */
+export const getNotificationSettings = async () => {
+  const res = await request({ url: '/api/notify/settings', method: 'GET' }) as any
+  return res?.data ?? res
+}
+
+/**
+ * 更新通知设置
+ */
+export const updateNotificationSettings = async (data: {
+  notifyDays: number
+  smsEnabled: boolean
+  wechatEnabled: boolean
+}) => {
+  return request({ url: '/api/notify/settings', method: 'PUT', data })
+}

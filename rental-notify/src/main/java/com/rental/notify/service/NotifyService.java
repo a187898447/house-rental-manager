@@ -37,4 +37,14 @@ public interface NotifyService {
      * 删除通知
      */
     boolean delete(Long id);
+    
+    /**
+     * 获取通知设置
+     */
+    java.util.Map<String, Object> getSettings(Long userId);
+    
+    /**
+     * 更新通知设置
+     */
+    boolean updateSettings(Long userId, java.util.Map<String, Object> settings);
 }

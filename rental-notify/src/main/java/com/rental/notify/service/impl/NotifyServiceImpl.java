@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -108,6 +109,24 @@ public class NotifyServiceImpl implements NotifyService {
     @Transactional
     public boolean delete(Long id) {
         return notifyMessageMapper.deleteById(id) > 0;
+    }
+
+    @Override
+    public Map<String, Object> getSettings(Long userId) {
+        // 从数据库或缓存获取用户通知设置
+        // 暂时返回默认设置
+        Map<String, Object> settings = new HashMap<>();
+        settings.put("notifyDays", 3);
+        settings.put("smsEnabled", true);
+        settings.put("wechatEnabled", true);
+        return settings;
+    }
+
+    @Override
+    public boolean updateSettings(Long userId, Map<String, Object> settings) {
+        // TODO: 保存用户通知设置到数据库或缓存
+        log.info("更新用户通知设置: userId={}, settings={}", userId, settings);
+        return true;
     }
 
     private NotifyMessageVO convertToVO(NotifyMessage message) {

@@ -25,15 +25,46 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onShow } from 'vue'
+import { getNotificationSettings, updateNotificationSettings } from '@/services/notification'
 
 const notifyDays = ref(3)
 const smsEnabled = ref(true)
 const wechatEnabled = ref(true)
+const loading = ref(false)
 
-const onSave = () => {
-  uni.showToast({ title: '保存成功', icon: 'success' })
-  setTimeout(() => uni.navigateBack(), 1500)
+// 每次页面显示时刷新数据
+onShow(async () => {
+  loading.value = true
+  try {
+    const settings = await getNotificationSettings()
+    if (settings) {
+      notifyDays.value = settings.notifyDays || 3
+      smsEnabled.value = settings.smsEnabled ?? true
+      wechatEnabled.value = settings.wechatEnabled ?? true
+    }
+  } catch (e) {
+    console.error('获取通知设置失败', e)
+  } finally {
+    loading.value = false
+  }
+})
+
+const onSave = async () => {
+  loading.value = true
+  try {
+    await updateNotificationSettings({
+      notifyDays: notifyDays.value,
+      smsEnabled: smsEnabled.value,
+      wechatEnabled: wechatEnabled.value
+    })
+    uni.showToast({ title: '保存成功', icon: 'success' })
+    setTimeout(() => uni.navigateBack(), 1500)
+  } catch (e: any) {
+    uni.showToast({ title: e.message || '保存失败', icon: 'none' })
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 

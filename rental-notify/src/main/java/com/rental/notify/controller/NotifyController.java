@@ -67,4 +67,21 @@ public class NotifyController {
         boolean result = notifyService.delete(id);
         return Result.success(result);
     }
+
+    @GetMapping("/settings")
+    @Operation(summary = "获取通知设置")
+    public Result<java.util.Map<String, Object>> getSettings(
+            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "1") String userId) {
+        java.util.Map<String, Object> settings = notifyService.getSettings(Long.valueOf(userId));
+        return Result.success(settings);
+    }
+
+    @PutMapping("/settings")
+    @Operation(summary = "更新通知设置")
+    public Result<Boolean> updateSettings(
+            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "1") String userId,
+            @RequestBody java.util.Map<String, Object> settings) {
+        boolean result = notifyService.updateSettings(Long.valueOf(userId), settings);
+        return Result.success(result);
+    }
 }
