@@ -2,6 +2,7 @@ package com.rental.bill.controller;
 
 import com.rental.bill.service.*;
 import com.rental.common.result.Result;
+import com.rental.property.service.PropertyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
