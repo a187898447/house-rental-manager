@@ -262,11 +262,8 @@ public class RentRecordServiceImpl implements RentRecordService {
         BigDecimal pendingAmount = rentRecordMapper.selectSumByOwnerAndStatus(ownerId, 0);
         stats.put("pendingAmount", pendingAmount != null ? pendingAmount : BigDecimal.ZERO);
         
-        // 统计待支付数量
-        long pendingCount = rentRecordMapper.selectCount(
-                new LambdaQueryWrapper<RentRecord>()
-                        .eq(RentRecord::getOwnerId, ownerId)
-                        .in(RentRecord::getStatus, 0, 2));
+        // 统计待支付和逾期数量（通过查询关联property）
+        long pendingCount = rentRecordMapper.selectCountByOwnerAndStatus(ownerId);
         stats.put("pendingCount", pendingCount);
         
         log.info("获取房东租金统计: ownerId={}, stats={}", ownerId, stats);

@@ -23,4 +23,9 @@ public interface RentRecordMapper extends BaseMapper<RentRecord> {
             "INNER JOIN t_property p ON r.property_id = p.id " +
             "WHERE p.owner_id = #{ownerId} AND r.status = #{status}")
     BigDecimal selectSumByOwnerAndStatus(@Param("ownerId") Long ownerId, @Param("status") Integer status);
+    
+    @Select("SELECT COUNT(*) FROM t_rent_record r " +
+            "INNER JOIN t_property p ON r.property_id = p.id " +
+            "WHERE p.owner_id = #{ownerId} AND r.status IN (0, 2)")
+    long selectCountByOwnerAndStatus(@Param("ownerId") Long ownerId);
 }
