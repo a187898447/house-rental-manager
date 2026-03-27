@@ -20,7 +20,7 @@ public class MyBatisPlusConfig implements MetaObjectHandler {
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         // 分页插件
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.DM)); // 达梦数据库
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL)); // MySQL 数据库
         return interceptor;
     }
 

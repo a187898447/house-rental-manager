@@ -10,23 +10,16 @@ export const getRentBills = async (params?: {
   status?: string
   month?: string
 }) => {
-  const res = await request<any>({
-    url: '/api/rent/bills/owner',
-    method: 'GET',
-    data: params
-  })
-  // 后端返回 Result<Page> 结构: { code, message, data: { records, total, ... } }
-  return res?.data?.records || res?.records || []
+  const res = await request({ url: '/api/rent/bills/owner', method: 'GET', data: params }) as any
+  const data = res?.data
+  return data?.records ?? data?.list ?? []
 }
 
 /**
  * 获取账单详情
  */
 export const getRentBillDetail = async (id: string) => {
-  const res = await request<any>({
-    url: `/api/rent/bills/${id}`,
-    method: 'GET'
-  })
+  const res = await request({ url: `/api/rent/bills/${id}`, method: 'GET' }) as any
   return res?.data || res
 }
 
@@ -34,29 +27,19 @@ export const getRentBillDetail = async (id: string) => {
  * 生成账单
  */
 export const generateRentBill = async (data: BillInput) => {
-  return request<RentBill>({
-    url: '/api/rent/bills',
-    method: 'POST',
-    data
-  })
+  return request({ url: '/api/rent/bills', method: 'POST', data })
 }
 
 /**
  * 标记账单已支付
  */
 export const markBillPaid = async (id: string) => {
-  return request<RentBill>({
-    url: `/api/rent/bills/${id}/pay`,
-    method: 'POST'
-  })
+  return request({ url: `/api/rent/bills/${id}/pay`, method: 'POST' })
 }
 
 /**
  * 发送催租提醒
  */
 export const sendRentReminder = async (id: string) => {
-  return request<{ success: boolean }>({
-    url: `/api/rent/bills/${id}/remind`,
-    method: 'POST'
-  })
+  return request({ url: `/api/rent/bills/${id}/remind`, method: 'POST' })
 }

@@ -104,23 +104,28 @@ const handleWechatLogin = async () => {
 
   loading.value = true
   try {
-    const res = await wechatLogin()
+    const res = await wechatLogin() as any
+    // 后端返回 Result<LoginVO>: { code, message, data: { token, userId, nickname, ... } }
+    const data = res?.data || res
     
-    if (res.needBindPhone) {
-      // 需要绑定手机号
-      tempToken = res.token
-      showBindPhone.value = true
-    } else {
-      // 登录成功
-      userStore.setToken(res.token)
-      if (res.userInfo) {
-        userStore.setUserInfo(res.userInfo)
-      }
-      uni.showToast({ title: '登录成功', icon: 'success' })
-      setTimeout(() => {
-        uni.switchTab({ url: '/pages/landlord/index/index' })
-      }, 1500)
+    if (!data.token) {
+      throw new Error('登录失败：未获取到token')
     }
+    
+    // 登录成功，保存用户信息
+    userStore.setToken(data.token)
+    userStore.setUserInfo({
+      id: data.userId,
+      nickname: data.nickname || '用户',
+      role: data.role || 'tenant',
+      phone: data.phone,
+      avatar: data.avatarUrl
+    } as any)
+    
+    uni.showToast({ title: '登录成功', icon: 'success' })
+    setTimeout(() => {
+      uni.switchTab({ url: '/pages/landlord/index/index' })
+    }, 1500)
   } catch (error: any) {
     uni.showToast({ title: error.message || '登录失败', icon: 'none' })
   } finally {
@@ -181,11 +186,26 @@ const handleBind = async () => {
 
   binding.value = true
   try {
-    const res = await bindPhone(phone.value, code.value)
-    userStore.setToken(res.token)
-    if (res.userInfo) {
-      userStore.setUserInfo(res.userInfo)
+    const res = await bindPhone(phone.value, code.value) as any
+    // 后端返回 Result<UserVO>: { code, message, data: { id, phone, nickname, ... } }
+    const data = res?.data || res
+    
+    // 获取当前token（如果有tempToken则用tempToken）
+    const currentToken = uni.getStorageSync('token')
+    if (currentToken) {
+      userStore.setToken(currentToken)
     }
+    
+    if (data) {
+      userStore.setUserInfo({
+        id: data.id,
+        phone: data.phone,
+        nickname: data.nickname,
+        avatar: data.avatarUrl,
+        role: data.role
+      } as any)
+    }
+    
     showBindPhone.value = false
     uni.showToast({ title: '绑定成功', icon: 'success' })
     setTimeout(() => {

@@ -26,8 +26,9 @@ export const useNotificationStore = defineStore('notification', () => {
 
   const fetchUnreadCount = async () => {
     try {
-      const res = await getUnreadCount()
-      unreadCount.value = res.count
+      const res = await getUnreadCount() as any
+      // 后端返回 Result<Long>: { code, message, data: count }
+      unreadCount.value = res?.data ?? res?.count ?? 0
     } catch (error) {
       console.error('获取未读数量失败:', error)
     }

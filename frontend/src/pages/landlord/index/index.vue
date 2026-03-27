@@ -60,12 +60,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, toRaw } from 'vue'
+import { storeToRefs } from 'pinia'
 import type { Property } from '@/types'
 import { usePropertyStore } from '@/stores/property'
 import PropertyCard from '@/components/PropertyCard.vue'
 
 const propertyStore = usePropertyStore()
+// 使用 storeToRefs 保持响应性
+const { properties } = storeToRefs(propertyStore)
+
 const currentTab = ref(0)
 const loading = ref(false)
 
@@ -77,31 +81,21 @@ const tabs = [
 
 const statusMap = [null, 0, 1]
 
-// 直接使用 store 中的 properties
-// Pinia setup 语法返回的是响应式对象
-const properties = propertyStore.properties
+console.log('properties:', properties.value)
 
-console.log('propertyStore.properties:', properties)
-console.log('length:', properties?.length)
-
-// 统计 - 使用 toRaw 获取原始数组
-import { toRaw } from 'vue'
-const rawList = toRaw(properties)
-console.log('raw list:', rawList)
-
+// 统计
 const vacantCount = computed(() => {
-  const list = toRaw(properties) || []
+  const list = toRaw(properties.value) || []
   return list.filter((p: any) => p.status === 0).length
 })
 const rentedCount = computed(() => {
-  const list = toRaw(properties) || []
+  const list = toRaw(properties.value) || []
   return list.filter((p: any) => p.status === 1).length
 })
 
 const filteredList = computed(() => {
   const status = statusMap[currentTab.value]
-  const list = toRaw(properties) || []
-  console.log('currentTab:', currentTab.value, 'status:', status, 'list length:', list.length)
+  const list = toRaw(properties.value) || []
   // 全部 tab 时 status 为 null，返回全部
   if (currentTab.value === 0) return list
   return list.filter((p: any) => p.status === status)

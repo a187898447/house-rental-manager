@@ -170,12 +170,4 @@ const onLogout = () => {
     font-weight: 600;
   }
 }
-  background-color: #fff;
-  border-radius: 44rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #FF3B30;
-  font-size: 32rpx;
-}
 </style>

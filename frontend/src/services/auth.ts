@@ -6,53 +6,33 @@ import type { LoginResponse, User, ApiResponse } from '@/types'
  */
 export const wechatLogin = async () => {
   const loginRes = await uni.login()
-  
-  return request<LoginResponse>({
-    url: '/api/user/login',
-    method: 'POST',
-    data: { code: loginRes.code }
-  })
+  return request({ url: '/api/user/login', method: 'POST', data: { code: loginRes.code } })
 }
 
 /**
  * 绑定手机号
  */
 export const bindPhone = async (phone: string, code: string) => {
-  return request<LoginResponse>({
-    url: '/api/user/bind-phone',
-    method: 'POST',
-    data: { phone, code }
-  })
+  return request({ url: '/api/user/bind-phone', method: 'POST', data: { phone, code } })
 }
 
 /**
  * 获取用户信息
  */
 export const getUserInfo = async () => {
-  return request<User>({
-    url: '/api/user/info',
-    method: 'GET'
-  })
+  return request({ url: '/api/user/info', method: 'GET' })
 }
 
 /**
  * 更新用户信息
  */
 export const updateUserInfo = async (data: Partial<User>) => {
-  return request<User>({
-    url: '/api/user',
-    method: 'PUT',
-    data
-  })
+  return request({ url: '/api/user', method: 'PUT', data })
 }
 
 /**
  * 发送验证码
  */
 export const sendVerifyCode = async (phone: string) => {
-  return request<{ success: boolean }>({
-    url: '/api/user/send-code',
-    method: 'POST',
-    data: { phone }
-  })
+  return request({ url: '/api/user/send-code', method: 'POST', data: { phone } })
 }

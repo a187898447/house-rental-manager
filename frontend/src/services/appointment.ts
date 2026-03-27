@@ -21,12 +21,9 @@ export const getMyAppointments = async (params?: {
   page?: number
   size?: number
 }) => {
-  const res = await request<any>({
-    url: '/api/tenant/appointment/my',
-    method: 'GET',
-    data: params
-  })
-  return res?.records || res?.list || []
+  const res = await request({ url: '/api/tenant/appointment/my', method: 'GET', data: params }) as any
+  const data = res?.data
+  return data?.records ?? data?.list ?? []
 }
 
 // 获取预约列表（房东端）
@@ -36,12 +33,9 @@ export const getOwnerAppointments = async (params?: {
   page?: number
   size?: number
 }) => {
-  const res = await request<any>({
-    url: '/api/tenant/appointment/owner',
-    method: 'GET',
-    data: params
-  })
-  return res?.records || res?.list || []
+  const res = await request({ url: '/api/tenant/appointment/owner', method: 'GET', data: params }) as any
+  const data = res?.data
+  return data?.records ?? data?.list ?? []
 }
 
 // 创建预约
@@ -53,11 +47,7 @@ export const createAppointment = async (data: {
   appointmentTime: string
   remark?: string
 }) => {
-  return request<{ id: number }>({
-    url: '/api/tenant/appointment',
-    method: 'POST',
-    data
-  })
+  return request({ url: '/api/tenant/appointment', method: 'POST', data })
 }
 
 // 更新预约状态
@@ -69,18 +59,10 @@ export const updateAppointmentStatus = async (
     rejectReason?: string
   }
 ) => {
-  return request<{ success: boolean }>({
-    url: `/api/tenant/appointment/${id}/status`,
-    method: 'PUT',
-    data
-  })
+  return request({ url: `/api/tenant/appointment/${id}/status`, method: 'PUT', data })
 }
 
 // 取消预约
 export const cancelAppointment = async (id: number, remark?: string) => {
-  return request<{ success: boolean }>({
-    url: `/api/tenant/appointment/${id}/cancel`,
-    method: 'POST',
-    data: { remark }
-  })
+  return request({ url: `/api/tenant/appointment/${id}/cancel`, method: 'POST', data: { remark } })
 }

@@ -1,5 +1,5 @@
 // 其他费用服务 - OtherFee
-import request from './index'
+import { request } from './index'
 
 export interface OtherFee {
   id: number
@@ -21,12 +21,9 @@ export const getMyOtherFees = async (params?: {
   page?: number
   size?: number
 }) => {
-  const res = await request<any>({
-    url: '/api/fee/tenant',
-    method: 'GET',
-    data: params
-  })
-  return res?.records || res?.list || []
+  const res = await request({ url: '/api/fee/tenant', method: 'GET', data: params }) as any
+  const data = res?.data
+  return data?.records ?? data?.list ?? []
 }
 
 // 获取其他费用列表（房东端）
@@ -38,20 +35,15 @@ export const getOwnerOtherFees = async (params?: {
   page?: number
   size?: number
 }) => {
-  const res = await request<any>({
-    url: '/api/fee/owner',
-    method: 'GET',
-    data: params
-  })
-  return res?.records || res?.list || []
+  const res = await request({ url: '/api/fee/owner', method: 'GET', data: params }) as any
+  const data = res?.data
+  return data?.records ?? data?.list ?? []
 }
 
 // 获取其他费用详情
 export const getOtherFeeDetail = async (id: number) => {
-  return request<OtherFee>({
-    url: `/api/fee/${id}`,
-    method: 'GET'
-  })
+  const res = await request({ url: `/api/fee/${id}`, method: 'GET' }) as any
+  return res?.data || res
 }
 
 // 创建其他费用
@@ -63,25 +55,15 @@ export const createOtherFee = async (data: {
   month: string
   remark?: string
 }) => {
-  return request<{ id: number }>({
-    url: '/api/fee',
-    method: 'POST',
-    data
-  })
+  return request({ url: '/api/fee', method: 'POST', data })
 }
 
 // 支付其他费用
 export const payOtherFee = async (id: number) => {
-  return request<{ success: boolean }>({
-    url: `/api/fee/${id}/pay`,
-    method: 'POST'
-  })
+  return request({ url: `/api/fee/${id}/pay`, method: 'POST' })
 }
 
 // 删除其他费用
 export const deleteOtherFee = async (id: number) => {
-  return request<{ success: boolean }>({
-    url: `/api/fee/${id}`,
-    method: 'DELETE'
-  })
+  return request({ url: `/api/fee/${id}`, method: 'DELETE' })
 }

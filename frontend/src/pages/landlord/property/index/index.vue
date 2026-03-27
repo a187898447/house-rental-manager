@@ -55,12 +55,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { toRaw } from 'vue'
+import { ref, computed, onMounted, toRaw } from 'vue'
+import { storeToRefs } from 'pinia'
 import { usePropertyStore } from '@/stores/property'
 import PropertyCard from '@/components/PropertyCard.vue'
 
 const propertyStore = usePropertyStore()
+// 使用 storeToRefs 保持响应性
+const { properties } = storeToRefs(propertyStore)
 
 const tabs = [
   { name: '全部', value: '' },
@@ -76,12 +78,9 @@ const pageSize = ref(10)
 
 const loading = computed(() => propertyStore.loading)
 
-// 使用 toRaw 处理 Proxy
-const properties = computed(() => toRaw(propertyStore.properties))
-
 const filteredList = computed(() => {
   const statusMap = [null, 0, 1]
-  const list = properties.value || []
+  const list = toRaw(properties.value) || []
   // 全部 tab
   if (currentTab.value === 0) return list
   return list.filter((p: any) => p.status === statusMap[currentTab.value])

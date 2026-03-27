@@ -10,20 +10,15 @@ export const getOwnerReceipts = async (params?: {
   page?: number
   size?: number
 }) => {
-  const res = await request<any>({
-    url: '/api/receipt/owner',
-    method: 'GET',
-    data: params
-  })
-  return res?.records || res?.list || []
+  const res = await request({ url: '/api/receipt/owner', method: 'GET', data: params }) as any
+  const data = res?.data
+  return data?.records ?? data?.list ?? []
 }
 
 /**
  * 获取收据详情
  */
 export const getReceiptDetail = async (id: string) => {
-  return request<any>({
-    url: `/api/receipt/${id}`,
-    method: 'GET'
-  })
+  const res = await request({ url: `/api/receipt/${id}`, method: 'GET' }) as any
+  return res?.data || res
 }

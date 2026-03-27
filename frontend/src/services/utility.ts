@@ -5,10 +5,7 @@ import type { UtilityBill, ApiResponse } from '@/types'
  * 获取水电费配置
  */
 export const getUtilityConfig = async (propertyId: string) => {
-  const res = await request<any>({
-    url: `/api/property/${propertyId}/utility-config`,
-    method: 'GET'
-  })
+  const res = await request({ url: `/api/property/${propertyId}/utility-config`, method: 'GET' }) as any
   return res?.data || res
 }
 
@@ -19,14 +16,10 @@ export const setUtilityConfig = async (propertyId: string, data: {
   waterRate: number
   electricityRate: number
 }) => {
-  const res = await request<any>({
-    url: `/api/property/${propertyId}/utility-config`,
-    method: 'PUT',
-    data: {
-      waterPrice: data.waterRate,
-      electricityPrice: data.electricityRate
-    }
-  })
+  const res = await request({ url: `/api/property/${propertyId}/utility-config`, method: 'PUT', data: {
+    waterPrice: data.waterRate,
+    electricityPrice: data.electricityRate
+  } }) as any
   return res?.data || res
 }
 
@@ -39,12 +32,9 @@ export const getUtilityBills = async (params?: {
   status?: number
   month?: string
 }) => {
-  const res = await request<any>({
-    url: '/api/utility/owner',
-    method: 'GET',
-    data: params
-  })
-  return res?.data?.records || res?.records || res?.list || []
+  const res = await request({ url: '/api/utility/owner', method: 'GET', data: params }) as any
+  const data = res?.data
+  return data?.records ?? data?.list ?? []
 }
 
 /**
@@ -62,11 +52,7 @@ export const createUtilityBill = async (data: {
   electricityAmount?: number
   source?: number
 }) => {
-  const res = await request<any>({
-    url: '/api/utility/bills',
-    method: 'POST',
-    data
-  })
+  const res = await request({ url: '/api/utility/bills', method: 'POST', data }) as any
   return res?.data || res
 }
 
@@ -74,9 +60,6 @@ export const createUtilityBill = async (data: {
  * 标记水电费已支付
  */
 export const markUtilityPaid = async (id: string) => {
-  const res = await request<any>({
-    url: `/api/utility/${id}/pay`,
-    method: 'POST'
-  })
+  const res = await request({ url: `/api/utility/${id}/pay`, method: 'POST' }) as any
   return res?.data || res
 }

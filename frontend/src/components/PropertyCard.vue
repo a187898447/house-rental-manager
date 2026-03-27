@@ -23,7 +23,7 @@
         <text class="unit">{{ data.unit }}-{{ data.roomNumber }}</text>
       </view>
       <view class="info-row">
-        <text class="rent">¥{{ data.rent }}/月</text>
+        <text class="rent">¥{{ data.rentAmount }}/月</text>
         <text v-if="data.area" class="area">{{ data.area }}㎡</text>
       </view>
     </view>
@@ -40,18 +40,16 @@ const props = defineProps<{
 
 const emit = defineEmits(['click'])
 
-const statusMap: Record<string, string> = {
-  vacant: '未出租',
-  rented: '已出租',
-  rented_unpaid: '未缴费',
-  rented_paid: '已缴费'
+const statusMap: Record<number, string> = {
+  0: '未出租',
+  1: '已出租'
 }
 
 const statusClass = computed(() => {
   const status = props.data.status
-  if (status === 'vacant') return 'status-vacant'
-  if (status === 'rented_unpaid') return 'status-unpaid'
-  return 'status-rented'
+  if (status === 0) return 'status-vacant'
+  if (status === 1) return 'status-rented'
+  return 'status-vacant'
 })
 
 const statusText = computed(() => statusMap[props.data.status] || '')
