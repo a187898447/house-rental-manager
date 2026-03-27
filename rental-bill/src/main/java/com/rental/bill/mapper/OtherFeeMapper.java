@@ -14,7 +14,8 @@ import java.math.BigDecimal;
 @Mapper
 public interface OtherFeeMapper extends BaseMapper<OtherFee> {
     
-    @Select("SELECT COALESCE(SUM(amount), 0) FROM t_other_fee WHERE property_id IN " +
-            "(SELECT id FROM t_property WHERE owner_id = #{ownerId}) AND status = 1")
+    @Select("SELECT COALESCE(SUM(o.amount), 0) FROM t_other_fee o " +
+            "INNER JOIN t_property p ON o.property_id = p.id " +
+            "WHERE p.owner_id = #{ownerId} AND o.status = 1")
     BigDecimal selectSumByOwner(@Param("ownerId") Long ownerId);
 }

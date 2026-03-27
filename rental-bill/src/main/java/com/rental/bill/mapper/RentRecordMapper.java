@@ -14,9 +14,13 @@ import java.math.BigDecimal;
 @Mapper
 public interface RentRecordMapper extends BaseMapper<RentRecord> {
     
-    @Select("SELECT COALESCE(SUM(amount), 0) FROM t_rent_record WHERE owner_id = #{ownerId}")
+    @Select("SELECT COALESCE(SUM(r.amount), 0) FROM t_rent_record r " +
+            "INNER JOIN t_property p ON r.property_id = p.id " +
+            "WHERE p.owner_id = #{ownerId}")
     BigDecimal selectSumByOwner(@Param("ownerId") Long ownerId);
     
-    @Select("SELECT COALESCE(SUM(amount), 0) FROM t_rent_record WHERE owner_id = #{ownerId} AND status = #{status}")
+    @Select("SELECT COALESCE(SUM(r.amount), 0) FROM t_rent_record r " +
+            "INNER JOIN t_property p ON r.property_id = p.id " +
+            "WHERE p.owner_id = #{ownerId} AND r.status = #{status}")
     BigDecimal selectSumByOwnerAndStatus(@Param("ownerId") Long ownerId, @Param("status") Integer status);
 }
