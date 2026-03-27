@@ -18,7 +18,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/statistics")
+@RequestMapping("/statistics")
 @RequiredArgsConstructor
 @Tag(name = "数据统计", description = "房东数据统计相关接口")
 public class StatisticsController {
