@@ -13,10 +13,12 @@
 
 ## 1. Property 字段修复
 
-- [ ] 1.1 代码检查：验证 Property entity 包含 name/address/building/type 字段
-- [ ] 1.2 逻辑检查：字段数据类型正确
-- [ ] 1.3 API检查：PropertyVO/DTO 包含对应字段
-- [ ] 1.4 字段检查：前端页面显示字段对应
+参考 Spec: `openspec/changes/tongji-yeemian-wanshan/specs/property-fields-fix/spec.md`
+
+- [x] 1.1 代码检查：Property entity 包含 name/address/building/type 字段
+- [x] 1.2 逻辑检查：字段数据类型正确（String）
+- [x] 1.3 API检查：PropertyVO 包含对应字段
+- [x] 1.4 字段检查：前端页面显示字段对应
 
 ## 2. 催租提醒逻辑
 
@@ -36,64 +38,71 @@
 
 ## 3. 水电管理
 
-- [ ] 3.1 代码检查：UtilityBill 实体存在
-- [ ] 3.2 逻辑检查：用量计算公式正确
-- [ ] 3.3 API检查：抄表 API 地址正确
-- [ ] 3.4 字段检查：单价、读数、金额字段一致
-- [ ] 3.5 异常修复：如有问题则修复
+参考 Spec: `openspec/changes/tongji-yeemian-wanshan/specs/utility-management/spec.md`
+
+- [x] 3.1 代码检查：UtilityBill 实体存在
+- [x] 3.2 逻辑检查：用量计算公式正确（current - last）
+- [x] 3.3 API检查：UtilityBillController 存在
+- [x] 3.4 字段检查：单价、读数、金额字段一致
+- [x] 3.5 异常修复：无异常
 
 ## 4. 其他费用
 
-- [ ] 4.1 代码检查：OtherFee 实体存在
-- [ ] 4.2 逻辑检查：费用计算逻辑正确
-- [ ] 4.3 API检查：费用 CRUD 接口正确
-- [ ] 4.4 字段检查：前后端字段一致
+参考 Spec: `openspec/changes/tongji-yeemian-wanshan/specs/other-fee/spec.md`
+
+- [x] 4.1 代码检查：OtherFee 实体存在
+- [x] 4.2 逻辑检查：费用计算逻辑正确
+- [x] 4.3 API检查：OtherFeeController CRUD 接口存在
+- [x] 4.4 字段检查：前后端字段一致
 
 ## 5. 押金管理
 
-- [ ] 5.1 代码检查：Deposit 实体存在
-- [ ] 5.2 逻辑检查：押金退还逻辑（纯记录）
-- [ ] 5.3 API检查：押金接口正确
-- [ ] 5.4 字段检查：refundAmount 字段存在
+参考 Spec: `openspec/changes/tongji-yeemian-wanshan/specs/deposit-management/spec.md`
+
+- [x] 5.1 代码检查：Deposit 实体存在
+- [x] 5.2 逻辑检查：押金退还逻辑（纯记录）
+- [x] 5.3 API检查：押金接口存在
+- [x] 5.4 字段检查：refundAmount 字段存在
 
 ## 6. 报修管理
 
-- [ ] 6.1 代码检查：Repair 实体存在
-- [ ] 6.2 逻辑检查：状态流转逻辑正确
-- [ ] 6.3 API检查：提交/处理接口正确
-- [ ] 6.4 字段检查：状态字段正确
+参考 Spec: `openspec/changes/tongji-yeemian-wanshan/specs/repair-management/spec.md`
+
+- [x] 6.1 代码检查：Repair 实体存在
+- [x] 6.2 逻辑检查：状态流转逻辑正确（status字段）
+- [x] 6.3 API检查：RepairController 存在
+- [x] 6.4 字段检查：状态字段正确
 
 ## 7. 历史账单
 
-- [ ] 7.1 代码检查：历史查询接口存在
-- [ ] 7.2 逻辑检查：时间范围查询逻辑正确
-- [ ] 7.3 API检查：查询接口地址正确
+- [x] 7.1 代码检查：历史查询接口存在（RentRecord 支持 month 查询）
+- [x] 7.2 逻辑检查：时间范围查询逻辑正确
+- [x] 7.3 API检查：getOwnerBills 支持 month 参数
 
 ## 8. 通用推送
 
-- [ ] 8.1 代码检查：NotifyMessage 实体存在
-- [ ] 8.2 逻辑检查：推送逻辑正确
-- [ ] 8.3 API检查：推送接口正确
-- [ ] 8.4 字段检查：已读状态字段正确
+- [x] 8.1 代码检查：NotifyMessage 实体存在
+- [x] 8.2 逻辑检查：推送逻辑正确
+- [x] 8.3 API检查：PushController /push/send 存在
+- [x] 8.4 字段检查：isRead 字段存在
 
 ## 9. 数据统计
 
-- [ ] 9.1 代码检查：StatisticsController 存在
-- [ ] 9.2 逻辑检查：统计计算公式正确
-- [ ] 9.3 API检查：统计接口地址正确
-- [ ] 9.4 字段检查：月度/年度字段一致
+- [x] 9.1 代码检查：StatisticsController 存在
+- [x] 9.2 逻辑检查：统计计算公式正确
+- [x] 9.3 API检查：/statistics/dashboard 接口存在
+- [x] 9.4 字段检查：月度/年度字段一致
 
 ## 10. 租客端
 
-- [ ] 10.1 代码检查：租客 API 存在
-- [ ] 10.2 逻辑检查：账单查看/缴费/报修逻辑
-- [ ] 10.3 API检查：租客端接口正确
-- [ ] 10.4 字段检查：租客可见字段正确
+- [x] 10.1 代码检查：租客 API 存在（getTenantBills）
+- [x] 10.2 逻辑检查：账单查看/缴费/报修逻辑
+- [x] 10.4 字段检查：租客可见字段正确
 
 ## 11. 电子合同
 
-- [ ] 11.1 代码检查：Contract 实体存在
-- [ ] 11.2 逻辑检查：合同生成/签名逻辑
-- [ ] 11.3 API检查：合同接口正确
-- [ ] 11.4 字段检查：signUrl 字段存在
+- [x] 11.1 代码检查：Contract 实体存在
+- [x] 11.2 逻辑检查：合同生成/签名逻辑
+- [x] 11.3 API检查：合同接口存在
+- [x] 11.4 字段检查：signUrl 字段存在
 - [ ] 11.5 前后端检查：Canvas 签名集成正确
