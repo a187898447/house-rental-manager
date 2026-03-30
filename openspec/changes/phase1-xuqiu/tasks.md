@@ -13,27 +13,46 @@
 
 ## 1. 房源管理
 
+参考 Spec: `openspec/changes/phase1-xuqiu/specs/property-management/spec.md`
+
 - [x] 1.1 代码检查：Property 实体存在
-- [x] 1.2 逻辑检查：CRUD 逻辑正确
+- [x] 1.2 逻辑检查：CRUD 逻辑正确（对比 spec.md 的 Requirement）
+  - ✅ create: PropertyServiceImpl.create()
+  - ✅ update: PropertyServiceImpl.updateProperty()
+  - ✅ delete: PropertyServiceImpl.deleteProperty() - 逻辑删除
 - [x] 1.3 API检查：房源 API 接口正确
 - [x] 1.4 字段检查：PropertyVO/DTO 字段一致
 
 ## 2. 租金管理
 
+参考 Spec: `openspec/changes/phase1-xuqiu/specs/rent-management/spec.md`
+
 - [x] 2.1 代码检查：RentRecord 实体存在
-- [x] 2.2 逻辑检查：账单生成/计算逻辑正确
+- [x] 2.2 逻辑检查：账单生成/计算逻辑正确（对比 spec.md）
+  - ✅ 记录租金: RentRecordServiceImpl.create()
+  - ✅ 收租提醒: RentRecordServiceImpl.sendReminder()
+  - ✅ 租金统计: RentRecordServiceImpl.getOwnerStats()
 - [x] 2.3 API检查：租金 API 接口正确
 - [x] 2.4 字段检查：金额/状态字段一致
 
 ## 3. 租客管理
 
+参考 Spec: `openspec/changes/phase1-xuqiu/specs/tenant-management/spec.md`
+
 - [x] 3.1 代码检查：Tenant 实体存在
-- [x] 3.2 逻辑检查：入住/退租逻辑正确
+- [x] 3.2 逻辑检查：入住/退租逻辑正确（对比 spec.md）
+  - ✅ 入住登记: TenantServiceImpl.checkIn()
+  - ✅ 租客列表: TenantServiceImpl.getOwnerTenants()
+  - ✅ 退租办理: TenantServiceImpl.checkOut()
 - [x] 3.3 API检查：租客 API 接口正确
 - [x] 3.4 字段检查：租客信息字段一致
 
 ## 4. 微信登录
 
+参考 Spec: `openspec/changes/phase1-xuqiu/specs/wechat-login/spec.md`
+
 - [x] 4.1 代码检查：WxServiceImpl 存在
-- [x] 4.2 逻辑检查：登录流程正确（但未完整实现）
-- [x] 4.3 状态：部分实现，Phase 1 使用账号密码登录
+- [x] 4.2 逻辑检查：登录流程（部分实现，对比 spec.md）
+  - ⚠️ WxServiceImpl 有 jscode2session 但未完整集成
+  - ✅ JWT Token 生成: 通过账号密码登录实现
+- [ ] 4.3 状态：未完整实现，Phase 1 使用账号密码登录
