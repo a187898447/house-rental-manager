@@ -137,37 +137,86 @@ public class BillTask {
     }
 
     /**
-     * 每周发送租金提醒
-     * 规则：对已逾期和即将到期的租客发送提醒
+     * 催租提醒定时任务 - D+0/D+2/D+3 三轮提醒
+     * 规则：
+     * - D+0: 租金到期日当天，租客收到第1次提醒
+     * - D+2: 租金逾期第2天，租客收到第2次提醒
+     * - D+3: 租金逾期第3天，租客收到第3次提醒 + 房东收到逾期通知
      */
     @Scheduled(cron = "0 0 3 * * ?")
     public void sendPaymentReminder() {
-        log.info("开始发送租金提醒...");
+        log.info("开始发送租金催租提醒（D+0/D+2/D+3）...");
         
-        // 查找已逾期和即将逾期(3天内)的账单
         LocalDate today = LocalDate.now();
-        LocalDate warningDate = today.plusDays(3);
         
-        List<RentRecord> billsToRemind = rentRecordMapper.selectList(
+        // 查询所有待支付或已逾期的账单
+        List<RentRecord> bills = rentRecordMapper.selectList(
                 new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<RentRecord>()
                         .in(RentRecord::getStatus, 0, 2) // 待支付或已逾期
-                        .le(RentRecord::getPayDate, warningDate)
+                        .le(RentRecord::getPayDate, today) // 到期日 <= 今天
         );
         
-        for (RentRecord bill : billsToRemind) {
+        int tenantReminderCount = 0;
+        int landlordNotificationCount = 0;
+        
+        for (RentRecord bill : bills) {
             try {
-                // 调用催租提醒接口
-                bill.setRemindCount(bill.getRemindCount() + 1);
-                rentRecordMapper.updateById(bill);
+                LocalDate payDate = bill.getPayDate();
+                long daysOverdue = java.time.temporal.ChronoUnit.DAYS.between(payDate, today);
+                int currentRemindCount = bill.getRemindCount() != null ? bill.getRemindCount() : 0;
                 
-                // 微信模板消息通知（暂缓）
-                log.info("发送租金提醒: billId={}, remindCount={}", bill.getId(), bill.getRemindCount());
+                // D+0: 当天首次提醒
+                if (daysOverdue == 0 && currentRemindCount == 0) {
+                    bill.setRemindCount(1);
+                    rentRecordMapper.updateById(bill);
+                    // 发送通知给租客
+                    notifyTenant(bill.getTenantId(), 1);
+                    tenantReminderCount++;
+                    log.info("账单 {} D+0 第1次提醒已发送", bill.getId());
+                }
+                // D+2: 逾期第2天，第二次提醒
+                else if (daysOverdue >= 2 && currentRemindCount == 1) {
+                    bill.setRemindCount(2);
+                    rentRecordMapper.updateById(bill);
+                    // 发送通知给租客
+                    notifyTenant(bill.getTenantId(), 2);
+                    tenantReminderCount++;
+                    log.info("账单 {} D+2 第2次提醒已发送", bill.getId());
+                }
+                // D+3: 逾期第3天，第三次提醒 + 房东通知
+                else if (daysOverdue >= 3 && currentRemindCount == 2) {
+                    bill.setRemindCount(3);
+                    rentRecordMapper.updateById(bill);
+                    // 发送通知给租客
+                    notifyTenant(bill.getTenantId(), 3);
+                    tenantReminderCount++;
+                    // 发送通知给房东
+                    notifyLandlord(bill);
+                    landlordNotificationCount++;
+                    log.info("账单 {} D+3 第3次提醒+房东通知已发送", bill.getId());
+                }
                 
             } catch (Exception e) {
-                log.error("发送提醒失败: billId={}, error={}", bill.getId(), e.getMessage());
+                log.error("处理提醒失败: billId={}, error={}", bill.getId(), e.getMessage());
             }
         }
         
-        log.info("租金提醒发送完成，共处理 {} 条", billsToRemind.size());
+        log.info("催租提醒发送完成: 租客提醒{}条, 房东通知{}条", tenantReminderCount, landlordNotificationCount);
+    }
+    
+    /**
+     * 通知租客
+     */
+    private void notifyTenant(Long tenantId, int round) {
+        log.info("发送第{}次提醒给租客: tenantId={}", round, tenantId);
+        // TODO: 调用通知服务发送消息
+    }
+    
+    /**
+     * 通知房东
+     */
+    private void notifyLandlord(RentRecord bill) {
+        log.info("发送逾期通知给房东: billId={}", bill.getId());
+        // TODO: 调用通知服务发送消息给房东
     }
 }
