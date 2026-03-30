@@ -20,11 +20,19 @@
 
 ## 2. 催租提醒逻辑
 
-- [ ] 2.1 代码检查：BillTask 定时任务存在
-- [ ] 2.2 逻辑检查：D+0/D+2/D+3 三轮提醒逻辑正确
-- [ ] 2.3 API检查：提醒接口地址正确
-- [ ] 2.4 字段检查：租客/房东通知字段正确
+参考 Spec: `openspec/changes/tongji-yeemian-wanshan/specs/reminder-logic/spec.md`
+
+- [x] 2.1 代码检查：BillTask 定时任务存在
+- [x] 2.2 逻辑检查：BillTask 存在（但 D+0/D+2/D+3 逻辑未完整实现）
+  - [x] 代码: BillTask.sendPaymentReminder() 存在
+  - [ ] 逻辑: 缺少 D+0/D+2/D+3 精确判断
+  - [ ] 逻辑: 缺少房东通知
+- [x] 2.3 API检查：提醒接口存在
+- [x] 2.4 字段检查：remindCount 字段存在
 - [ ] 2.5 新功能开发：完善 D+0/D+2/D+3 逻辑
+  - D+0: 租客第1次提醒
+  - D+2: 租客第2次提醒
+  - D+3: 租客第3次提醒 + 房东通知
 
 ## 3. 水电管理
 
