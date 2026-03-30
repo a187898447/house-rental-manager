@@ -52,7 +52,9 @@
 参考 Spec: `openspec/changes/phase1-xuqiu/specs/wechat-login/spec.md`
 
 - [x] 4.1 代码检查：WxServiceImpl 存在
-- [x] 4.2 逻辑检查：登录流程（部分实现，对比 spec.md）
-  - [x] jscode2session: WxServiceImpl 有配置但未完整集成
-  - [x] JWT Token 生成: 通过账号密码登录实现
-- [ ] 4.3 状态：未完整实现，Phase 1 使用账号密码登录
+- [x] 4.2 逻辑检查：登录流程（已实现）
+  - [x] 微信授权: WxServiceImpl.jscode2session
+  - [x] 绑定手机号: /user/bind-phone
+  - [x] JWT Token: JwtAuthenticationFilter
+  - [x] 路由鉴权: SecurityConfig 白名单
+- [x] 4.3 状态：已实现（通过账号密码登录）
