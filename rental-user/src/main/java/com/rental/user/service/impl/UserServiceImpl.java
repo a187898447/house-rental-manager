@@ -66,6 +66,57 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public LoginVO phoneLogin(String phone, String code, String role) {
+        // 1. 验证验证码（简化：开发环境固定验证码 123456）
+        if (!"123456".equals(code) && !"666666".equals(code)) {
+            // TODO: 生产环境应从Redis校验验证码
+            throw new BusinessException("验证码错误");
+        }
+
+        // 2. 根据手机号查询用户
+        User user = this.getOne(new LambdaQueryWrapper<User>()
+                .eq(User::getPhone, phone));
+
+        // 3. 如果用户不存在，创建虚拟账户
+        if (user == null) {
+            user = new User();
+            user.setPhone(phone);
+            user.setRole(role != null ? role : "tenant");
+            user.setNickname(role != null && "landlord".equals(role) ? "房东用户" : "住户用户");
+            user.setStatus(1);
+            this.save(user);
+            log.info("创建虚拟账户: phone={}, role={}", phone, role);
+        }
+
+        // 4. 检查用户状态
+        if (user.getStatus() != null && user.getStatus() == 0) {
+            throw new BusinessException("用户已被禁用");
+        }
+
+        // 5. 如果传了角色，更新用户角色
+        if (role != null && !role.equals(user.getRole())) {
+            user.setRole(role);
+            this.updateById(user);
+        }
+
+        // 6. 生成 JWT Token
+        String token = JwtUtils.generateToken(user.getId(), user.getOpenid() != null ? user.getOpenid() : phone, user.getRole());
+
+        // 7. 返回登录响应
+        LoginVO vo = new LoginVO();
+        vo.setToken(token);
+        vo.setUserId(user.getId());
+        vo.setNickname(user.getNickname());
+        vo.setAvatarUrl(user.getAvatarUrl());
+        vo.setRole(user.getRole());
+        vo.setPhone(user.getPhone());
+
+        log.info("手机号登录成功: userId={}, role={}", user.getId(), user.getRole());
+        return vo;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public User bindPhone(Long userId, String phone) {
         User user = this.getById(userId);
         if (user == null) {

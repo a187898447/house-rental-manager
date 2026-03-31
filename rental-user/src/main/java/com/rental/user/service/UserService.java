@@ -17,6 +17,15 @@ public interface UserService extends IService<User> {
     LoginVO wxLogin(String code);
 
     /**
+     * 手机号登录（房东/住户）
+     * @param phone 手机号
+     * @param code 验证码
+     * @param role 角色
+     * @return 登录响应
+     */
+    LoginVO phoneLogin(String phone, String code, String role);
+
+    /**
      * 绑定手机号
      * @param userId 用户ID
      * @param phone 手机号

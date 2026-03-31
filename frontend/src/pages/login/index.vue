@@ -6,14 +6,57 @@
       <text class="app-name">租房管理</text>
     </view>
 
-    <!-- 登录按钮 -->
-    <view class="login-section">
-      <button 
-        class="wechat-btn" 
-        :loading="loading"
-        @click="handleWechatLogin"
+    <!-- 角色选择 Tab -->
+    <view class="role-tabs">
+      <view 
+        class="role-tab" 
+        :class="{ active: loginRole === 'landlord' }"
+        @click="switchRole('landlord')"
       >
-        <text v-if="!loading">微信一键登录</text>
+        房东登录
+      </view>
+      <view 
+        class="role-tab" 
+        :class="{ active: loginRole === 'tenant' }"
+        @click="switchRole('tenant')"
+      >
+        住户登录
+      </view>
+    </view>
+
+    <!-- 登录表单 -->
+    <view class="login-form">
+      <view class="input-group">
+        <input 
+          v-model="phone" 
+          type="number" 
+          placeholder="请输入手机号" 
+          class="phone-input"
+        />
+      </view>
+      <view class="input-group code-group">
+        <input 
+          v-model="code" 
+          type="number" 
+          placeholder="请输入验证码" 
+          class="code-input"
+        />
+        <button 
+          class="send-code-btn" 
+          :disabled="countdown > 0"
+          @click="sendCode"
+        >
+          {{ countdown > 0 ? `${countdown}s` : '发送验证码' }}
+        </button>
+      </view>
+      
+      <!-- 登录按钮 -->
+      <button 
+        class="login-btn" 
+        :loading="loading"
+        @click="handleLogin"
+      >
+        <text v-if="!loading">{{ loginRole === 'landlord' ? '房东登录' : '住户登录' }}</text>
         <text v-else>登录中...</text>
       </button>
 
@@ -40,113 +83,34 @@
         </text>
       </view>
     </view>
-
-    <!-- 手机号绑定弹窗 -->
-    <view v-if="showBindPhone" class="bind-popup">
-      <view class="mask" @click="showBindPhone = false" />
-      <view class="popup-content">
-        <text class="popup-title">绑定手机号</text>
-        <view class="input-group">
-          <input 
-            v-model="phone" 
-            type="number" 
-            placeholder="请输入手机号" 
-            class="phone-input"
-          />
-        </view>
-        <view class="input-group code-group">
-          <input 
-            v-model="code" 
-            type="number" 
-            placeholder="请输入验证码" 
-            class="code-input"
-          />
-          <button 
-            class="send-code-btn" 
-            :disabled="countdown > 0"
-            @click="sendCode"
-          >
-            {{ countdown > 0 ? `${countdown}s` : '发送验证码' }}
-          </button>
-        </view>
-        <button class="bind-btn" :loading="binding" @click="handleBind">
-          绑定并登录
-        </button>
-      </view>
-    </view>
   </view>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
-import { wechatLogin, bindPhone, sendVerifyCode } from '@/services/auth'
+import { phoneLogin, sendVerifyCode } from '@/services/auth'
 
 const userStore = useUserStore()
 
 const loading = ref(false)
-const binding = ref(false)
 const agreed = ref(false)
 
-// 手机号绑定
-const showBindPhone = ref(false)
+// 角色选择
+const loginRole = ref<'landlord' | 'tenant'>('landlord')
+
+// 表单数据
 const phone = ref('')
 const code = ref('')
 const countdown = ref(0)
-let tempToken = ''
 
-// 微信登录
-const handleWechatLogin = async () => {
-  if (!agreed.value) {
-    uni.showToast({ title: '请先同意用户协议', icon: 'none' })
-    return
-  }
-
-  loading.value = true
-  try {
-    const res = await wechatLogin() as any
-    // 后端返回 Result<LoginVO>: { code, message, data: { token, userId, nickname, ... } }
-    const data = res?.data || res
-    
-    if (!data.token) {
-      throw new Error('登录失败：未获取到token')
-    }
-    
-    // 登录成功，保存用户信息
-    userStore.setToken(data.token)
-    userStore.setUserInfo({
-      id: data.userId,
-      nickname: data.nickname || '用户',
-      role: data.role || 'tenant',
-      phone: data.phone,
-      avatar: data.avatarUrl
-    } as any)
-    
-    uni.showToast({ title: '登录成功', icon: 'success' })
-    setTimeout(() => {
-      uni.switchTab({ url: '/pages/landlord/index/index' })
-    }, 1500)
-  } catch (error: any) {
-    uni.showToast({ title: error.message || '登录失败', icon: 'none' })
-  } finally {
-    loading.value = false
-  }
-}
-
-// 试用模式 - 无需登录
-const handleDemoLogin = () => {
-  // 设置演示用户信息
-  userStore.setToken("demo-token");
-  userStore.setUserInfo({
-    id: 1,
-    nickname: '演示用户',
-    role: 'landlord',
-    phone: '13800000000'
-  })
-  uni.showToast({ title: '已进入演示模式', icon: 'success' })
-  setTimeout(() => {
-    uni.switchTab({ url: '/pages/landlord/index/index' })
-  }, 1000)
+// 角色切换
+const switchRole = (role: 'landlord' | 'tenant') => {
+  loginRole.value = role
+  // 清空表单
+  phone.value = ''
+  code.value = ''
+  countdown.value = 0
 }
 
 // 发送验证码
@@ -173,232 +137,222 @@ const sendCode = async () => {
   }
 }
 
-// 绑定手机号
-const handleBind = async () => {
+// 手机号登录
+const handleLogin = async () => {
+  if (!agreed.value) {
+    uni.showToast({ title: '请先同意用户协议', icon: 'none' })
+    return
+  }
+  
   if (!/^1\d{10}$/.test(phone.value)) {
     uni.showToast({ title: '请输入正确的手机号', icon: 'none' })
     return
   }
+  
   if (!/^\d{4,6}$/.test(code.value)) {
     uni.showToast({ title: '请输入验证码', icon: 'none' })
     return
   }
 
-  binding.value = true
+  loading.value = true
   try {
-    const res = await bindPhone(phone.value, code.value) as any
-    // 后端返回 Result<UserVO>: { code, message, data: { id, phone, nickname, ... } }
-    const data = res?.data || res
+    // 根据角色调用不同接口
+    const role = loginRole.value
+    const res = await phoneLogin(phone.value, code.value, role) as any
     
-    // 获取当前token（如果有tempToken则用tempToken）
-    const currentToken = uni.getStorageSync('token')
-    if (currentToken) {
-      userStore.setToken(currentToken)
-    }
-    
-    if (data) {
+    if (res.code === 200 || res.code === 0) {
+      const data = res.data
+      
+      // 保存用户信息
+      userStore.setToken(data.token)
       userStore.setUserInfo({
-        id: data.id,
+        id: data.userId,
+        nickname: data.nickname || '用户',
+        role: data.role || role,
         phone: data.phone,
-        nickname: data.nickname,
-        avatar: data.avatarUrl,
-        role: data.role
+        avatar: data.avatarUrl
       } as any)
+      
+      uni.showToast({ title: '登录成功', icon: 'success' })
+      
+      // 根据角色跳转不同页面
+      setTimeout(() => {
+        if (role === 'landlord') {
+          uni.switchTab({ url: '/pages/landlord/index/index' })
+        } else {
+          uni.switchTab({ url: '/pages/tenant/index/index' })
+        }
+      }, 1500)
+    } else {
+      uni.showToast({ title: res.message || '登录失败', icon: 'none' })
     }
-    
-    showBindPhone.value = false
-    uni.showToast({ title: '绑定成功', icon: 'success' })
-    setTimeout(() => {
-      uni.switchTab({ url: '/pages/landlord/index/index' })
-    }, 1500)
   } catch (error: any) {
-    uni.showToast({ title: error.message || '绑定失败', icon: 'none' })
+    uni.showToast({ title: error.message || '登录失败', icon: 'none' })
   } finally {
-    binding.value = false
+    loading.value = false
   }
 }
 
-// 查看协议
+// 试用模式 - 根据角色设置不同演示用户
+const handleDemoLogin = () => {
+  const role = loginRole.value
+  
+  // 设置演示用户信息
+  userStore.setToken("demo-token-" + role)
+  userStore.setUserInfo({
+    id: role === 'landlord' ? 1 : 100,
+    nickname: role === 'landlord' ? '房东演示' : '住户演示',
+    role: role,
+    phone: '13800000000'
+  })
+  
+  uni.showToast({ title: '已进入演示模式', icon: 'success' })
+  
+  // 根据角色跳转
+  setTimeout(() => {
+    if (role === 'landlord') {
+      uni.switchTab({ url: '/pages/landlord/index/index' })
+    } else {
+      uni.switchTab({ url: '/pages/tenant/index/index' })
+    }
+  }, 1000)
+}
+
+// 打开协议
 const openAgreement = (type: string) => {
-  // TODO: 跳转到协议页面
-  console.log('open agreement:', type)
+  // TODO: 实现协议页面跳转
+  uni.showToast({ title: '协议页面开发中', icon: 'none' })
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .login-page {
   min-height: 100vh;
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 200rpx 60rpx 0;
+  background: #fff;
+  padding: 48rpx 32rpx;
 }
 
 .logo-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 120rpx;
-
-  .logo {
-    width: 160rpx;
-    height: 160rpx;
-    margin-bottom: 24rpx;
-  }
-
-  .app-name {
-    font-size: 40rpx;
-    font-weight: bold;
-    color: #333;
-  }
+  margin-bottom: 64rpx;
 }
 
-.login-section {
+.logo {
+  width: 160rpx;
+  height: 160rpx;
+  background: #f5f5f5;
+  border-radius: 32rpx;
+}
+
+.app-name {
+  font-size: 40rpx;
+  font-weight: 600;
+  color: #333;
+  margin-top: 24rpx;
+}
+
+/* 角色选择 Tab */
+.role-tabs {
+  display: flex;
+  background: #f5f5f5;
+  border-radius: 16rpx;
+  padding: 8rpx;
+  margin-bottom: 48rpx;
+}
+
+.role-tab {
+  flex: 1;
+  text-align: center;
+  padding: 24rpx 0;
+  font-size: 28rpx;
+  color: #666;
+  border-radius: 12rpx;
+  transition: all 0.3s;
+}
+
+.role-tab.active {
+  background: #fff;
+  color: #007AFF;
+  font-weight: 600;
+  box-shadow: 0 2rpx 8rpx rgba(0, 122, 255, 0.15);
+}
+
+.login-form {
   width: 100%;
-
-  .wechat-btn {
-    width: 100%;
-    height: 96rpx;
-    background-color: #07C160;
-    border-radius: 48rpx;
-    color: #fff;
-    font-size: 32rpx;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    
-    &::after {
-      border: none;
-    }
-  }
-
-  .demo-btn {
-    width: 100%;
-    height: 96rpx;
-    background-color: #fff;
-    border: 2rpx solid #0087FF;
-    border-radius: 48rpx;
-    color: #0087FF;
-    font-size: 32rpx;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 24rpx;
-    
-    &::after {
-      border: none;
-    }
-  }
-
-  .agreement {
-    display: flex;
-    align-items: flex-start;
-    margin-top: 40rpx;
-    padding: 0 20rpx;
-
-    .agreement-text {
-      font-size: 24rpx;
-      color: #999;
-      line-height: 1.6;
-      margin-left: 12rpx;
-
-      .link {
-        color: #0087FF;
-      }
-    }
-  }
 }
 
-.bind-popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 999;
+.input-group {
+  margin-bottom: 32rpx;
+}
 
-  .mask {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
+.phone-input,
+.code-input {
+  width: 100%;
+  height: 96rpx;
+  background: #f5f5f5;
+  border-radius: 16rpx;
+  padding: 0 32rpx;
+  font-size: 28rpx;
+}
 
-  .popup-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600rpx;
-    background-color: #fff;
-    border-radius: 24rpx;
-    padding: 60rpx 40rpx;
+.code-group {
+  display: flex;
+  align-items: center;
+}
 
-    .popup-title {
-      font-size: 36rpx;
-      font-weight: bold;
-      color: #333;
-      display: block;
-      text-align: center;
-      margin-bottom: 40rpx;
-    }
+.code-input {
+  flex: 1;
+  margin-right: 24rpx;
+}
 
-    .input-group {
-      margin-bottom: 24rpx;
+.send-code-btn {
+  width: 200rpx;
+  height: 80rpx;
+  background: #f5f5f5;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 24rpx;
+  color: #007AFF;
+  padding: 0;
+}
 
-      .phone-input,
-      .code-input {
-        width: 100%;
-        height: 88rpx;
-        background-color: #f5f5f5;
-        border-radius: 12rpx;
-        padding: 0 24rpx;
-        font-size: 28rpx;
-      }
-    }
+.login-btn {
+  width: 100%;
+  height: 96rpx;
+  background: #007AFF;
+  color: #fff;
+  border-radius: 16rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  margin-bottom: 24rpx;
+}
 
-    .code-group {
-      display: flex;
-      gap: 16rpx;
+.demo-btn {
+  width: 100%;
+  height: 88rpx;
+  background: #fff;
+  border: 2rpx solid #ddd;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 48rpx;
+}
 
-      .code-input {
-        flex: 1;
-      }
+.agreement {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-      .send-code-btn {
-        width: 200rpx;
-        height: 88rpx;
-        background-color: #f5f5f5;
-        border-radius: 12rpx;
-        font-size: 24rpx;
-        color: #0087FF;
-        border: none;
-        padding: 0;
+.agreement-text {
+  font-size: 24rpx;
+  color: #999;
+  margin-left: 16rpx;
+}
 
-        &::after {
-          border: none;
-        }
-      }
-    }
-
-    .bind-btn {
-      width: 100%;
-      height: 96rpx;
-      background-color: #0087FF;
-      border-radius: 48rpx;
-      color: #fff;
-      font-size: 32rpx;
-      margin-top: 40rpx;
-      border: none;
-
-      &::after {
-        border: none;
-      }
-    }
-  }
+.link {
+  color: #007AFF;
 }
 </style>
