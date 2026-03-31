@@ -3,6 +3,7 @@ package com.rental.user.controller;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.rental.common.result.Result;
 import com.rental.user.dto.BindPhoneRequest;
+import com.rental.user.dto.PhoneLoginRequest;
 import com.rental.user.dto.SendCodeRequest;
 import com.rental.user.dto.WxLoginRequest;
 import com.rental.user.entity.User;
@@ -30,6 +31,13 @@ public class UserController {
     @Operation(summary = "微信登录")
     public Result<LoginVO> wxLogin(@RequestBody WxLoginRequest request) {
         LoginVO loginVO = userService.wxLogin(request.getCode());
+        return Result.success(loginVO);
+    }
+
+    @PostMapping("/phone-login")
+    @Operation(summary = "手机号登录（房东/住户）")
+    public Result<LoginVO> phoneLogin(@RequestBody PhoneLoginRequest request) {
+        LoginVO loginVO = userService.phoneLogin(request.getPhone(), request.getCode(), request.getRole());
         return Result.success(loginVO);
     }
 

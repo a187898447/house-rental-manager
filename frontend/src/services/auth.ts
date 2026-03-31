@@ -31,6 +31,15 @@ export const updateUserInfo = async (data: Partial<User>) => {
 }
 
 /**
+ * 手机号登录（房东/住户）
+ */
+export const phoneLogin = async (phone: string, code: string, role?: string) => {
+  const data: any = { phone, code }
+  if (role) data.role = role
+  return request({ url: '/api/user/phone-login', method: 'POST', data })
+}
+
+/**
  * 发送验证码
  */
 export const sendVerifyCode = async (phone: string) => {
