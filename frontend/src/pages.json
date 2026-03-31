@@ -154,6 +154,54 @@
     },
     {
       "path": "pages/tenant/contact/index/index",
+    {
+      "path": "pages/tenant/index/index",
+      "style": {
+        "navigationBarTitleText": "租客首页"
+      }
+    },
+    {
+      "path": "pages/tenant/property/index",
+      "style": {
+        "navigationBarTitleText": "我的房源"
+      }
+    },
+    {
+      "path": "pages/tenant/settings/index",
+      "style": {
+        "navigationBarTitleText": "设置"
+      }
+    },
+    {
+      "path": "pages/tenant/settings/profile/index",
+      "style": {
+        "navigationBarTitleText": "个人资料"
+      }
+    },
+    {
+      "path": "pages/tenant/settings/notification/index",
+      "style": {
+        "navigationBarTitleText": "通知设置"
+      }
+    },
+    {
+      "path": "pages/tenant/utility/index",
+      "style": {
+        "navigationBarTitleText": "水电账单"
+      }
+    },
+    {
+      "path": "pages/tenant/deposit/index",
+      "style": {
+        "navigationBarTitleText": "押金信息"
+      }
+    },
+    {
+      "path": "pages/tenant/rent/index",
+      "style": {
+        "navigationBarTitleText": "租金详情"
+      }
+    },
       "style": {
         "navigationBarTitleText": "联系房东"
       }
