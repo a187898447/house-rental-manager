@@ -1,28 +1,27 @@
-# 登录角色选择功能
+## Why
 
-## 为什么
+当前登录页面缺少角色选择功能，无法区分房东和住户身份。系统需要支持两种角色的独立登录流程，并提供虚拟账户供测试使用。
 
-当前登录页面缺少角色选择逻辑，无法区分房东和住户身份。需要增加角色选择并对应不同权限的登录方式。
+## What Changes
 
-## 需求变更
-
-- 登录页增加房东/住户角色选择
-- 根据角色调用对应登录接口
-- 虚拟账户机制：测试时自动创建虚拟账户
+- 登录页增加房东/住户角色选择 Tab
+- 手机号+验证码登录方式
+- 虚拟账户自动创建（首次登录自动创建）
+- 根据角色区分登录后跳转页面
 
 ## Capabilities
 
-- **New Capabilities**:
-  - login-role-select: 登录角色选择组件
-  - virtual-account: 虚拟账户自动创建
+### New Capabilities
 
-## 影响
+- `login-role-select`: 登录页面角色选择（房东/住户）
+- `phone-login`: 手机号验证码登录接口
+- `virtual-account`: 虚拟账户自动创建机制
 
-- 前端: login/index.vue, user store
-- 后端: AuthController, User entity, 权限验证
+### Modified Capabilities
 
-## 实现方式
+- (无)
 
-1. 前端登录页增加角色切换 Tab（房东/住户）
-2. 后端虚拟账户：登录时检查用户是否存在，不存在则自动创建
-3. 角色权限：通过 ownerId 区分房东，通过 tenantId 区分住户
+## Impact
+
+- 前端：`frontend/src/pages/login/index.vue`
+- 后端：`rental-user` 模块 UserController、UserService
