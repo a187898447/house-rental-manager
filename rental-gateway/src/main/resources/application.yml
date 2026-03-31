@@ -132,3 +132,7 @@ spring:
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
+
+# JWT 配置
+jwt:
+  secret: house-rental-manager-jwt-secret-key-2026

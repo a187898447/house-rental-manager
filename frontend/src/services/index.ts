@@ -6,13 +6,17 @@ const baseURL = 'http://localhost:8080'
 const request = (options: any) => {
   return new Promise((resolve, reject) => {
     const token = uni.getStorageSync('token')
+    const headers: any = {
+      ...options.header
+    }
+    // 只有当 token 存在且非空时才添加 Authorization 头
+    if (token && token.trim() !== '' && token !== 'undefined' && token !== 'null') {
+      headers['Authorization'] = `Bearer ${token}`
+    }
     uni.request({
       ...options,
       url: baseURL + options.url,
-      header: {
-        ...options.header,
-        'Authorization': token ? `Bearer ${token}` : ''
-      },
+      header: headers,
       success: (res: any) => {
         if (res.statusCode === 200) {
           resolve(res.data)
