@@ -60,12 +60,13 @@
         <text v-else>登录中...</text>
       </button>
 
-      <!-- 试用按钮 -->
+      <!-- 微信登录按钮 -->
       <button 
-        class="demo-btn" 
-        @click="handleDemoLogin"
+        class="wechat-btn" 
+        :loading="wechatLoading"
+        @click="handleWechatLogin"
       >
-        试用一下（无需登录）
+        微信一键登录
       </button>
 
       <!-- 用户协议 -->
@@ -89,11 +90,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
-import { phoneLogin, sendVerifyCode } from '@/services/auth'
+import { phoneLogin, sendVerifyCode, wechatLogin } from '@/services/auth'
 
 const userStore = useUserStore()
 
 const loading = ref(false)
+const wechatLoading = ref(false)
 const agreed = ref(false)
 
 // 角色选择
@@ -209,6 +211,42 @@ const handleDemoLogin = () => {
       uni.switchTab({ url: '/pages/tenant/index/index' })
     }
   }, 1000)
+}
+
+// 微信登录
+const handleWechatLogin = async () => {
+  if (!agreed.value) {
+    uni.showToast({ title: '请先同意用户协议', icon: 'none' })
+    return
+  }
+
+  wechatLoading.value = true
+  try {
+    const res = await wechatLogin() as any
+    const data = res?.data || res
+    
+    if (!data.token) {
+      throw new Error('登录失败：未获取到token')
+    }
+    
+    userStore.setToken(data.token)
+    userStore.setUserInfo({
+      id: data.userId,
+      nickname: data.nickname || '用户',
+      role: data.role || 'tenant',
+      phone: data.phone,
+      avatar: data.avatarUrl
+    } as any)
+    
+    uni.showToast({ title: '登录成功', icon: 'success' })
+    setTimeout(() => {
+      uni.switchTab({ url: '/pages/landlord/index/index' })
+    }, 1500)
+  } catch (error: any) {
+    uni.showToast({ title: error.message || '登录失败', icon: 'none' })
+  } finally {
+    wechatLoading.value = false
+  }
 }
 
 // 打开协议
@@ -328,6 +366,17 @@ const openAgreement = (type: string) => {
   border-radius: 16rpx;
   font-size: 28rpx;
   color: #666;
+  margin-bottom: 24rpx;
+}
+
+.wechat-btn {
+  width: 100%;
+  height: 96rpx;
+  background: #07C160;
+  color: #fff;
+  border-radius: 16rpx;
+  font-size: 32rpx;
+  font-weight: 500;
   margin-bottom: 48rpx;
 }
 
