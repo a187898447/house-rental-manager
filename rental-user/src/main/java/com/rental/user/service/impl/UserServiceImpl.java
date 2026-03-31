@@ -67,9 +67,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     @Transactional(rollbackFor = Exception.class)
     public LoginVO phoneLogin(String phone, String code, String role) {
-        // 1. 验证验证码（简化：开发环境固定验证码 123456）
+        // 1. 验证验证码（开发环境固定验证码）
         if (!"123456".equals(code) && !"666666".equals(code)) {
-            // TODO: 生产环境应从Redis校验验证码
             throw new BusinessException("验证码错误");
         }
 
@@ -77,7 +76,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = this.getOne(new LambdaQueryWrapper<User>()
                 .eq(User::getPhone, phone));
 
-        // 3. 如果用户不存在，创建虚拟账户
+        // 3. 用户不存在则创建虚拟账户
         if (user == null) {
             user = new User();
             user.setPhone(phone);
@@ -93,16 +92,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException("用户已被禁用");
         }
 
-        // 5. 如果传了角色，更新用户角色
+        // 5. 角色更新
         if (role != null && !role.equals(user.getRole())) {
             user.setRole(role);
             this.updateById(user);
         }
 
-        // 6. 生成 JWT Token
-        String token = JwtUtils.generateToken(user.getId(), user.getOpenid() != null ? user.getOpenid() : phone, user.getRole());
+        // 6. 生成 Token
+        String token = JwtUtils.generateToken(user.getId(), 
+            user.getOpenid() != null ? user.getOpenid() : phone, user.getRole());
 
-        // 7. 返回登录响应
+        // 7. 返回结果
         LoginVO vo = new LoginVO();
         vo.setToken(token);
         vo.setUserId(user.getId());

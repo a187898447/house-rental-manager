@@ -107,7 +107,6 @@ const countdown = ref(0)
 // 角色切换
 const switchRole = (role: 'landlord' | 'tenant') => {
   loginRole.value = role
-  // 清空表单
   phone.value = ''
   code.value = ''
   countdown.value = 0
@@ -124,7 +123,6 @@ const sendCode = async () => {
     await sendVerifyCode(phone.value)
     uni.showToast({ title: '验证码已发送', icon: 'success' })
     
-    // 开始倒计时
     countdown.value = 60
     const timer = setInterval(() => {
       countdown.value--
@@ -156,14 +154,12 @@ const handleLogin = async () => {
 
   loading.value = true
   try {
-    // 根据角色调用不同接口
     const role = loginRole.value
     const res = await phoneLogin(phone.value, code.value, role) as any
     
     if (res.code === 200 || res.code === 0) {
       const data = res.data
       
-      // 保存用户信息
       userStore.setToken(data.token)
       userStore.setUserInfo({
         id: data.userId,
@@ -175,7 +171,6 @@ const handleLogin = async () => {
       
       uni.showToast({ title: '登录成功', icon: 'success' })
       
-      // 根据角色跳转不同页面
       setTimeout(() => {
         if (role === 'landlord') {
           uni.switchTab({ url: '/pages/landlord/index/index' })
@@ -193,11 +188,10 @@ const handleLogin = async () => {
   }
 }
 
-// 试用模式 - 根据角色设置不同演示用户
+// 试用模式
 const handleDemoLogin = () => {
   const role = loginRole.value
   
-  // 设置演示用户信息
   userStore.setToken("demo-token-" + role)
   userStore.setUserInfo({
     id: role === 'landlord' ? 1 : 100,
@@ -208,7 +202,6 @@ const handleDemoLogin = () => {
   
   uni.showToast({ title: '已进入演示模式', icon: 'success' })
   
-  // 根据角色跳转
   setTimeout(() => {
     if (role === 'landlord') {
       uni.switchTab({ url: '/pages/landlord/index/index' })
@@ -220,7 +213,6 @@ const handleDemoLogin = () => {
 
 // 打开协议
 const openAgreement = (type: string) => {
-  // TODO: 实现协议页面跳转
   uni.showToast({ title: '协议页面开发中', icon: 'none' })
 }
 </script>
@@ -253,7 +245,6 @@ const openAgreement = (type: string) => {
   margin-top: 24rpx;
 }
 
-/* 角色选择 Tab */
 .role-tabs {
   display: flex;
   background: #f5f5f5;
