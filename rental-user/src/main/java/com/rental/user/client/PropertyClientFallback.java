@@ -1,7 +1,7 @@
 package com.rental.user.client;
 
 import com.rental.common.result.Result;
-import com.rental.user.vo.PropertyVO;
+import com.rental.common.vo.PropertyVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
