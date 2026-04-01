@@ -23,8 +23,6 @@
         <module>rental-user</module>
         <module>rental-property</module>
         <module>rental-bill</module>
-        <module>rental-notify</module>
-        <module>rental-pay</module>
         <module>rental-gateway</module>
     </modules>
 
