@@ -1,58 +1,29 @@
-import { request } from './index'
-import type { LoginResponse, User, ApiResponse } from '@/types'
+import { post, get } from './index'
+import type { Result, User } from '@/types'
 
 /**
  * 微信登录
  */
-export const wechatLogin = async () => {
-  const loginRes = await uni.login()
-  
-  return request<LoginResponse>({
-    url: '/api/auth/wechat/login',
-    method: 'POST',
-    data: { code: loginRes.code }
+export function wxLogin(code: string, nickname?: string, avatarUrl?: string) {
+  return post<User>('/user/wx-login', {
+    openid: code,
+    nickname,
+    avatarUrl,
   })
 }
 
 /**
- * 绑定手机号
+ * 手机号登录
  */
-export const bindPhone = async (phone: string, code: string) => {
-  return request<LoginResponse>({
-    url: '/api/auth/bind-phone',
-    method: 'POST',
-    data: { phone, code }
+export function phoneLogin(phone: string, code: string, role: 'landlord' | 'tenant') {
+  return post<User>('/user/phone-login', null, {
+    params: { phone, code, role }
   })
 }
 
 /**
  * 获取用户信息
  */
-export const getUserInfo = async () => {
-  return request<User>({
-    url: '/api/auth/userinfo',
-    method: 'GET'
-  })
-}
-
-/**
- * 更新用户信息
- */
-export const updateUserInfo = async (data: Partial<User>) => {
-  return request<User>({
-    url: '/api/auth/userinfo',
-    method: 'PUT',
-    data
-  })
-}
-
-/**
- * 发送验证码
- */
-export const sendVerifyCode = async (phone: string) => {
-  return request<{ success: boolean }>({
-    url: '/api/auth/send-code',
-    method: 'POST',
-    data: { phone }
-  })
+export function getUserInfo(userId: number) {
+  return get<User>(`/user/info?userId=${userId}`)
 }

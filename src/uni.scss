@@ -1,37 +1,31 @@
-/**
- * 全局样式变量
- */
+/* 全局变量 */
+$uni-color-primary: #667eea;
+$uni-color-success: #07c160;
+$uni-color-warning: #ffba00;
+$uni-color-error: #f44336;
 
-// 主题色
-$primary-color: #0087FF;
-$success-color: #5AC725;
-$warning-color: #FFB100;
-$error-color: #F5A623;
-$info-color: #999999;
+$uni-text-color: #333333;
+$uni-text-color-grey: #666666;
+$uni-text-color-placeholder: #999999;
 
-// 文字颜色
-$text-color: #333333;
-$text-color-light: #666666;
-$text-color-muted: #999999;
+$uni-border-color: #e5e5e5;
+$uni-bg-color: #f5f5f5;
+$uni-bg-color-grey: #f8f8f8;
 
-// 背景色
-$bg-color: #F8F8F8;
-$bg-color-white: #FFFFFF;
+/* 间距 */
+$uni-spacing-sm: 8rpx;
+$uni-spacing-base: 16rpx;
+$uni-spacing-lg: 24rpx;
+$uni-spacing-xl: 32rpx;
 
-// 边框颜色
-$border-color: #E5E5E5;
+/* 字体大小 */
+$uni-font-size-sm: 22rpx;
+$uni-font-size-base: 26rpx;
+$uni-font-size-lg: 30rpx;
+$uni-font-size-xl: 36rpx;
 
-// 字体大小
-$font-size-sm: 24rpx;
-$font-size-base: 28rpx;
-$font-size-lg: 32rpx;
-
-// 间距
-$spacing-sm: 10rpx;
-$spacing-base: 20rpx;
-$spacing-lg: 30rpx;
-
-// 圆角
-$border-radius-sm: 8rpx;
-$border-radius-base: 12rpx;
-$border-radius-lg: 16rpx;
+/* 圆角 */
+$uni-border-radius-sm: 8rpx;
+$uni-border-radius-base: 12rpx;
+$uni-border-radius-lg: 16rpx;
+$uni-border-radius-xl: 24rpx;

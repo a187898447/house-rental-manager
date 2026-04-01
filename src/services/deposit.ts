@@ -1,39 +1,19 @@
-import { request } from './index'
-import type { Deposit, ApiResponse } from '@/types'
-
-/**
- * 获取押金列表
- */
-export const getDeposits = async (params?: { propertyId?: string; tenantId?: string }) => {
-  return request<Deposit[]>({
-    url: '/api/deposits',
-    method: 'GET',
-    data: params
-  })
-}
+import { post } from './index'
 
 /**
  * 收取押金
  */
-export const createDeposit = async (data: {
-  propertyId: string
-  tenantId: string
-  amount: number
-}) => {
-  return request<Deposit>({
-    url: '/api/deposits',
-    method: 'POST',
-    data
+export function collectDeposit(tenantId: number, propertyId: number, amount: number) {
+  return post<number>('/deposit', null, {
+    params: { tenantId, propertyId, amount }
   })
 }
 
 /**
  * 退还押金
  */
-export const refundDeposit = async (id: string, data: { amount: number; remark?: string }) => {
-  return request<Deposit>({
-    url: `/api/deposits/${id}/refund`,
-    method: 'POST',
-    data
+export function refundDeposit(recordId: number, refundDate: string) {
+  return post(`/deposit/${recordId}/refund`, null, {
+    params: { refundDate }
   })
 }

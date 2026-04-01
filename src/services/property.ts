@@ -1,79 +1,47 @@
-import { request } from './index'
-import type { Property, PropertyInput, ApiResponse, PageResponse } from '@/types'
+import { post, get, put, del } from './index'
+import type { Property, PropertyDTO, PageResult } from '@/types'
 
 /**
- * 获取房源列表
+ * 添加房源
  */
-export const getProperties = async (params?: { status?: string; page?: number; pageSize?: number }) => {
-  return request<Property[]>({
-    url: '/api/properties',
-    method: 'GET',
-    data: params
-  })
-}
-
-/**
- * 获取房源详情
- */
-export const getPropertyDetail = async (id: string) => {
-  return request<Property>({
-    url: `/api/properties/${id}`,
-    method: 'GET'
-  })
-}
-
-/**
- * 新增房源
- */
-export const createProperty = async (data: PropertyInput) => {
-  return request<Property>({
-    url: '/api/properties',
-    method: 'POST',
-    data
-  })
+export function addProperty(data: PropertyDTO, landlordId: number) {
+  return post<number>(`/property?landlordId=${landlordId}`, data)
 }
 
 /**
  * 编辑房源
  */
-export const updateProperty = async (id: string, data: PropertyInput) => {
-  return request<Property>({
-    url: `/api/properties/${id}`,
-    method: 'PUT',
-    data
-  })
+export function updateProperty(data: PropertyDTO) {
+  return put('/property', data)
 }
 
 /**
  * 删除房源
  */
-export const deleteProperty = async (id: string) => {
-  return request<{ success: boolean }>({
-    url: `/api/properties/${id}`,
-    method: 'DELETE'
+export function deleteProperty(propertyId: number) {
+  return del(`/property/${propertyId}`)
+}
+
+/**
+ * 查询房源列表
+ */
+export function getPropertyList(
+  landlordId: number,
+  status?: number,
+  pageNum: number = 1,
+  pageSize: number = 10
+) {
+  return get<PageResult<Property>>('/property/list', {
+    landlordId,
+    status,
+    pageNum,
+    pageSize,
   })
 }
 
 /**
- * 上传房源图片
+ * 查询房源详情
  */
-export const uploadPropertyImages = async (filePaths: string[]) => {
-  return new Promise<string[]>((resolve, reject) => {
-    const promises = filePaths.map((path) => {
-      return new Promise<string>((resolve, reject) => {
-        uni.uploadFile({
-          url: 'https://api.example.com/api/upload',
-          filePath: path,
-          name: 'file',
-          success: (res) => {
-            const data = JSON.parse(res.data) as ApiResponse<{ url: string }>
-            resolve(data.data.url)
-          },
-          fail: reject
-        })
-      })
-    })
-    
-    Promise.all(promises).then(resolve).catch(reject)
-  })
+export function getPropertyDetail(propertyId: number) {
+  return get<Property>(`/property/${propertyId}`)
 }

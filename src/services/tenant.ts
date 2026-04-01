@@ -1,64 +1,42 @@
-import { request } from './index'
-import type { Tenant, ApiResponse } from '@/types'
-
-/**
- * 获取租客列表
- */
-export const getTenants = async (params?: { propertyId?: string; status?: string }) => {
-  return request<Tenant[]>({
-    url: '/api/tenants',
-    method: 'GET',
-    data: params
-  })
-}
-
-/**
- * 获取租客详情
- */
-export const getTenantDetail = async (id: string) => {
-  return request<Tenant>({
-    url: `/api/tenants/${id}`,
-    method: 'GET'
-  })
-}
+import { post, get } from './index'
+import type { Tenant, TenantDTO, PageResult } from '@/types'
 
 /**
  * 入住登记
  */
-export const checkIn = async (data: {
-  propertyId: string
-  name: string
-  phone: string
-  idCard?: string
-  leaseStart: string
-  leaseEnd: string
-  emergencyContact?: string
-  emergencyPhone?: string
-}) => {
-  return request<Tenant>({
-    url: '/api/tenants/checkin',
-    method: 'POST',
-    data
-  })
+export function checkIn(data: TenantDTO) {
+  return post<number>('/tenant/check-in', data)
 }
 
 /**
  * 退租办理
  */
-export const checkOut = async (id: string, data?: { remark?: string }) => {
-  return request<Tenant>({
-    url: `/api/tenants/${id}/checkout`,
-    method: 'POST',
-    data
+export function checkOut(tenantId: number, checkOutDate: string) {
+  return post('/tenant/check-out', null, {
+    params: { tenantId, checkOutDate }
   })
 }
 
 /**
- * 删除租客
+ * 查询租客列表
  */
-export const deleteTenant = async (id: string) => {
-  return request<{ success: boolean }>({
-    url: `/api/tenants/${id}`,
-    method: 'DELETE'
+export function getTenantList(
+  landlordId: number,
+  status?: number,
+  pageNum: number = 1,
+  pageSize: number = 10
+) {
+  return get<PageResult<Tenant>>('/tenant/list', {
+    landlordId,
+    status,
+    pageNum,
+    pageSize,
   })
+}
+
+/**
+ * 查询租客详情
+ */
+export function getTenantDetail(tenantId: number) {
+  return get<Tenant>(`/tenant/${tenantId}`)
 }

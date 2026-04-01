@@ -1,65 +1,69 @@
-import { useUserStore } from '@/stores/user'
-import type { ApiResponse } from '@/types'
+import type { Result, PageResult } from '@/types'
 
-interface RequestOptions {
-  url: string
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
-  data?: any
-  header?: Record<string, string>
-}
-
-const baseURL = 'https://api.example.com' // TODO: 配置实际后端地址
+const BASE_URL = '/api'
 
 /**
- * 统一请求封装
+ * 请求封装
  */
-export const request = async <T = any>(options: RequestOptions): Promise<T> => {
-  const userStore = useUserStore()
+async function request<T>(
+  url: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const token = uni.getStorageSync('token')
   
-  const header: Record<string, string> = {
-    'Content-Type': 'application/json',
-    ...options.header
-  }
-  
-  // 添加认证 Token
-  if (userStore.token) {
-    header['Authorization'] = `Bearer ${userStore.token}`
-  }
-  
-  return new Promise<T>((resolve, reject) => {
-    uni.request({
-      url: baseURL + options.url,
-      method: options.method || 'GET',
-      data: options.data,
-      header,
-      success: (res) => {
-        if (res.statusCode === 200) {
-          const response = res.data as ApiResponse<T>
-          if (response.code === 200 || response.code === 0) {
-            resolve(response.data)
-          } else {
-            uni.showToast({
-              title: response.message || '请求失败',
-              icon: 'none'
-            })
-            reject(response)
-          }
-        } else if (res.statusCode === 401) {
-          // Token 过期，跳转登录
-          userStore.logout()
-          uni.reLaunch({ url: '/pages/landlord/index/index' })
-          reject(new Error('未授权'))
-        } else {
-          reject(res.data)
-        }
-      },
-      fail: (err) => {
-        uni.showToast({
-          title: '网络请求失败',
-          icon: 'none'
-        })
-        reject(err)
-      }
-    })
+  const response = await fetch(BASE_URL + url, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...options.headers,
+    },
   })
+
+  const result: Result<T> = await response.json()
+  
+  if (result.code !== 200) {
+    uni.showToast({
+      title: result.message || '请求失败',
+      icon: 'none'
+    })
+    throw new Error(result.message)
+  }
+
+  return result.data
+}
+
+/**
+ * GET 请求
+ */
+export function get<T>(url: string, params?: Record<string, any>): Promise<T> {
+  const queryString = params ? '?' + new URLSearchParams(params).toString() : ''
+  return request<T>(url + queryString, { method: 'GET' })
+}
+
+/**
+ * POST 请求
+ */
+export function post<T>(url: string, data?: any): Promise<T> {
+  return request<T>(url, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  })
+}
+
+/**
+ * PUT 请求
+ */
+export function put<T>(url: string, data?: any): Promise<T> {
+  return request<T>(url, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  })
+}
+
+/**
+ * DELETE 请求
+ */
+export function del<T>(url: string): Promise<T> {
+  return request<T>(url, { method: 'DELETE' })
 }

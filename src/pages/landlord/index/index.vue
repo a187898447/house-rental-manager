@@ -1,144 +1,236 @@
 <template>
-  <view class="property-list-page">
-    <!-- 顶部 Tabs -->
-    <u-tabs 
-      :list="tabs" 
-      :current="currentTab" 
-      @change="onTabChange"
-      :scrollable="false"
-      lineColor="#0087FF"
-      activeStyle="{ color: '#0087FF' }"
-    />
-    
-    <!-- 房源列表 -->
-    <scroll-view 
-      scroll-y 
-      class="property-list"
-      @scrolltolower="onLoadMore"
-      :lower-threshold="100"
-    >
-      <view v-if="loading && properties.length === 0" class="loading-wrap">
-        <u-loading mode="circle"></u-loading>
+  <view class="container">
+    <!-- 顶部统计 -->
+    <view class="stats-card">
+      <view class="stat-item">
+        <text class="stat-value">{{ stats.propertyCount }}</text>
+        <text class="stat-label">房源总数</text>
       </view>
-      
-      <view v-else-if="filteredList.length === 0" class="empty-wrap">
-        <u-empty text="暂无房源" mode="list"></u-empty>
+      <view class="stat-item">
+        <text class="stat-value">{{ stats.tenantCount }}</text>
+        <text class="stat-label">在租房客</text>
       </view>
-      
-      <view v-else class="property-items">
-        <PropertyCard 
-          v-for="item in filteredList" 
-          :key="item.id" 
-          :data="item"
-          @click="onPropertyClick(item)"
-        />
+      <view class="stat-item">
+        <text class="stat-value">¥{{ stats.monthlyIncome }}</text>
+        <text class="stat-label">本月收入</text>
       </view>
-      
-      <view v-if="loading && properties.length > 0" class="loading-more">
-        <u-loading mode="circle"></u-loading>
+      <view class="stat-item">
+        <text class="stat-value">{{ stats.unpaidCount }}</text>
+        <text class="stat-label">待收租</text>
       </view>
-    </scroll-view>
-    
-    <!-- 新增按钮 -->
-    <view class="add-btn" @click="onAddProperty">
-      <u-icon name="plus" color="#fff" size="24"></u-icon>
+    </view>
+
+    <!-- 功能入口 -->
+    <view class="menu-grid">
+      <view class="menu-item" @click="goTo('/pages/landlord/property/list')">
+        <view class="menu-icon">🏠</view>
+        <text class="menu-text">房源管理</text>
+      </view>
+      <view class="menu-item" @click="goTo('/pages/landlord/tenant/list')">
+        <view class="menu-icon">👤</view>
+        <text class="menu-text">租客管理</text>
+      </view>
+      <view class="menu-item" @click="goTo('/pages/landlord/rent/list')">
+        <view class="menu-icon">💰</view>
+        <text class="menu-text">租金管理</text>
+      </view>
+      <view class="menu-item" @click="goTo('/pages/tenant/bill/index')">
+        <view class="menu-icon">📊</view>
+        <text class="menu-text">数据统计</text>
+      </view>
+    </view>
+
+    <!-- 待办提醒 -->
+    <view class="todo-section">
+      <view class="section-header">
+        <text class="section-title">待办提醒</text>
+        <text class="section-more">查看全部 ></text>
+      </view>
+      <view class="todo-list">
+        <view class="todo-item" v-if="todos.dueToday > 0">
+          <text class="todo-icon">📅</text>
+          <text class="todo-text">今日待收租 {{ todos.dueToday }} 笔</text>
+        </view>
+        <view class="todo-item" v-if="todos.overdue2 > 0">
+          <text class="todo-icon">⚠️</text>
+          <text class="todo-text">逾期 2 天未交租 {{ todos.overdue2 }} 笔</text>
+        </view>
+        <view class="todo-item" v-if="todos.overdue3 > 0">
+          <text class="todo-icon">❗</text>
+          <text class="todo-text">逾期 3 天未交租 {{ todos.overdue3 }} 笔</text>
+        </view>
+        <view class="todo-empty" v-if="!hasTodos">
+          <text class="empty-text">暂无待办事项 👍</text>
+        </view>
+      </view>
     </view>
   </view>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import type { Property } from '@/types'
-import { usePropertyStore } from '@/stores/property'
-import PropertyCard from '@/components/PropertyCard.vue'
+import { useUserStore } from '@/stores/user'
 
-const propertyStore = usePropertyStore()
-const currentTab = ref(0)
-const loading = ref(false)
+const userStore = useUserStore()
 
-const tabs = [
-  { name: '未出租', value: 'vacant' },
-  { name: '已出租未缴费', value: 'rented_unpaid' },
-  { name: '已出租已缴费', value: 'rented_paid' }
-]
-
-const statusMap = ['vacant', 'rented_unpaid', 'rented_paid']
-
-const properties = computed(() => propertyStore.properties)
-
-const filteredList = computed(() => {
-  const status = statusMap[currentTab.value]
-  return properties.value.filter(p => p.status === status)
+const stats = ref({
+  propertyCount: 0,
+  tenantCount: 0,
+  monthlyIncome: 0,
+  unpaidCount: 0,
 })
 
-const onTabChange = (index: number) => {
-  currentTab.value = index
-}
-
-const onLoadMore = () => {
-  // TODO: 加载更多
-}
-
-const onPropertyClick = (item: Property) => {
-  uni.navigateTo({
-    url: `/pages/landlord/property/edit/index?id=${item.id}`
-  })
-}
-
-const onAddProperty = () => {
-  uni.navigateTo({
-    url: '/pages/landlord/property/add/index'
-  })
-}
-
-// 页面加载
-onMounted(() => {
-  loading.value = true
-  propertyStore.fetchProperties().finally(() => {
-    loading.value = false
-  })
+const todos = ref({
+  dueToday: 0,
+  overdue2: 0,
+  overdue3: 0,
 })
+
+const hasTodos = computed(() => {
+  return todos.value.dueToday > 0 || todos.value.overdue2 > 0 || todos.value.overdue3 > 0
+})
+
+/**
+ * 加载统计数据
+ */
+function loadStats() {
+  // TODO: 调用后端 API 获取统计数据
+  stats.value = {
+    propertyCount: 12,
+    tenantCount: 8,
+    monthlyIncome: 15600,
+    unpaidCount: 3,
+  }
+  todos.value = {
+    dueToday: 2,
+    overdue2: 1,
+    overdue3: 0,
+  }
+}
+
+/**
+ * 页面跳转
+ */
+function goTo(url: string) {
+  uni.navigateTo({ url })
+}
+
+// 页面加载时初始化
+loadStats()
 </script>
 
 <style lang="scss" scoped>
-.property-list-page {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: #F8F8F8;
+.container {
+  padding: 24rpx;
+  background: #f5f5f5;
+  min-height: 100vh;
 }
 
-.property-list {
-  flex: 1;
-  padding: 20rpx;
+.stats-card {
+  display: flex;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16rpx;
+  padding: 32rpx 20rpx;
+  margin-bottom: 24rpx;
+
+  .stat-item {
+    text-align: center;
+
+    .stat-value {
+      display: block;
+      font-size: 36rpx;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 8rpx;
+    }
+
+    .stat-label {
+      display: block;
+      font-size: 22rpx;
+      color: rgba(255, 255, 255, 0.8);
+    }
+  }
 }
 
-.property-items {
-  display: flex;
-  flex-direction: column;
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 20rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 32rpx 20rpx;
+  margin-bottom: 24rpx;
+
+  .menu-item {
+    text-align: center;
+
+    .menu-icon {
+      font-size: 48rpx;
+      margin-bottom: 12rpx;
+    }
+
+    .menu-text {
+      font-size: 24rpx;
+      color: #333;
+    }
+  }
 }
 
-.loading-wrap,
-.empty-wrap,
-.loading-more {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 60rpx 0;
-}
+.todo-section {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
 
-.add-btn {
-  position: fixed;
-  right: 30rpx;
-  bottom: 30rpx;
-  width: 100rpx;
-  height: 100rpx;
-  background-color: #0087FF;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 4rpx 20rpx rgba(0, 135, 255, 0.4);
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20rpx;
+
+    .section-title {
+      font-size: 30rpx;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .section-more {
+      font-size: 24rpx;
+      color: #999;
+    }
+  }
+
+  .todo-list {
+    .todo-item {
+      display: flex;
+      align-items: center;
+      padding: 20rpx 0;
+      border-bottom: 1rpx solid #f5f5f5;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .todo-icon {
+        font-size: 32rpx;
+        margin-right: 16rpx;
+      }
+
+      .todo-text {
+        font-size: 26rpx;
+        color: #333;
+      }
+    }
+
+    .todo-empty {
+      text-align: center;
+      padding: 40rpx 0;
+
+      .empty-text {
+        font-size: 26rpx;
+        color: #999;
+      }
+    }
+  }
 }
 </style>

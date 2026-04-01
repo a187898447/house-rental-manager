@@ -1,58 +1,39 @@
-import { request } from './index'
-import type { Repair, ApiResponse } from '@/types'
+import { post, get } from './index'
 
 /**
- * 获取报修列表
+ * 提交报修
  */
-export const getRepairs = async (params?: { 
-  propertyId?: string
-  tenantId?: string
-  status?: string
-}) => {
-  return request<Repair[]>({
-    url: '/api/repairs',
-    method: 'GET',
-    data: params
-  })
-}
-
-/**
- * 获取报修详情
- */
-export const getRepairDetail = async (id: string) => {
-  return request<Repair>({
-    url: `/api/repairs/${id}`,
-    method: 'GET'
-  })
-}
-
-/**
- * 提交报修申请
- */
-export const createRepair = async (data: {
-  propertyId: string
-  title: string
+export function submitRepair(data: {
+  tenantId: number
+  propertyId: number
   description: string
   images?: string[]
-  contactPhone?: string
-}) => {
-  return request<Repair>({
-    url: '/api/repairs',
-    method: 'POST',
-    data
+}) {
+  return post<number>('/repair', data)
+}
+
+/**
+ * 处理报修
+ */
+export function processRepair(repairId: number, status: number, remark?: string) {
+  return post('/repair/process', null, {
+    params: { repairId, status, remark }
   })
 }
 
 /**
- * 更新报修状态
+ * 查询报修列表
  */
-export const updateRepairStatus = async (id: string, data: { 
-  status: 'processing' | 'completed' | 'cancelled'
-  remark?: string
-}) => {
-  return request<Repair>({
-    url: `/api/repairs/${id}/status`,
-    method: 'PUT',
-    data
+export function getRepairList(
+  propertyId?: number,
+  status?: number,
+  pageNum: number = 1,
+  pageSize: number = 10
+) {
+  return get('/repair/list', {
+    propertyId,
+    status,
+    pageNum,
+    pageSize,
   })
 }

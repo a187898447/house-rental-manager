@@ -1,152 +1,96 @@
 {
   "pages": [
     {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "首页"
+      }
+    },
+    {
+      "path": "pages/login/index",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
+    },
+    {
       "path": "pages/landlord/index/index",
       "style": {
-        "navigationBarTitleText": "房源管理",
-        "enablePullDownRefresh": true
+        "navigationBarTitleText": "房东端首页"
       }
     },
     {
-      "path": "pages/landlord/property/add/index",
+      "path": "pages/landlord/property/list",
       "style": {
-        "navigationBarTitleText": "新增房源"
+        "navigationBarTitleText": "房源管理"
       }
     },
     {
-      "path": "pages/landlord/property/edit/index",
+      "path": "pages/landlord/property/edit",
       "style": {
         "navigationBarTitleText": "编辑房源"
       }
     },
     {
-      "path": "pages/landlord/tenant/list/index",
+      "path": "pages/landlord/tenant/list",
       "style": {
         "navigationBarTitleText": "租客管理"
       }
     },
     {
-      "path": "pages/landlord/tenant/checkin/index",
+      "path": "pages/landlord/rent/list",
       "style": {
-        "navigationBarTitleText": "入住登记"
+        "navigationBarTitleText": "租金管理"
       }
     },
     {
-      "path": "pages/landlord/tenant/checkout/index",
+      "path": "pages/tenant/index/index",
       "style": {
-        "navigationBarTitleText": "退租办理"
+        "navigationBarTitleText": "租客端首页"
       }
     },
     {
-      "path": "pages/landlord/rent/list/index",
+      "path": "pages/tenant/bill/index",
       "style": {
-        "navigationBarTitleText": "租金账单"
+        "navigationBarTitleText": "我的账单"
       }
     },
     {
-      "path": "pages/landlord/rent/detail/index",
+      "path": "pages/tenant/contract/index",
       "style": {
-        "navigationBarTitleText": "账单详情"
-      }
-    },
-    {
-      "path": "pages/landlord/deposit/list/index",
-      "style": {
-        "navigationBarTitleText": "押金记录"
-      }
-    },
-    {
-      "path": "pages/landlord/utility/config/index",
-      "style": {
-        "navigationBarTitleText": "水电配置"
-      }
-    },
-    {
-      "path": "pages/landlord/fee/list/index",
-      "style": {
-        "navigationBarTitleText": "其他费用"
-      }
-    },
-    {
-      "path": "pages/landlord/history/index",
-      "style": {
-        "navigationBarTitleText": "历史账单"
-      }
-    },
-    {
-      "path": "pages/landlord/receipt/export/index",
-      "style": {
-        "navigationBarTitleText": "电子收据"
-      }
-    },
-    {
-      "path": "pages/landlord/repair/list/index",
-      "style": {
-        "navigationBarTitleText": "报修处理"
-      }
-    },
-    {
-      "path": "pages/tenant/contract/sign/index",
-      "style": {
-        "navigationBarTitleText": "签署合同"
-      }
-    },
-    {
-      "path": "pages/tenant/contract/view/index",
-      "style": {
-        "navigationBarTitleText": "查看合同"
-      }
-    },
-    {
-      "path": "pages/tenant/bill/list/index",
-      "style": {
-        "navigationBarTitleText": "账单列表"
-      }
-    },
-    {
-      "path": "pages/tenant/bill/pay/index",
-      "style": {
-        "navigationBarTitleText": "在线缴费"
-      }
-    },
-    {
-      "path": "pages/tenant/repair/apply/index",
-      "style": {
-        "navigationBarTitleText": "报修申请"
-      }
-    },
-    {
-      "path": "pages/tenant/contact/index/index",
-      "style": {
-        "navigationBarTitleText": "联系房东"
+        "navigationBarTitleText": "电子合同"
       }
     }
   ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "租房管理",
-    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarTitleText": "租房管家",
+    "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   },
   "tabBar": {
-    "color": "#999999",
-    "selectedColor": "#0087FF",
+    "color": "#7A7E83",
+    "selectedColor": "#007AFF",
     "borderStyle": "black",
-    "backgroundColor": "#FFFFFF",
+    "backgroundColor": "#ffffff",
     "list": [
       {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/tabbar/home.png",
+        "selectedIconPath": "static/tabbar/home-active.png"
+      },
+      {
         "pagePath": "pages/landlord/index/index",
-        "text": "房源"
+        "text": "房东端",
+        "iconPath": "static/tabbar/landlord.png",
+        "selectedIconPath": "static/tabbar/landlord-active.png"
       },
       {
-        "pagePath": "pages/landlord/rent/list/index",
-        "text": "账单"
-      },
-      {
-        "pagePath": "pages/landlord/tenant/list/index",
-        "text": "我的"
+        "pagePath": "pages/tenant/index/index",
+        "text": "租客端",
+        "iconPath": "static/tabbar/tenant.png",
+        "selectedIconPath": "static/tabbar/tenant-active.png"
       }
     ]
-  },
-  "uniIdRouter": {}
+  }
 }

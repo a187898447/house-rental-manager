@@ -1,59 +1,67 @@
-import { request } from './index'
-import type { RentBill, BillInput, ApiResponse } from '@/types'
+import { post, get } from './index'
+import type { RentRecord, RentRecordDTO, PageResult } from '@/types'
 
 /**
- * 获取租金账单列表
+ * 创建租金记录
  */
-export const getRentBills = async (params?: { 
-  propertyId?: string
-  tenantId?: string
-  status?: string
-  month?: string
-}) => {
-  return request<RentBill[]>({
-    url: '/api/rent/bills',
-    method: 'GET',
-    data: params
+export function createRentRecord(data: RentRecordDTO) {
+  return post<number>('/rent', data)
+}
+
+/**
+ * 确认收款
+ */
+export function confirmPayment(recordId: number, paidDate: string) {
+  return post(`/rent/${recordId}/payment`, null, {
+    params: { paidDate }
   })
 }
 
 /**
- * 获取账单详情
+ * 查询租金记录列表
  */
-export const getRentBillDetail = async (id: string) => {
-  return request<RentBill>({
-    url: `/api/rent/bills/${id}`,
-    method: 'GET'
+export function getRentRecordList(
+  landlordId: number,
+  status?: number,
+  pageNum: number = 1,
+  pageSize: number = 10
+) {
+  return get<PageResult<RentRecord>>('/rent/list', {
+    landlordId,
+    status,
+    pageNum,
+    pageSize,
   })
 }
 
 /**
- * 生成账单
+ * 查询今日待收租（D+0 提醒）
  */
-export const generateRentBill = async (data: BillInput) => {
-  return request<RentBill>({
-    url: '/api/rent/bills',
-    method: 'POST',
-    data
+export function getDueTodayList(
+  landlordId: number,
+  pageNum: number = 1,
+  pageSize: number = 10
+) {
+  return get<PageResult<RentRecord>>('/rent/due-today', {
+    landlordId,
+    pageNum,
+    pageSize,
   })
 }
 
 /**
- * 标记账单已支付
+ * 查询催租提醒（D+2/D+3）
  */
-export const markBillPaid = async (id: string) => {
-  return request<RentBill>({
-    url: `/api/rent/bills/${id}/pay`,
-    method: 'POST'
-  })
-}
-
-/**
- * 发送催租提醒
- */
-export const sendRentReminder = async (id: string) => {
-  return request<{ success: boolean }>({
-    url: `/api/rent/bills/${id}/remind`,
-    method: 'POST'
+export function getOverdueList(
+  landlordId: number,
+  days: number,
+  pageNum: number = 1,
+  pageSize: number = 10
+) {
+  return get<PageResult<RentRecord>>('/rent/overdue', {
+    landlordId,
+    days,
+    pageNum,
+    pageSize,
   })
 }
