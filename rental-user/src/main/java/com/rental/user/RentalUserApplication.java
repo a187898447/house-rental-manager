@@ -5,6 +5,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.Import;
+
+import com.rental.user.config.FeignConfig;
 
 /**
  * 用户服务启动类
@@ -15,7 +18,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @MapperScan("com.rental.user.mapper")
 @EnableDiscoveryClient
-@EnableFeignClients
+@EnableFeignClients(defaultConfiguration = FeignConfig.class)
+@Import(FeignConfig.class)
 public class RentalUserApplication {
 
     public static void main(String[] args) {
