@@ -1,22 +1,20 @@
-package com.rental.bill;
+package com.rental.gateway;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
- * 账单服务启动类
+ * API 网关启动类
  *
  * @author rental-team
  * @date 2026-04-01
  */
 @SpringBootApplication
-@MapperScan("com.rental.bill.mapper")
 @EnableDiscoveryClient
-public class RentalBillApplication {
+public class RentalGatewayApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(RentalBillApplication.class, args);
+        SpringApplication.run(RentalGatewayApplication.class, args);
     }
 }

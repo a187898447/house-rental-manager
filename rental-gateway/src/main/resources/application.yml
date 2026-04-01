@@ -1,0 +1,50 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: rental-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_SERVER_ADDR:localhost:8848}
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: rental-user
+          uri: lb://rental-user
+          predicates:
+            - Path=/api/user/**, /api/tenant/**
+          filters:
+            - name: AuthFilter
+              args:
+                excludePaths: /api/user/wx-login, /api/user/phone-login
+        - id: rental-property
+          uri: lb://rental-property
+          predicates:
+            - Path=/api/property/**
+        - id: rental-bill
+          uri: lb://rental-bill
+          predicates:
+            - Path=/api/rent/**, /api/deposit/**, /api/utility/**, /api/other-fee/**
+      default-filters:
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter.replenishRate: 10
+            redis-rate-limiter.burstCapacity: 20
+            key-resolver: "#{@ipKeyResolver}"
+    sentinel:
+      transport:
+        dashboard: ${SENTINEL_DASHBOARD:localhost:8080}
+      datasource:
+        ds1:
+          nacos:
+            server-addr: ${NACOS_SERVER_ADDR:localhost:8848}
+            dataId: ${spring.application.name}-sentinel
+            groupId: DEFAULT_GROUP
+            rule-type: flow
